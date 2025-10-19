@@ -7,5 +7,8 @@ stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
 sphere: UsdGeom.Sphere = UsdGeom.Sphere.Define(stage, "/hello")
 sphere.CreateRadiusAttr().Set(2)
 
+# to refine the sphere
+# mesh.CreateSubdivisionSchemeAttr().Set(UsdGeom.Tokens.catmullClark)
+
 # Save the stage:
 stage.Save()
