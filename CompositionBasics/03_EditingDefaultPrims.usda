@@ -1,0 +1,20 @@
+#usda 1.0
+(
+    defaultPrim = "Car"
+)
+
+def Xform "Car" {
+    def Mesh "Body" {
+        double3[] points = [(0, 0, 0), (2, 0, 0), (2, 1, 0), (0, 1, 0)]
+        int[] faceVertexCounts = [4]
+        int[] faceVertexIndices = [0, 1, 2, 3]
+    }
+}
+
+def Xform "Building" {
+    def Mesh "Structure" {
+        double3[] points = [(0, 0, 0), (5, 0, 0), (5, 10, 0), (0, 10, 0)]
+        int[] faceVertexCounts = [4]
+        int[] faceVertexIndices = [0, 1, 2, 3]
+    }
+}

@@ -71,3 +71,17 @@ xform.AddXformOp(opType, value)
 UsdLux.SphereLight.Define(stage, '/path/to/light')
 # Set the intensity of a light primitive
 light_prim.GetIntensityAttr().Set(500)
+# Clears all content/opinions not saved on that layer
+layer.Reload()
+# Saves content from that layer to disk
+layer.Save()
+# Get a prim’s specifier
+prim.GetSpecifier()
+# Set a prim’s specifier
+prim.SetSpecifier(specifier)
+# Create a new USD stage in memory
+stage = Usd.Stage.CreateInMemory()
+# Check if a prim has variant sets
+HasVariantSets()
+# To edit a variant
+SetVariantSelection()
