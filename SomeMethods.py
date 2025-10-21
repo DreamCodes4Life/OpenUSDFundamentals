@@ -1,5 +1,5 @@
-# Import Usd, Sdf, and Gf libraries from Pixar
-from pxr import Usd, Sdf, Gf
+# Import libraries from Pixar
+from pxr import Usd, UsdGeom, UsdLux, UsdPhysics, Gf, Sdf
 
 # Create a new, empty USD stage where 3D scenes are assembled
 Usd.Stage.CreateNew()
@@ -53,3 +53,21 @@ stage.GetMetadata('key')
 stage.SetMetadata('key', value) 
 # Use for better performance if accessing a single value and not all the metadata within a key
 GetMetadataByDictKey()
+# Retrieve the schema info for a registered schema
+Usd.SchemaRegistry.FindSchemaInfo()
+# Retrieve the schema typeName
+Usd.SchemaRegistry.GetSchemaTypeName()
+# Used to define a new Scope at a specified path on a given stage
+UsdGeom.Scope.Define(stage, path)
+# This command is generic, but it's useful to confirm that a prim's type is a Scope, ensuring correct usage in scripts
+prim.IsA(UsdGeom.Scope)
+# Used to define a new Xform prim at a specified path on a given stage
+UsdGeom.Xform.Define(stage, path)
+# Retrieves the order of transformation operations, which is crucial for understanding how multiple transformations are combined. Different orders can yield different results, so understanding XformOpOrder is important. 
+xform.GetXformOpOrderAttr()
+# Adds a new transform operation to the Xform prim, such as translation or rotation, with specified value   
+xform.AddXformOp(opType, value)
+# Create a sphere light primitive
+UsdLux.SphereLight.Define(stage, '/path/to/light')
+# Set the intensity of a light primitive
+light_prim.GetIntensityAttr().Set(500)
