@@ -1,0 +1,2 @@
+https://openusd.org/dev/user_guides/namespace_editing.html
+https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/strength-ordering/tracing-through-liverps.html

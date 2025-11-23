@@ -1,5 +1,5 @@
 # Import libraries from Pixar
-from pxr import Usd, UsdGeom, UsdLux, UsdPhysics, Gf, Sdf
+from pxr import Usd, UsdGeom, UsdLux, UsdPhysics, Gf, Sdf, Kind
 
 # Create a new, empty USD stage where 3D scenes are assembled
 Usd.Stage.CreateNew()
@@ -85,3 +85,52 @@ stage = Usd.Stage.CreateInMemory()
 HasVariantSets()
 # To edit a variant
 SetVariantSelection()
+# Constructs a UsdGeomPrimvarsAPI on UsdPrim prim
+primvar_api = UsdGeom.PrimvarsAPI(prim)
+# Creates a new primvar called displayColor of type Color3f[]
+primvar_api.CreatePrimvar('displayColor', Sdf.ValueTypeNames.Color3fArray)
+# Gets the displayColor primvar
+primvar = primvar_api.GetPrimvar('displayColor')
+# Sets displayColor values
+primvar.Set([Gf.Vec3f(0.0, 1.0, 0.0)])
+# Gets displayColor values
+values = primvar.Get()
+# If you need to get the same attribute value many times
+UsdAttributeQuery(primvar.GetAttr()).Get()
+# get the actual animated values
+UsdTimeCode::EarliestTime() 
+# Make the prim at /Parent inactive
+stage.GetPrimAtPath('/Parent').SetActive(False)
+# Return whether a prim is currently active on the stage
+UsdPrim.IsActive()
+# Construct a Usd.ModelAPI on a prim
+prim_model_api = Usd.ModelAPI(prim)
+# Return the kind of a prim
+prim_model_api.GetKind()
+# Set the kind of a prim to component
+prim_model_api.SetKind(Kind.Tokens.component) 
+# Return "true" if the prim repersents a model based on its kind metadata
+prim.IsModel()  
+# This yields all active, loaded, defined, non-abstract prims on this stage depth-first
+Usd.Stage.Traverse()
+# Traverse all prims in the stage
+Usd.Stage.TraverseAll()
+# Predicates are combined used bitwise operators
+predicate = Usd.PrimIsActive & Usd.PrimIsLoaded
+# Traverse starting from the given prim and based on the predicate for filtering the traversal
+Usd.PrimRange(prim, predicate=predicate)
+# You must use iter() to invoke iterator methods like Usd.PrimRange.PruneChildren()
+it = iter(Usd.PrimRange.Stage(stage))
+for prim in it:
+    if prim.GetName() == "Environment":
+        prim_range.PruneChildren()  # Skip all children of "Environment"
+# remove sublayer
+root_layer.subLayerPaths.remove("./contents/shading.usd")
+# unload payloads (in viewport example)
+stage = usdviewApi.stage
+root = stage.GetPseudoRoot()
+root.Unload()
+# load
+bldg = stage.GetPrimAtPath("/World/sm_bldgF_01")
+bldg.Load()
+

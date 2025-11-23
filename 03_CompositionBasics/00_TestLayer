@@ -1,0 +1,13 @@
+import omni.usd
+from pxr import Usd
+
+ctx = omni.usd.get_context()
+stage = ctx.get_stage()
+
+# This will be your green "environment.usd (Authoring Layer)"
+layer = stage.GetEditTarget().GetLayer()
+
+print("Authoring layer identifier:", layer.identifier)
+print("Dirty before any change?:", layer.dirty)
+
+layer.Reload()

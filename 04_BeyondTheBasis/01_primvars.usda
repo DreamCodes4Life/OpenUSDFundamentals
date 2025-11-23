@@ -1,0 +1,84 @@
+#usda 1.0
+(
+    customLayerData = {
+        dictionary cameraSettings = {
+            dictionary Front = {
+                double3 position = (5, 0, 0)
+                double radius = 5
+            }
+            dictionary Perspective = {
+                double3 position = (11.246712707972415, 10.324767161642615, 11.174492448785074)
+                double3 target = (-0.4999999999999929, 0.5, -4.9999999999999964)
+            }
+            dictionary Right = {
+                double3 position = (0, -5, 0)
+                double radius = 5
+            }
+            dictionary Top = {
+                double3 position = (0, 0, 5)
+                double radius = 5
+            }
+            string boundCamera = "/OmniverseKit_Persp"
+        }
+        dictionary omni_layer = {
+            string authoring_layer = "./test1.usda"
+            dictionary locked = {
+            }
+            dictionary muteness = {
+            }
+        }
+        dictionary renderSettings = {
+        }
+    }
+    defaultPrim = "World"
+    endTimeCode = 1000000
+    metersPerUnit = 1
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Z"
+)
+
+def Mesh "constant"
+{
+    float3[] extent = [(-1, 0, 0), (1, 1, 0)]
+    int[] faceVertexCounts = [4, 4]
+    int[] faceVertexIndices = [3, 2, 1, 0, 5, 4, 2, 3]
+    point3f[] points = [(-1, 0, 0), (-1, 1, 0), (0, 1, 0), (0, 0, 0), (1, 1, 0), (1, 0, 0)]
+    color3f[] primvars:displayColor = [(1, 0, 0)] (
+        interpolation = "constant"
+    )
+    double3 xformOp:translate = (0, 0, 1)
+    uniform token[] xformOpOrder = ["xformOp:translate"]
+}
+
+def Mesh "uniform"
+{
+    float3[] extent = [(-1, 0, 0), (1, 1, 0)]
+    point3f[] points = [(-1, 0, 0), (-1, 1, 0), (0, 1, 0), (0, 0, 0), (1, 1, 0), (1, 0, 0)]
+    int[] faceVertexCounts = [4, 4]
+    int[] faceVertexIndices = [3, 2, 1, 0, 5, 4, 2, 3]
+
+    color3f[] primvars:displayColor = [(1, 0, 0), (0,0,1)] (
+        interpolation = "uniform"
+    )
+
+    double3 xformOp:translate = (0, 0, 0.1)
+    uniform token[] xformOpOrder = ["xformOp:translate"]
+}
+
+def Mesh "vertex"
+{
+    float3[] extent = [(-1, 0, 0), (1, 1, 0)]
+    point3f[] points = [(-1, 0, 0), (-1, 1, 0), (0, 1, 0), (0, 0, 0), (1, 1, 0), (1, 0, 0)]
+    int[] faceVertexCounts = [4, 4]
+    int[] faceVertexIndices = [3, 2, 1, 0, 5, 4, 2, 3]
+
+    color3f[] primvars:displayColor = [(1, 0, 0), (0.75,0,0), (0.5,0,0.25), (0.25,0,0.5), (0,0,1), (0,0,0.75)] (
+        interpolation = "vertex"
+    )
+
+    double3 xformOp:translate = (0, 0, 2)
+    uniform token[] xformOpOrder = ["xformOp:translate"]
+
+}
+
