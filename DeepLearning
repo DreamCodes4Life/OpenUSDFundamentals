@@ -1,0 +1,13 @@
+# Image Classification of an American Sign Language Dataset
+import torch.nn as nn
+import pandas as pd
+import torch
+from torch.optim import Adam
+from torch.utils.data import Dataset, DataLoader
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+torch.cuda.is_available()
+
+# To load and work with the data, we'll be using a library called Pandas, which is a highly performant tool for loading and manipulating data. We'll read the CSV files into a format called a DataFrame.
+train_df = pd.read_csv("data/asl_data/sign_mnist_train.csv")
+valid_df = pd.read_csv("data/asl_data/sign_mnist_valid.csv")
