@@ -5,6 +5,8 @@
 work, and when and when it is appropriate to use each. The developer needs to be able to debug complex LIVRPS scenarios</strong>
 </p>
 
+[More info](https://openusd.org/release/glossary.html#liverps-strength-ordering)
+
 ---
 
 ##  1.1- Creating Composition Arcs
