@@ -436,23 +436,14 @@ for critter in critters:
                 with jobVS.GetVariantEditContext():
                     # Now edits *additionally* go inside the selected job variant
                     title.Set(critter + job)
-
 stage.GetRootLayer().Save()
-
 ```
   </td > 
 </table>
 
+Basically we are making a variantSet and attribute depending on other varianSets
+
 🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-variant)
-
-
-
-
-
-
-
-
-
 
 ### 1.3.4 - R(E)locates: 
 Relocates is a composition arc that maps a prim path defined in a remote LayerStack (i.e. across a composition arc) to a new path location in the local namespace (these paths can only be prim paths, not property paths).
@@ -508,6 +499,173 @@ def "MainPrim"
     {
         float childValue = 5.2
         uniform string testString = "test"
+    }
+}
+```
+</td> 
+</table>
+
+- You cannot relocate a root prim.
+- When a source path is relocated, that original source path is considered no longer valid in the current namespace. Any local opinions authored on a source path will generate a “invalid option at relocation source path” error.
+- Relocates that would create invalid or conflicting namespace paths are not allowed
+
+##### ⭐ Example "Relocates respect to composition strength ordering"
+---
+<table>
+  <tr>
+    <th align="left">main.usda <br>with added class and inherits</th>
+    <th align="left">flattened main.usda <br>with inherits and relocates applied</th>
+  </tr>
+  <tr>
+    <td valign="top">
+  
+```usda
+#usda 1.0
+(
+    relocates = {
+        </MainPrim/PrimAChild> : </MainPrim/RenamedPrimAChild>
+    }
+)
+
+class "WorkClass"
+{
+    float childValue = 20.5
+    uniform string testString = "from WorkClass"
+}
+
+def "MainPrim" (
+    prepend references = @refLayer.usda@</PrimA>
+)
+{
+    def "RenamedPrimAChild"
+    (
+        inherits = </WorkClass>
+    )
+    {
+    }
+}
+```
+  </td> 
+  <td valign="top">
+    
+```usda
+#usda 1.0
+(
+    relocates = {
+        </MainPrim/PrimAChild> : </MainPrim/RenamedPrimAChild>
+    }
+)
+def "MainPrim" (
+    prepend references = @refLayer.usda@</PrimA>
+)
+{
+    over RenamedPrimAChild
+    {
+        float childValue = 5.2
+    }
+}
+```
+</td> 
+</table>
+
+#### <ins>Relocates and inherits</ins> 
+
+A relocated prim will still inherit the same opinions it would have had it not been relocated. This can result in some subtle composition behavior.
+
+##### ⭐ Example "Relocates and composition strength ordering with inherits"
+
+In the next flattened stage, /Model/Rig/LRig in model.usda has inherited from /ClassA/Rig/LRig even though it was relocated to /Model/Anim/LAnim in that layer, and does not inherit opinions from /ClassA/Anim/LAnim. However, note that /Model_1/Anim/LAnim in the root.usda layer does inherit from the layer’s /ClassA/Anim/LAnim.
+
+---
+<table>
+  <tr>
+    <th align="left">model.usda <br>with ClassA and Model that inherits from ClassA</th>
+    <th align="left">root.usda</th>
+    <th align="left">flattened root.usda/th>
+  </tr>
+  <tr>
+    <td valign="top">
+  
+```usda
+#usda 1.0
+(
+    relocates = {
+        </Model/Rig/LRig>: </Model/Anim/LAnim>
+    }
+)
+
+class "ClassA"
+{
+    def "Rig"
+    {
+        def "LRig"
+        {
+            uniform token modelClassALRig = "test"
+        }
+    }
+
+    def "Anim"
+    {
+        def "LAnim"
+        {
+            uniform token modelClassALAnim = "test"
+        }
+    }
+}
+
+def "Model" (
+    inherits = </ClassA>
+)
+{
+}
+```
+  </td> 
+  <td valign="top">
+    
+```usda
+def "Model_1" (
+    references = @./model.usda@</Model>
+)
+{
+}
+
+class "ClassA"
+{
+    def "Rig"
+    {
+        def "LRig"
+        {
+            uniform token rootClassALRig = "test"
+        }
+    }
+
+    def "Anim"
+    {
+        def "LAnim"
+        {
+            uniform token rootClassALAnim = "test"
+        }
+    }
+}
+```
+</td> 
+  <td valign="top">
+    
+```usda
+def "Model_1"
+{
+    def "Rig"
+    {
+    }
+
+    def "Anim"
+    {
+        def "LAnim"
+        {
+            uniform token modelClassALRig = "test"
+            uniform token rootClassALAnim = "test"
+            uniform token rootClassALRig = "test"
+        }
     }
 }
 ```
