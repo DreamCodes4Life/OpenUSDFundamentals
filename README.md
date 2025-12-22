@@ -27,9 +27,9 @@ Composition arcs are evaluated according to **strength ordering** (from weakest 
 
 | Order | Arc Type | Purpose |
 |-----|---------|--------|
-| L | **Link** | Connect internal relationships |
+| L | **Local (Layers)** | Local changes |
 | I | **Inherit** | Share properties from a base prim |
-| V | **Variant Set** | Enable configuration switching |
+| V | **VariantSet** | Enable configuration switching |
 | E | **Relocate** | Move prim paths |
 | R | **Reference** | Bring in external USD layers |
 | P | **Payload** | Lazy-load external content |
