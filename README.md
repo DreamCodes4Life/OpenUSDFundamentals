@@ -85,7 +85,7 @@ The following example shows how a **shot** composes multiple layers and includes
 ```
 </table>
 
-#### <u>Layer Offsets for TimeSamples</u>
+#### <ins>Layer Offsets for TimeSamples</ins>
 
 **Layer offsets** allow TimeSamples to be **shifted and scaled** when a layer is brought in via **Sublayers or References**.
 
@@ -123,7 +123,8 @@ Layer offsets cannot vary themselves over time
 ```
 </table>
 
-LayerStack: The ordered set of layers resulting from the recursive gathering of all SubLayers of a Layer, plus the layer itself as first and strongest.
+#### <ins>LayerStack:</ins> 
+The ordered set of layers resulting from the recursive gathering of all SubLayers of a Layer, plus the layer itself as first and strongest.
 
 # Content Aggregation: Exam Weight 10%
 # Customizing USD: Exam Weight 6%
