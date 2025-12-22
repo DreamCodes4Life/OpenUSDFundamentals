@@ -1,4 +1,4 @@
-# Composition: Exam Weight 23%
+# 1) Composition: Exam Weight 23%
 
 <p align="center">
   <strong>Authoring, design with, or debugging composition arcs. A developer needs to know all of the composition arcs, how they
@@ -7,7 +7,7 @@ work, and when and when it is appropriate to use each. The developer needs to be
 
 ---
 
-##  - Creating Composition Arcs
+##  1.1- Creating Composition Arcs
 
 **Composition arcs** are the operators that allow **USD (Universal Scene Description)** to combine multiple layers of scene description in specific ways.
 
@@ -15,7 +15,7 @@ They define **how opinions are discovered, ordered, and resolved** across multip
 
 ---
 
-##  - The 7 Composition Arc Types (LIVERPS)
+##  1.2- The 7 Composition Arc Types (LIVERPS)
 
 Composition arcs are evaluated according to **strength ordering** (from weakest → strongest).
 
@@ -33,7 +33,7 @@ Composition arcs are evaluated according to **strength ordering** (from weakest 
 
 ---
 
-## - Sublayer (Local)
+## 1.3 Sublayer (Local)
 
 **Sublayer** is a special composition mechanism:
 
