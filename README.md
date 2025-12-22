@@ -39,7 +39,7 @@ Composition arcs are evaluated according to **strength ordering** (from weakest 
 
 ---
 
-### 1.3.1 - Sublayer (Local)
+### 1.2.1 - Sublayer (Local)
 
 **Sublayer** is a special composition mechanism:
 
@@ -185,7 +185,7 @@ a second.
 </td> 
 </table>
 
-### 1.3.2 - Inherit
+### 1.2.2 - Inherit
 Inherits is a composition arc that addresses the problem of adding a single, non-destructive edit (override) that can affect a whole class of distinct objects on a stage. Inherits acts as a non-destructive “broadcast” operator that applies opinions authored on one prim to every other prim that inherits the “source” prim; not only do property opinions broadcast over inherits arcs - all scene description, hierarchically from the source, inherits. 
 
 🔗 [More info]([https://openusd.org/release/glossary.html#liverps-strength-ordering](https://openusd.org/release/glossary.html#usdglossary-instancing))
@@ -317,7 +317,7 @@ Instancing in USD is a feature that allows many instances of “the same” obje
 
 🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-instancing)
 
-### 1.3.3 - VariantSets and Variants:
+### 1.2.3 - VariantSets and Variants:
 
 Apply the resolved variant selections to all VariantSets that affect the PrimSpec at path in the LayerStack, and iterate through the selected Variants on each VariantSet. For each target, recursively apply LIVERP evaluation on the targeted LayerStack - Note that the “S” is not present - we ignore Specializes arcs while recursing
 A VariantSet is a composition arc that allows a content creator to package a discrete set of alternatives, between which a downstream consumer is able to non-destructively switch, or augment.
@@ -445,7 +445,7 @@ Basically we are making a variantSet and attribute depending on other varianSets
 
 🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-variant)
 
-### 1.3.4 - R(E)locates: 
+### 1.2.4 - R(E)locates: 
 Relocates is a composition arc that maps a prim path defined in a remote LayerStack (i.e. across a composition arc) to a new path location in the local namespace (these paths can only be prim paths, not property paths).
 
 ##### ⭐ Example "Relocates"
@@ -671,6 +671,176 @@ def "Model_1"
 ```
 </td> 
 </table>
+
+#### <ins>Relocates and ancestral arcs during composition</ins> 
+
+One aspect of relocates and composition is that relocates will ignore all ancestral arcs except variant arcs when we build the PrimIndex for a prim. So, if you had a layer that relocates a prim to be the child of a prim with an ancestral inherits arc:
+
+##### ⭐ Example "Layer with ancestral inherits and relocates"
+
+Next with the relocates for /PrimA/Child to /PrimWithInherits/Child, the ancestral opinions from /ClassA/Child are ignored.
+
+<table>
+  <tr>
+    <th align="left">layer.usd</th>
+    <th align="left">flattened layer</th>
+  </tr>
+  <tr>
+  <td valign="top">
+    
+```usda
+#usda 1.0
+(
+    relocates = {
+        </PrimA/Child>: </PrimWithInherits/Child>
+    }
+)
+
+def "ClassA"
+(
+)
+{
+    def "Child"
+    {
+        uniform token testString = "from ClassA/Child"
+        uniform token classAChildString = "test"
+    }
+}
+
+def "RefPrim"
+(
+)
+{
+    def "Child"
+    {
+        uniform token testString = "from RefPrim/Child"
+        uniform token refPrimChildString = "test"
+    }
+}
+
+def "PrimA"
+(
+    prepend references = </RefPrim>
+)
+{
+}
+
+
+def "PrimWithInherits"
+(
+    inherits = </ClassA>
+)
+{
+}
+```
+</td> 
+  <td valign="top">
+    
+```usda
+def "PrimWithInherits"
+{
+    def "Child"
+    {
+        uniform token refPrimChildString = "test"
+        uniform token testString = "from RefPrim/Child"
+    }
+}
+```
+</td> 
+</table>
+
+##### ⭐ Example "Layer with ancestral variantSets and relocates"
+
+Next we see as ancestral variant arcs will still compose with relocate
+
+<table>
+  <tr>
+    <th align="left">layer.usd</th>
+    <th align="left">flattened layer</th>
+  </tr>
+  <tr>
+  <td valign="top">
+    
+```usda
+#usda 1.0
+(
+    relocates = {
+        </PrimA/Child>: </PrimWithInherits/Child>
+    }
+)
+
+def "ClassA"
+(
+)
+{
+    def "Child"
+    {
+        uniform token testString = "from ClassA/Child"
+        uniform token classAChildString = "test"
+    }
+}
+
+def "RefPrim"
+(
+)
+{
+    def "Child"
+    {
+        uniform token testString = "from RefPrim/Child"
+        uniform token refPrimChildString = "test"
+    }
+}
+
+def "PrimA"
+(
+    prepend references = </RefPrim>
+)
+{
+}
+
+
+def "PrimWithInherits"
+(
+    # Removed inherits of ClassA
+    # Added variantSet and selection with authored Child opinions
+    variants = {
+        string varSet = "Set1"
+    }
+    prepend variantSets = "varSet"
+)
+{
+    variantSet "varSet" = {
+        "Set1" ()
+        {
+            def "Child"
+            {
+                uniform token testString = "from varSet Child"
+                uniform token varChildString = "test"
+            }
+        }
+        "Set2" ()
+        {
+        }
+    }
+}
+```
+</td> 
+  <td valign="top">
+    
+```usda
+def "PrimWithInherits"
+{
+    def "Child"
+    {
+        uniform token refPrimChildString = "test"
+        uniform token testString = "from varSet Child"
+        uniform token varChildString = "test"
+    }
+}
+```
+</td> 
+</table>
+
 
 🔗 [More info](https://openusd.org/release/glossary.html#relocates)
 
