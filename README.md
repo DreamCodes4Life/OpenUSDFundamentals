@@ -118,10 +118,15 @@ This USD will resolve as next:
 A timesample of 30 in the someAnimation will be resolved here at: 30*0.5 + 10 = 25.
 Layer offsets cannot themselves vary over time
 ```
-
+</table>
 
 
 # Content Aggregation: Exam Weight 10%
 # Customizing USD: Exam Weight 6%
+# Data Exchange: Exam Weight 15%
+# Data Modeling: Exam Weight 13%
+# Debugging and Troubleshooting: Exam Weight 11%
+# Pipeline Development: Exam Weight 14%
+# Visualization: Exam Weight 8%
 
 
