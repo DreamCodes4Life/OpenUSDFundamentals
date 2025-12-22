@@ -94,7 +94,7 @@ They are commonly used to:
 - Reuse animation data non-destructively
 - Align animation in time without modifying the source layer
 
-#### ⭐ Example Time Offset and Scale
+##### ⭐ Example Time Offset and Scale
 ---
 <table>
   <tr>
@@ -127,7 +127,7 @@ Layer offsets cannot vary themselves over time
 #### <ins>LayerStack:</ins> 
 The ordered set of layers resulting from the recursive gathering of all SubLayers of a Layer, plus the layer itself as first and strongest.
 
-#### ⭐ Example "TimeCodes Scaled to Real Time"
+##### ⭐ Example "TimeCodes Scaled to Real Time"
 ---
 <table>
   <tr>
@@ -186,7 +186,7 @@ Inherits is a composition arc that addresses the problem of adding a single, non
 
 🔗 [More info]([https://openusd.org/release/glossary.html#liverps-strength-ordering](https://openusd.org/release/glossary.html#usdglossary-instancing))
 
-#### ⭐ Example "TimeCodes Scaled to Real Time"
+##### ⭐ Example "TimeCodes Scaled to Real Time"
 ---
 <table>
   <tr>
@@ -318,7 +318,7 @@ Instancing in USD is a feature that allows many instances of “the same” obje
 Apply the resolved variant selections to all VariantSets that affect the PrimSpec at path in the LayerStack, and iterate through the selected Variants on each VariantSet. For each target, recursively apply LIVERP evaluation on the targeted LayerStack - Note that the “S” is not present - we ignore Specializes arcs while recursing
 A VariantSet is a composition arc that allows a content creator to package a discrete set of alternatives, between which a downstream consumer is able to non-destructively switch, or augment.
 
-####   ⭐ Example Simple VarianSet
+#####   ⭐ Example Simple VarianSet
 ---
 <table>
   <tr>
@@ -370,7 +370,7 @@ def Xform "Implicits" (
 ### 1.3.4 - R(E)locates: 
 Relocates is a composition arc that maps a prim path defined in a remote LayerStack (i.e. across a composition arc) to a new path location in the local namespace (these paths can only be prim paths, not property paths).
 
-#### ⭐ Example "Relocates"
+##### ⭐ Example "Relocates"
 ---
 <table>
   <tr>
