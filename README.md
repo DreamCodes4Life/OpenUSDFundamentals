@@ -63,7 +63,7 @@ The following example shows how a **shot** composes multiple layers and includes
 </tr>
 <tr>
     
-<td>
+<td valign="top">
     
 ```usda
 #usda 1.0
@@ -75,7 +75,8 @@ The following example shows how a **shot** composes multiple layers and includes
     ]
 )
 ```
-</td> <td>
+</td> 
+<td valign="top">
 
 ```usda
 #usda 1.0
@@ -87,7 +88,110 @@ The following example shows how a **shot** composes multiple layers and includes
     ]
 )
 ```
+</td>
 </table>
+
+##### ⭐ Example: Sublayers Simple example
+
+The following example shows how a **shot** composes multiple layers and includes an entire **sequence**, which itself is composed of additional layers.
+
+<table>
+<tr>
+<th align="left">sublayers_simple.usd</th>
+<th align="left">sublayerA.usd</th>
+<th align="left">sublayerB.usd</th>
+</tr>
+<tr>
+    
+<td valign="top">
+    
+```usda
+#usda 1.0
+(
+    defaultPrim = "World"
+    endTimeCode = 100
+    metersPerUnit = 0.01
+    startTimeCode = 0
+    subLayers = [
+        @./sublayerB.usd@,
+        @./sublayerA.usd@
+    ]
+    timeCodesPerSecond = 24
+    upAxis = "Y"
+)
+
+def Xform "World"
+{
+    def Scope "Geometry"
+    {
+    }
+}
+
+
+```
+</td> 
+<td valign="top">
+
+```usda
+#usda 1.0
+(
+    upAxis = "Y"
+)
+
+over "World"
+{
+    over "Geometry"
+    {
+        def Cube "Cube"
+        {
+            float3[] extent = [(-50, -50, -50), (50, 50, 50)]
+            double size = 100
+            double3 xformOp:rotateXYZ = (0, 0, 0)
+            double3 xformOp:scale = (1, 1, 1)
+            double3 xformOp:translate = (0, 0, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+        }
+    }
+}
+```
+</td>
+<td valign="top">
+
+```usda
+#usda 1.0
+(
+    upAxis = "Y"
+)
+
+over "World"
+{
+    over "Geometry"
+    {
+        def Sphere "Sphere"
+        {
+            float3[] extent = [(-50, -50, -50), (50, 50, 50)]
+            double radius = 50
+            custom bool refinementEnableOverride = 1
+            custom int refinementLevel = 2
+            double3 xformOp:rotateXYZ = (0, 0, 0)
+            double3 xformOp:scale = (1, 1, 1)
+            double3 xformOp:translate = (0, 150, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+        }
+
+        over "Cube"
+        {
+            double3 xformOp:translate = (0, 50, 0)
+        }
+    }
+}
+
+
+```
+</td>
+
+</table>
+
 
 #### <ins>Layer Offsets for TimeSamples</ins>
 
