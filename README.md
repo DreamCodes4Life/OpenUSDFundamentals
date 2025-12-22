@@ -33,7 +33,7 @@ Composition arcs are evaluated according to **strength ordering** (from weakest 
 
 ---
 
-## 1.3 Sublayer (Local)
+## 1.3- Sublayer (Local)
 
 **Sublayer** is a special composition mechanism:
 
@@ -83,7 +83,7 @@ The following example shows how a **shot** composes multiple layers and includes
 ```
 </table>
 
-##  - Layer Offsets for TimeSamples
+##  1.4- Layer Offsets for TimeSamples
 
 **Layer offsets** allow TimeSamples to be **shifted and scaled** when a layer is brought in via **Sublayers or References**.
 
