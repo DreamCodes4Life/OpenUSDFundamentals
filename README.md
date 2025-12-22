@@ -447,15 +447,13 @@ def "MainPrim"
 
 •	An **index**, also referred to as a PrimIndex, is the result of composition. A prim’s index contains an ordered (from strongest to weakest) list of “Nodes”. All of the queries on USD classes except for stage-level metadata rely on prim indices to perform value resolution.
 
-
-
-# Content Aggregation: Exam Weight 10%
-# Customizing USD: Exam Weight 6%
-# Data Exchange: Exam Weight 15%
-# Data Modeling: Exam Weight 13%
-# Debugging and Troubleshooting: Exam Weight 11%
-# Pipeline Development: Exam Weight 14%
-# Visualization: Exam Weight 8%
+# 2) Content Aggregation: Exam Weight 10%
+# 3) Customizing USD: Exam Weight 6%
+# 4) Data Exchange: Exam Weight 15%
+# 5) Data Modeling: Exam Weight 13%
+# 6) Debugging and Troubleshooting: Exam Weight 11%
+# 7) Pipeline Development: Exam Weight 14%
+# 8) Visualization: Exam Weight 8%
 
 
 
