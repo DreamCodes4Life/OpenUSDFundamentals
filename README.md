@@ -35,7 +35,7 @@ Composition arcs are evaluated according to **strength ordering** (from weakest 
 
 ---
 
-## 1.3- Sublayer (Local)
+### 1.3.1 - Sublayer (Local)
 
 **Sublayer** is a special composition mechanism:
 
@@ -48,7 +48,7 @@ This makes sublayers ideal for **non-destructive layering** of work from multipl
 
 ---
 
-###    Example: Shot → Sequence Composition
+#### Example: Shot → Sequence Composition
 
 The following example shows how a **shot** composes multiple layers and includes an entire **sequence**, which itself is composed of additional layers.
 
@@ -94,7 +94,7 @@ They are commonly used to:
 - Reuse animation data non-destructively
 - Align animation in time without modifying the source layer
 
-###   Example Time Offset and Scale
+#### Example Time Offset and Scale
 ---
 <table>
   <tr>
@@ -123,6 +123,7 @@ Layer offsets cannot vary themselves over time
 ```
 </table>
 
+LayerStack: The ordered set of layers resulting from the recursive gathering of all SubLayers of a Layer, plus the layer itself as first and strongest.
 
 # Content Aggregation: Exam Weight 10%
 # Customizing USD: Exam Weight 6%
