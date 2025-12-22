@@ -46,7 +46,7 @@ This makes sublayers ideal for **non-destructive layering** of work from multipl
 
 ---
 
-###  Example: Shot → Sequence Composition
+###    Example: Shot → Sequence Composition
 
 The following example shows how a **shot** composes multiple layers and includes an entire **sequence**, which itself is composed of additional layers.
 
@@ -92,7 +92,7 @@ They are commonly used to:
 - Reuse animation data non-destructively
 - Align animation in time without modifying the source layer
 
-### Example
+###   Example Time Offset and Scale
 ---
 <table>
   <tr>
