@@ -195,7 +195,7 @@ Inherits is a composition arc that addresses the problem of adding a single, non
     <th align="left">Instanceable Trees</th>
   </tr>
   <tr>
-    <td>
+    <td valign="top">
   
 ```usda
 #usda 1.0
@@ -232,7 +232,7 @@ def "TreeB" (
 
 ```
   </td> 
-  <td>
+  <td valign="top">
     
 ```usda
 #usda 1.0
@@ -262,7 +262,7 @@ def "TreeB_1" (
 
 ```
 </td> 
-  <td>
+  <td valign="top">
     
 ```usda
 #usda 1.0
@@ -318,11 +318,114 @@ Instancing in USD is a feature that allows many instances of “the same” obje
 Apply the resolved variant selections to all VariantSets that affect the PrimSpec at path in the LayerStack, and iterate through the selected Variants on each VariantSet. For each target, recursively apply LIVERP evaluation on the targeted LayerStack - Note that the “S” is not present - we ignore Specializes arcs while recursing
 A VariantSet is a composition arc that allows a content creator to package a discrete set of alternatives, between which a downstream consumer is able to non-destructively switch, or augment.
 
+###   ⭐ Example Simple VarianSet
+---
+<table>
+  <tr>
+    <th align="left">simpleVariantSet.usd</th>
+  </tr>
+  <tr>
+    <td valign="top">
+  
+```usda
+#usda 1.0
 
+def Xform "Implicits" (
+    append variantSets = "shapeVariant"
+)
+{
+    variantSet "shapeVariant" = {
+        "Capsule" {
+            def Capsule "Pill"
+            {
+            }
+        }
+        "Cone" {
+            def Cone "PartyHat"
+            {
+            }
+        }
+        "Cube" {
+            def Cube "Box"
+            {
+            }
+        }
+        "Cylinder" {
+            def Cylinder "Tube"
+            {
+            }
+        }
+        "Sphere" {
+            def Sphere "Ball"
+            {
+            }
+        }
+    }
+}
 
+```
+  </td> 
+</table>
 
+### 1.3.4 - R(E)locates: 
+Relocates is a composition arc that maps a prim path defined in a remote LayerStack (i.e. across a composition arc) to a new path location in the local namespace (these paths can only be prim paths, not property paths).
 
-
+#### ⭐ Example "Relocates"
+---
+<table>
+  <tr>
+    <th align="left">refLayer.usda</th>
+    <th align="left">main.usda</th>
+    <th align="left">flattened main.usda</th>
+  </tr>
+  <tr>
+    <td valign="top">
+  
+```usda
+def "PrimA" ()
+{
+    def "PrimAChild" ()
+    {
+        uniform string testString = "test"
+        float childValue = 3.5
+    }
+}
+```
+  </td> 
+  <td valign="top">
+    
+```usda
+#usda 1.0
+(
+    relocates = {
+        </MainPrim/PrimAChild> : </MainPrim/RenamedPrimAChild>
+    }
+)
+def "MainPrim" (
+    prepend references = @refLayer.usda@</PrimA>
+)
+{
+    over RenamedPrimAChild
+    {
+        float childValue = 5.2
+    }
+}
+```
+</td> 
+  <td valign="top">
+    
+```usda
+def "MainPrim"
+{
+    def "RenamedPrimAChild"
+    {
+        float childValue = 5.2
+        uniform string testString = "test"
+    }
+}
+```
+</td> 
+</table>
 
 
 
