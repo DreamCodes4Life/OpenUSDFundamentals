@@ -318,7 +318,7 @@ Instancing in USD is a feature that allows many instances of “the same” obje
 Apply the resolved variant selections to all VariantSets that affect the PrimSpec at path in the LayerStack, and iterate through the selected Variants on each VariantSet. For each target, recursively apply LIVERP evaluation on the targeted LayerStack - Note that the “S” is not present - we ignore Specializes arcs while recursing
 A VariantSet is a composition arc that allows a content creator to package a discrete set of alternatives, between which a downstream consumer is able to non-destructively switch, or augment.
 
-###   ⭐ Example Simple VarianSet
+####   ⭐ Example Simple VarianSet
 ---
 <table>
   <tr>
@@ -426,8 +426,6 @@ def "MainPrim"
 ```
 </td> 
 </table>
-
-
 
 
 
