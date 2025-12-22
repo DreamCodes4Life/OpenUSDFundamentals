@@ -427,10 +427,25 @@ def "MainPrim"
 </td> 
 </table>
 
+🔗 [More info](https://openusd.org/release/glossary.html#relocates)
 
+## Notes: 
 
+•	**PrimSpec** is a container for property data and nested PrimSpecs.
 
+•	composition arcs can only be applied on PrimSpecs
 
+•	A **PrimStack** is a list of PrimSpecs that contribute opinions for a composed prim’s metadata.
+
+•	A **primvar** is a special attribute that a renderer associates with a geometric primitive, and can vary (interpolate) the value of the attribute over the surface/volume of the primitive
+
+•	Composition is cached, value resolution is not
+
+•	Composition is internally multi-threaded, value resolution is meant to be client multi-threaded. USD’s primary guidance for clients wishing to maximize USD’s performance on multi-core systems is to perform as much simultaneous value resolution and data extraction as possible
+
+•	Composition rules vary by composition arc, value resolution rules vary by metadatum.
+
+•	An **index**, also referred to as a PrimIndex, is the result of composition. A prim’s index contains an ordered (from strongest to weakest) list of “Nodes”. All of the queries on USD classes except for stage-level metadata rely on prim indices to perform value resolution.
 
 
 
@@ -441,5 +456,18 @@ def "MainPrim"
 # Debugging and Troubleshooting: Exam Weight 11%
 # Pipeline Development: Exam Weight 14%
 # Visualization: Exam Weight 8%
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
