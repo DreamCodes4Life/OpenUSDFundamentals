@@ -5,6 +5,8 @@
 work, and when and when it is appropriate to use each. The developer needs to be able to debug complex LIVRPS scenarios</strong>
 </p>
 
+🔗 <a href="https://openusd.org/release/glossary.html#liverps-strength-ordering" target="_blank" rel="noopener noreferrer">More info</a>
+
 [More info](https://openusd.org/release/glossary.html#liverps-strength-ordering)
 
 ---
