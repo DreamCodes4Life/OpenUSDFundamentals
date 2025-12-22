@@ -7,7 +7,7 @@ work, and when and when it is appropriate to use each. The developer needs to be
 
 ---
 
-##  Creating Composition Arcs
+##  - Creating Composition Arcs
 
 **Composition arcs** are the operators that allow **USD (Universal Scene Description)** to combine multiple layers of scene description in specific ways.
 
@@ -15,7 +15,7 @@ They define **how opinions are discovered, ordered, and resolved** across multip
 
 ---
 
-##  The 7 Composition Arc Types (LIVERPS)
+##  - The 7 Composition Arc Types (LIVERPS)
 
 Composition arcs are evaluated according to **strength ordering** (from weakest → strongest).
 
@@ -33,7 +33,7 @@ Composition arcs are evaluated according to **strength ordering** (from weakest 
 
 ---
 
-##  Sublayer (Local)
+## - Sublayer (Local)
 
 **Sublayer** is a special composition mechanism:
 
@@ -46,7 +46,7 @@ This makes sublayers ideal for **non-destructive layering** of work from multipl
 
 ---
 
-##  Example: Shot → Sequence Composition
+##  - Example: Shot → Sequence Composition
 
 The following example shows how a **shot** composes multiple layers and includes an entire **sequence**, which itself is composed of additional layers.
 
@@ -83,7 +83,7 @@ The following example shows how a **shot** composes multiple layers and includes
 ```
 </table>
 
-##  Layer Offsets for TimeSamples
+##  - Layer Offsets for TimeSamples
 
 **Layer offsets** allow TimeSamples to be **shifted and scaled** when a layer is brought in via **Sublayers or References**.
 
@@ -93,16 +93,14 @@ They are commonly used to:
 - Align animation in time without modifying the source layer
 
 ---
-
 <table>
-<tr>
-<th align="left">shot.usd</th>
-<th align="left">sequence.usd</th>
-</tr>
-<tr>
-    
-<td>
-    
+  <tr>
+    <th align="left">example.usd</th>
+    <th align="left">notes</th>
+  </tr>
+  <tr>
+    <td>
+  
 ```usda
 #usda 1.0
 (
@@ -111,12 +109,14 @@ They are commonly used to:
     ]
 )
 ```
-</td> <td>
-
+  </td> 
+  <td>
+    
 ```usda
 This USD will resolve as next:
-A timesample of 30 in the someAnimation will be resolved here at: 30*0.5 + 10 = 25.
-Layer offsets cannot themselves vary over time
+A timesample of 30 in the someAnimation will be
+resolved here at: 30*0.5 + 10 = 25.
+Layer offsets cannot vary themselves over time
 ```
 </table>
 
