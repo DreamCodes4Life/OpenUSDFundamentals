@@ -841,16 +841,248 @@ def "PrimWithInherits"
 </td> 
 </table>
 
-
 🔗 [More info](https://openusd.org/release/glossary.html#relocates)
 
+### 1.2.5 - References
 
+Resolve the References affecting the prim at path, and iterate through the resulting targets. For each target, recursively apply LIVERP evaluation on the targeted LayerStack - Note that the “S” is not present - we ignore Specializes arcs while recursing.
 
+##### ⭐ Example "References"
 
+<table>
+  <tr>
+    <th align="left">Marble.usd</th>
+    <th align="left">MarbleCollection.usd</th>
+    <th align="left">FlattenedMarbleCollection.usd</th>
+  </tr>
+  <tr>
+  <td valign="top">
+    
+```usda
+#usda 1.0
+(
+    defaultPrim = "Marble"
+)
 
+def Xform "Marble" (
+    kind = "component"
+)
+{
+    def Sphere "marble_geom"
+    {
+        color3f[] primvars:displayColor = [ (0, 1, 0) ]
+    }
+}
+```
+</td> 
+  <td valign="top">
+    
+```usda
+#usda 1.0
 
+def Xform "MarbleCollection" (
+    kind = "assembly"
+)
+{
+    def "Marble_Green" (
+            references = @Marble.usd@
+        )
+    {
+        double3 xformOp:translate = (-10, 0, 0)
+        uniform token[] xformOpOrder = [ "xformOp:translate" ]
+    }
 
+    def "Marble_Red" (
+        references = @Marble.usd@
+    )
+    {
+        double3 xformOp:translate = (5, 0, 0)
+        uniform token[] xformOpOrder = [ "xformOp:translate" ]
 
+        over "marble_geom"
+        {
+            color3f[] primvars:displayColor = [ (1, 0, 0) ]
+        }
+    }
+}
+```
+</td> 
+</td> 
+  <td valign="top">
+    
+```usda
+#usda 1.0
+
+def Xform "MarbleCollection" (
+    kind = "assembly"
+)
+{
+    def Xform "Marble_Green" (
+        kind = "component"
+    )
+    {
+        double3 xformOp:translate = (-10, 0, 0)
+        uniform token[] xformOpOrder = [ "xformOp:translate" ]
+
+        def Sphere "marble_geom"
+        {
+            color3f[] primvars:displayColor = [ (0, 1, 0) ]
+        }
+    }
+
+    def Xform "Marble_Red" (
+        kind = "component"
+    )
+    {
+        double3 xformOp:translate = (5, 0, 0)
+        uniform token[] xformOpOrder = [ "xformOp:translate" ]
+
+        def Sphere "marble_geom"
+        {
+            color3f[] primvars:displayColor = [ (1, 0, 0) ]
+        }
+    }
+}
+```
+</td> 
+</table>
+
+References can target any prim in a LayerStack, excepting ancestors of the prim containing the reference
+
+#### <ins>Relationship</ins> 
+
+A Relationship is a “namespace pointer” that is robust in the face of composition arcs, which means that when you ask USD for a relationship’s targets, USD will perform all the necessary namespace-manipulations required to translate the authored target value into the scene-level namespace.
+
+##### ⭐ Example "Relationship"
+
+<table>
+  <tr>
+    <th align="left">Marble.usd</th>
+  </tr>
+  <tr>
+  <td valign="top">
+    
+```usda
+#usda 1.0
+(
+    defaultPrim = "Marble"
+)
+
+def Xform "Marble" (
+    kind = "component"
+)
+{
+    def Sphere "marble_geom"
+    {
+        rel material:binding = </Marble/GlassMaterial>
+        color3f[] primvars:displayColor = [ (0, 1, 0) ]
+    }
+
+    def Material "GlassMaterial"
+    {
+        # Interface inputs, shading networks, etc.
+    }
+}
+```
+</td> 
+</table>
+
+🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-references)
+
+### 1.2.6 - Payloads
+
+A Payload is a composition arc that is a special kind of a Reference. It is different from references primarily in:
+
+  - The targets of References are always consumed greedily by the indexing algorithm that is used to open and build a Stage. When a Stage is opened with UsdStage::InitialLoadSet::LoadNone specified, Payload arcs are recorded, but not traversed. This behavior allows clients to manually construct a “working set” that is a subset of the whole scene, by loading just the bits of the scene that they require.
+
+### 1.2.7 - Specializes
+
+Specializes is a composition arc that allows a specialized prim to be continuously refined from a base prim, through unlimited levels of referencing.
+
+##### ⭐ Example "Specializes"
+
+<table>
+  <tr>
+    <th align="left">Robot.usd</th>
+    <th align="left">RobotScene.usd</th>
+  </tr>
+  <tr>
+  <td valign="top">
+    
+```usda
+#usda 1.0
+
+def Xform "Robot"
+{
+    def Scope "Materials"
+    {
+        def Material "Metal"
+        {
+            # Interface inputs drive shader parameters of the encapsulated
+            # network. We are not showing the connections, nor how we encode
+            # that the child Shader "Surface" is the primary output for the
+            # material.
+            float inputs:diffuseGain = 0
+            float inputs:specularRoughness = 0
+
+            def Shader "Surface"
+            {
+                asset info:id = @PxrSurface@
+            }
+        }
+
+        def Material "CorrodedMetal" (
+            specializes = </Robot/Materials/Metal>
+        )
+        {
+            # specialize roughness...
+            float inputs:specularRoughness = 0.2
+
+            # Adding a pattern to drive Surface bump
+            def Shader "Corrosion"
+            {
+                asset info:id = @PxrOSL@
+                vector3f outputs:disp
+            }
+
+            over "Surface"
+            {
+                # Override that would connect specularBump to Corrosion
+                # pattern's "outputs:disp" attribute
+            }
+        }
+    }
+}
+```
+</td> 
+  <td valign="top">
+    
+```usda
+#usda 1.0
+def Xform "World"
+{
+    def Xform "Characters"
+    {
+        def "Rosie" (
+            references = @./Robot.usd@</Robot>
+        )
+        {
+            over "Materials"
+            {
+                over "Metal"
+                {
+                     float inputs:diffuseGain = 0.3
+                     float inputs:specularRoughness = 0.1
+                }
+            }
+        }
+    }
+}
+```
+</td> 
+</table>
+
+In the above example if you examine the flattened RobotScene.usd you will see the effect of specializes on the specialized /World/Characters/Rosie/Materials/CorrodedMetal prim: we overrode both diffuseGain and specularRoughness on the base Metal material, but only the diffuseGain propagates onto /World/Characters/Rosie/Materials/CorrodedMetal, because specularRoughness was already refined on the referenced /Robot/Materials/CorrodedMetal prim. This also demonstrates the difference between specializes and inherits: if you change the specializes arc to inherits in Robot.usd and recompose the scene, you will see that both diffuseGain and specularRoughness propagate onto /World/Characters/Rosie/Materials/CorrodedMetal.
 
 ## Important concepts 
 
