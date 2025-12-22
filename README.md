@@ -85,7 +85,7 @@ The following example shows how a **shot** composes multiple layers and includes
 ```
 </table>
 
-##  1.4- Layer Offsets for TimeSamples
+#### <u>Layer Offsets for TimeSamples</u>
 
 **Layer offsets** allow TimeSamples to be **shifted and scaled** when a layer is brought in via **Sublayers or References**.
 
