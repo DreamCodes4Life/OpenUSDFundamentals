@@ -5,9 +5,7 @@
 work, and when and when it is appropriate to use each. The developer needs to be able to debug complex LIVRPS scenarios</strong>
 </p>
 
-🔗 <a href="https://openusd.org/release/glossary.html#liverps-strength-ordering" target="_blank" rel="noopener noreferrer">More info</a>
-
-[More info](https://openusd.org/release/glossary.html#liverps-strength-ordering)
+🔗 [More info](https://openusd.org/release/glossary.html#liverps-strength-ordering)
 
 ---
 
@@ -123,10 +121,197 @@ A timesample of 30 in the someAnimation will be
 resolved here at: 30*0.5 + 10 = 25.
 Layer offsets cannot vary themselves over time
 ```
+  </td> 
 </table>
 
 #### <ins>LayerStack:</ins> 
 The ordered set of layers resulting from the recursive gathering of all SubLayers of a Layer, plus the layer itself as first and strongest.
+
+#### ⭐ Example "TimeCodes Scaled to Real Time"
+---
+<table>
+  <tr>
+    <th align="left">example.usd</th>
+    <th align="left">notes</th>
+  </tr>
+  <tr>
+    <td>
+  
+```usda
+#usda 1.0
+(
+    timeCodesPerSecond = 24
+    framesPerSecond = 12
+    endTimeCode = 240
+    startTimeCode = 1
+)
+
+def Xform "Asset"
+{
+    def Sphere "Sphere"
+    {
+        double3 xformOp:translate.timeSamples = {
+            1: (0, 5.0, 0),
+            240: (0, -5.0, 0),
+        }
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+}
+
+```
+  </td> 
+  <td>
+    
+```usda
+TimeCode 240 corresponds to 10 seconds of real time
+
+If the left example layer was referenced into another
+layer that specified a timeCodesPerSecond value of 48
+the TimeSample at TimeCode 240 would be scaled to TimeCode
+480 to ensure that the translation still occurs at 10
+seconds of real time.
+
+If the left example layer specified a framesPerSecond
+of 12, this would not change the scaling of the TimeSample
+at TimeCode 240, and instead change the playback rate in a
+playback device to march forward by two TimeCodes for each
+consecutive rendered frame, which will be held for 1/12 of
+a second.
+```
+</td> 
+</table>
+
+### 1.3.2 - Inherit
+Inherits is a composition arc that addresses the problem of adding a single, non-destructive edit (override) that can affect a whole class of distinct objects on a stage. Inherits acts as a non-destructive “broadcast” operator that applies opinions authored on one prim to every other prim that inherits the “source” prim; not only do property opinions broadcast over inherits arcs - all scene description, hierarchically from the source, inherits. 
+
+🔗 [More info]([https://openusd.org/release/glossary.html#liverps-strength-ordering](https://openusd.org/release/glossary.html#usdglossary-inherits))
+
+#### ⭐ Example "TimeCodes Scaled to Real Time"
+---
+<table>
+  <tr>
+    <th align="left">Trees.usd <br>demonstrating inherits</th>
+    <th align="left">Forest.usd <br>demonstrating inherits propagation through references</th>
+    <th align="left">Instanceable Trees</th>
+  </tr>
+  <tr>
+    <td>
+  
+```usda
+#usda 1.0
+
+class Xform "_class_Tree"
+{
+    def Mesh "Trunk"
+    {
+        color3f[] primvars:displayColor = [(.8, .8, .2)]
+    }
+
+    def Mesh "Leaves"
+    {
+        color3f[] primvars:displayColor = [(0, 1, 0)]
+    }
+}
+
+def "TreeA" (
+    inherits = </_class_Tree>
+)
+{
+}
+
+def "TreeB" (
+    inherits = </_class_Tree>
+)
+{
+    over "Leaves"
+    {
+        color3f[] primvars:displayColor = [(0.8, 1, 0)]
+    }
+}
+
+
+```
+  </td> 
+  <td>
+    
+```usda
+#usda 1.0
+
+# A new prim, of the same name as the original inherits target,
+providing new overrides
+
+class "_class_Tree"
+{
+    token size = "small"
+
+    # It's autumn in California
+    over "Leaves"
+    {
+        color3f[] primvars:displayColor = [(1.0, .1, .1)]
+    }
+}
+
+# TreeB_1 still inherits from _class_Tree because its
+referent does
+def "TreeB_1" (
+    references = @./Trees.usd@</TreeB>
+)
+{
+}
+
+
+```
+</td> 
+  <td>
+    
+```usda
+#usda 1.0
+
+class Xform "_class_Tree"
+{
+    def Mesh "Trunk"
+    {
+        color3f[] primvars:displayColor = [(.8, .8, .2)]
+    }
+
+    def Mesh "Leaves"
+    {
+        color3f[] primvars:displayColor = [(0, 1, 0)]
+    }
+}
+
+def "TreeA" (
+    inherits = </_class_Tree>
+    instanceable = true
+)
+{
+}
+
+def "TreeB" (
+    inherits = </_class_Tree>
+    instanceable = true
+)
+{
+    over "Leaves"
+    {
+        color3f[] primvars:displayColor = [(0.8, 1, 0)]
+    }
+}
+```
+</td> 
+</table>
+
+Notes: 
+•	A prim can inherit from any prim that is neither a descendant nor ancestor of itself, regardless of the prim’s specifier or type.
+•	The key difference between references and inherits is that references fully encapsulate their targets, and therefore “disappear” when composed through another layer of referencing, whereas the relationship between inheritors and their inherits target remains “live” through arbitrary levels of referencing. 
+
+#### <ins>Instancing:</ins> 
+
+Instancing in USD is a feature that allows many instances of “the same” object to share the same representation (composed prims) on a UsdStage. Instances can be overridden in stronger layers, so it is possible to “break” an instance when necessary, if it must be uniquified.
+
+Instancing in USD is a feature that allows many instances of “the same” object to share the same representation (composed prims) on a UsdStage. In exchange for this sharing of representation (which provides speed and memory benefits both for the USD core and, generally, for clients processing the UsdStage), we give up the ability to uniquely override opinions on prims beneath the “instance root”, although it is possible to override opinions that will affect all instances’ views of the data. 
+
+🔗 [More info]([https://openusd.org/release/glossary.html#liverps-strength-ordering](https://openusd.org/release/glossary.html#usdglossary-instancing))
 
 # Content Aggregation: Exam Weight 10%
 # Customizing USD: Exam Weight 6%
