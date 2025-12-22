@@ -1,3 +1,6 @@
+
+🔗 [Exam Guide](https://nvdam.widen.net/s/6kxsqcsrrw/ncp-openusd-development-study-guide)
+
 # 1) Composition: Exam Weight 23%
 
 <p align="left">
@@ -301,11 +304,11 @@ def "TreeB" (
 </td> 
 </table>
 
-Notes: 
-•	A prim can inherit from any prim that is neither a descendant nor ancestor of itself, regardless of the prim’s specifier or type.
-•	The key difference between references and inherits is that references fully encapsulate their targets, and therefore “disappear” when composed through another layer of referencing, whereas the relationship between inheritors and their inherits target remains “live” through arbitrary levels of referencing. 
+A prim can inherit from any prim that is neither a descendant nor ancestor of itself, regardless of the prim’s specifier or type.
 
-#### <ins>Instancing:</ins> 
+The key difference between references and inherits is that references fully encapsulate their targets, and therefore “disappear” when composed through another layer of referencing, whereas the relationship between inheritors and their inherits target remains “live” through arbitrary levels of referencing. 
+
+#### <ins>Instancing</ins> 
 
 Instancing in USD is a feature that allows many instances of “the same” object to share the same representation (composed prims) on a UsdStage. Instances can be overridden in stronger layers, so it is possible to “break” an instance when necessary, if it must be uniquified.
 
@@ -318,7 +321,7 @@ Instancing in USD is a feature that allows many instances of “the same” obje
 Apply the resolved variant selections to all VariantSets that affect the PrimSpec at path in the LayerStack, and iterate through the selected Variants on each VariantSet. For each target, recursively apply LIVERP evaluation on the targeted LayerStack - Note that the “S” is not present - we ignore Specializes arcs while recursing
 A VariantSet is a composition arc that allows a content creator to package a discrete set of alternatives, between which a downstream consumer is able to non-destructively switch, or augment.
 
-#####   ⭐ Example Simple VarianSet
+##### ⭐ Example Simple VarianSet
 ---
 <table>
   <tr>
@@ -429,7 +432,15 @@ def "MainPrim"
 
 🔗 [More info](https://openusd.org/release/glossary.html#relocates)
 
-## Notes: 
+
+
+
+
+
+
+
+
+## Important concepts 
 
 •	**PrimSpec** is a container for property data and nested PrimSpecs.
 
