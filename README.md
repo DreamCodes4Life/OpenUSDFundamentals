@@ -1,3 +1,4 @@
+<img width="1458" height="442" alt="image" src="https://github.com/user-attachments/assets/cb3be4e7-cf02-4dfc-820d-7594be455aae" />
 
 🔗 [Exam Guide](https://nvdam.widen.net/s/6kxsqcsrrw/ncp-openusd-development-study-guide)
 
