@@ -7,7 +7,7 @@ work, and when and when it is appropriate to use each. The developer needs to be
 
 ---
 
-## 🎯 Creating Composition Arcs
+##  Creating Composition Arcs
 
 **Composition arcs** are the operators that allow **USD (Universal Scene Description)** to combine multiple layers of scene description in specific ways.
 
@@ -15,7 +15,7 @@ They define **how opinions are discovered, ordered, and resolved** across multip
 
 ---
 
-## 🧠 The 7 Composition Arc Types (LIVERPS)
+##  The 7 Composition Arc Types (LIVERPS)
 
 Composition arcs are evaluated according to **strength ordering** (from weakest → strongest).
 
@@ -46,7 +46,7 @@ This makes sublayers ideal for **non-destructive layering** of work from multipl
 
 ---
 
-## 🗂️ Example: Shot → Sequence Composition
+##  Example: Shot → Sequence Composition
 
 The following example shows how a **shot** composes multiple layers and includes an entire **sequence**, which itself is composed of additional layers.
 
