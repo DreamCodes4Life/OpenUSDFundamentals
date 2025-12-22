@@ -1,6 +1,6 @@
 # 1) Composition: Exam Weight 23%
 
-<p align="center">
+<p align="left">
   <strong>Authoring, design with, or debugging composition arcs. A developer needs to know all of the composition arcs, how they
 work, and when and when it is appropriate to use each. The developer needs to be able to debug complex LIVRPS scenarios</strong>
 </p>
