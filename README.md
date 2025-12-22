@@ -121,4 +121,7 @@ Layer offsets cannot themselves vary over time
 
 
 
+# Content Aggregation: Exam Weight 10%
+# Customizing USD: Exam Weight 6%
+
 
