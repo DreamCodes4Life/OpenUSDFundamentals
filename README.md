@@ -317,16 +317,19 @@ Instancing in USD is a feature that allows many instances of “the same” obje
 
 🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-instancing)
 
-### 1.3.3 - VariantSets:
+### 1.3.3 - VariantSets and Variants:
 
 Apply the resolved variant selections to all VariantSets that affect the PrimSpec at path in the LayerStack, and iterate through the selected Variants on each VariantSet. For each target, recursively apply LIVERP evaluation on the targeted LayerStack - Note that the “S” is not present - we ignore Specializes arcs while recursing
 A VariantSet is a composition arc that allows a content creator to package a discrete set of alternatives, between which a downstream consumer is able to non-destructively switch, or augment.
+
+A variant can contain overriding opinions (for properties, metadata, and more), as well as any arbitrary scene description (entire child prim subtrees, etc). Variants can also include additional composition arcs.
 
 ##### ⭐ Example Simple VarianSet
 ---
 <table>
   <tr>
     <th align="left">simpleVariantSet.usd</th>
+    <th align="left">VariantSet with references</th>
   </tr>
   <tr>
     <td valign="top">
@@ -368,8 +371,88 @@ def Xform "Implicits" (
 }
 
 ```
-  </td> 
+  </td > 
+  <td valign="top">
+    
+```usda
+over "Model" (
+    prepend variantSets = "referenceVariantSet"
+    variants = {
+       string referenceVariantSet = "asset1"
+    }
+)
+{
+    variantSet "referenceVariantSet" = {
+        "asset1" (
+            prepend references = @Asset1.usda@
+        ) {
+        }
+        "asset2" (
+            prepend references = @Asset2.usda@
+        ) {
+        }
+    }
+}
+
+```
+  </td>   
 </table>
+
+#### <ins>Nested VariantSets</ins> 
+
+VariantSets can be nested directly inside each other, on the same prim.
+
+##### 🐍 Example Nested VarianSets (Python)
+---
+<table>
+  <tr>
+    <th align="left">nestedVariants.py</th>
+  </tr>
+  <tr>
+    <td valign="top">
+  
+```usda
+from pxr import Sdf, Usd
+stage = Usd.Stage.CreateNew("nestedVariants.usd")
+prim = stage.DefinePrim("/Employee")
+title = prim.CreateAttribute("title", Sdf.ValueTypeNames.String)
+variantSets = prim.GetVariantSets()
+
+critters = [ "Bug", "Bear", "Dragon" ]
+jobs = [ "Squasher", "Rider", "Trainer" ]
+
+critterVS = variantSets.AppendVariantSet("critterVariant")
+for critter in critters:
+    critterVS.AppendVariant(critter)
+    critterVS.SetVariantSelection(critter)
+    with critterVS.GetVariantEditContext():
+        # All edits now go "inside" the selected critter variant
+        jobVS = variantSets.AppendVariantSet("jobVariant")
+        for job in jobs:
+            if (job != "Squasher" or critter == "Bug") and \
+               (job != "Rider" or critter != "Bug") :
+                jobVS.AppendVariant(job)
+                jobVS.SetVariantSelection(job)
+                with jobVS.GetVariantEditContext():
+                    # Now edits *additionally* go inside the selected job variant
+                    title.Set(critter + job)
+
+stage.GetRootLayer().Save()
+
+```
+  </td > 
+</table>
+
+🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-variant)
+
+
+
+
+
+
+
+
+
 
 ### 1.3.4 - R(E)locates: 
 Relocates is a composition arc that maps a prim path defined in a remote LayerStack (i.e. across a composition arc) to a new path location in the local namespace (these paths can only be prim paths, not property paths).
