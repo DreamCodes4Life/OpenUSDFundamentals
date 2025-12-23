@@ -1,0 +1,74 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    endTimeCode = 100
+    metersPerUnit = 0.01
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Y"
+)
+
+def Xform "World" (
+    inherits = </_street_lamp_dbl>
+    kind = "component"
+    payload = @./contents.usd@
+    variants = {
+        string lights = "lights_off"
+    }
+    prepend variantSets = "lights"
+)
+{
+    variantSet "lights" = {
+        "lights_off" {
+            over "Looks" (
+                variants = {
+                    string lights_emissive = "lights_off"
+                }
+            )
+            {
+            }
+
+            over "Lights"
+            {
+                over "sphere_light_01"
+                {
+                    float inputs:intensity = 0
+                }
+
+                over "sphere_light_02"
+                {
+                    float inputs:intensity = 0
+                }
+            }
+
+        }
+        "lights_on" {
+            over "Looks" (
+                variants = {
+                    string lights_emissive = "lights_on"
+                }
+            )
+            {
+            }
+
+            over "Lights"
+            {
+                over "sphere_light_01"
+                {
+                    float inputs:intensity = 100
+                }
+
+                over "sphere_light_02"
+                {
+                    float inputs:intensity = 100
+                }
+            }
+
+        }
+    }
+}
+
+class "_street_lamp_dbl"
+{
+}
+

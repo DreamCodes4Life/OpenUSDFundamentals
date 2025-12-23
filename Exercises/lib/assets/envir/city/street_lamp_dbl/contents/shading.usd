@@ -1,0 +1,100 @@
+#usda 1.0
+(
+    upAxis = "Y"
+)
+
+over "World"
+{
+    over "Geometry"
+    {
+        over "light_curvedDouble"
+        {
+            over "pavement" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </World/Looks/pavement> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+            }
+
+            over "light" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </World/Looks/light> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+            }
+
+            over "subset_defaultMat" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </World/Looks/defaultMat> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+            }
+        }
+    }
+
+    over "Looks"
+    {
+        def Material "pavement"
+        {
+            token outputs:displacement.connect = </World/Looks/pavement/pavement.outputs:displacement>
+            token outputs:surface.connect = </World/Looks/pavement/pavement.outputs:surface>
+
+            def Shader "pavement"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.75686276, 0.75686276, 0.8) (
+                    renderType = "color"
+                )
+                float inputs:metallic = 1
+                float inputs:roughness = 1
+                token outputs:displacement
+                token outputs:surface
+            }
+        }
+
+        def Material "light"
+        {
+            token outputs:displacement.connect = </World/Looks/light/light.outputs:displacement>
+            token outputs:surface.connect = </World/Looks/light/light.outputs:surface>
+
+            def Shader "light"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.9108908, 0.91089106, 0.91088194) (
+                    renderType = "color"
+                )
+                color3f inputs:emissiveColor (
+                    renderType = "color"
+                )
+                float inputs:roughness = 1
+                token outputs:displacement
+                token outputs:surface
+            }
+        }
+
+        def Material "defaultMat"
+        {
+            token outputs:displacement.connect = </World/Looks/defaultMat/pavement.outputs:displacement>
+            token outputs:surface.connect = </World/Looks/defaultMat/pavement.outputs:surface>
+
+            def Shader "pavement"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.8, 0.75771695, 0.75686276) (
+                    renderType = "color"
+                )
+                float inputs:metallic = 1
+                float inputs:roughness = 1
+                token outputs:displacement
+                token outputs:surface
+            }
+        }
+    }
+}
+

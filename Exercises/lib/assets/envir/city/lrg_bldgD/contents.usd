@@ -1,0 +1,20 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    subLayers = [
+        @./contents/shading.usd@,
+        @./contents/geometry.usd@
+    ]
+)
+
+def Xform "World"
+{
+    def Scope "Geometry"
+    {
+    }
+
+    def Scope "Looks"
+    {
+    }
+}
+

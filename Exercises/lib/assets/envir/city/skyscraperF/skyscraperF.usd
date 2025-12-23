@@ -1,0 +1,20 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    endTimeCode = 0
+    metersPerUnit = 0.01
+    startTimeCode = -1
+    upAxis = "Y"
+)
+
+def Xform "World" (
+    kind = "component"
+    prepend payload = @./contents.usd@
+)
+{
+    double3 xformOp:rotateXYZ = (0, 0, 0)
+    double3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+}
+
