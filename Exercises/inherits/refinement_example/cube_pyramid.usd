@@ -1,0 +1,68 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    endTimeCode = 100
+    metersPerUnit = 0.01
+    startTimeCode = 0
+    timeCodesPerSecond = 24
+    upAxis = "Y"
+)
+
+def Xform "World" (
+    kind = "assembly"
+)
+{
+    class "_local_cube"
+    {
+    }
+
+    def "cube_01" (
+        append inherits = </World/_local_cube>
+        prepend references = @./cube.usd@
+    )
+    {
+        double3 xformOp:rotateXYZ = (0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (-75, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+
+        over "CubeMaterial"
+        {
+            over "Shader"
+            {
+                color3f inputs:diffuseColor = (0, 0, 1)
+            }
+        }
+    }
+
+    def "cube_02" (
+        prepend inherits = </World/_local_cube>
+        prepend references = @./cube.usd@
+    )
+    {
+        double3 xformOp:rotateXYZ = (0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (75, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+
+        over "CubeMaterial"
+        {
+            over "Shader"
+            {
+                color3f inputs:diffuseColor = (0, 1, 0)
+            }
+        }
+    }
+
+    def "cube_03" (
+        prepend inherits = </World/_local_cube>
+        prepend references = @./cube.usd@
+    )
+    {
+        double3 xformOp:rotateXYZ = (0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 100, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }
+}
+

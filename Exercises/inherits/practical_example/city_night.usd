@@ -1,0 +1,68 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    endTimeCode = 100
+    metersPerUnit = 0.01
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Y"
+)
+
+def Xform "World" (
+    kind = "assembly"
+)
+{
+    def "main_street" (
+        prepend references = @../../lib/assets/location/main_street/main_street.usd@
+    )
+    {
+        over "street_lamp_dbl_01" (
+            variants = {
+                string lights = "lights_on"
+            }
+        )
+        {
+        }
+
+        over "street_lamp_dbl_02" (
+            variants = {
+                string lights = "lights_on"
+            }
+        )
+        {
+        }
+
+        over "street_lamp_dbl_03" (
+            variants = {
+                string lights = "lights_on"
+            }
+        )
+        {
+        }
+
+        over "street_lamp_dbl_04" (
+            variants = {
+                string lights = "lights_on"
+            }
+        )
+        {
+        }
+
+        over "street_lamp_dbl_05" (
+            variants = {
+                string lights = "lights_on"
+            }
+        )
+        {
+        }
+
+        over "street_lamp_dbl_06" (
+            variants = {
+                string lights = "lights_on"
+            }
+        )
+        {
+        }
+    }
+}
+

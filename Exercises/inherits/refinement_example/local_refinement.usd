@@ -1,0 +1,65 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    endTimeCode = 100
+    metersPerUnit = 0.01
+    startTimeCode = 0
+    timeCodesPerSecond = 24
+    upAxis = "Y"
+)
+
+def Xform "World"
+{
+    def "cube_pyramid_01" (
+        prepend references = @./cube_pyramid.usd@
+    )
+    {
+        float3 xformOp:rotateXYZ = (0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (-281.4038085128011, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+
+        over "_local_cube"
+        {
+            over "CubeMaterial"
+            {
+                over "Shader"
+                {
+                    color3f inputs:diffuseColor = (0, 1, 1)
+                }
+            }
+        }
+    }
+
+    def "cube_pyramid_02" (
+        prepend references = @./cube_pyramid.usd@
+    )
+    {
+        float3 xformOp:rotateXYZ = (0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }
+
+    def "cube_pyramid_03" (
+        prepend references = @./cube_pyramid.usd@
+    )
+    {
+        float3 xformOp:rotateXYZ = (0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (291.3808062729498, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }
+}
+
+over "_cube_asset"
+{
+    over "CubeMaterial"
+    {
+        over "Shader"
+        {
+            color3f inputs:diffuseColor = (1, 1, 1)
+        }
+    }
+}
+

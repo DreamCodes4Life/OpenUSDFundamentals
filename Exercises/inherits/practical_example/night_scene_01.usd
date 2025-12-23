@@ -1,0 +1,92 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    endTimeCode = 100
+    metersPerUnit = 0.01
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Y"
+)
+
+def Xform "World"
+{
+    def Scope "Envir"
+    {
+        def "city_night" (
+            prepend references = @./city_night.usd@
+        )
+        {
+        }
+    }
+
+    def Scope "Lights"
+    {
+        def DistantLight "DistantLight" (
+            prepend apiSchemas = ["ShapingAPI"]
+        )
+        {
+            float inputs:angle = 1
+            color3f inputs:color = (0.56105614, 0.56894183, 1)
+            float inputs:intensity = 1
+            float inputs:shaping:cone:angle = 180
+            float inputs:shaping:cone:softness
+            float inputs:shaping:focus
+            color3f inputs:shaping:focusTint
+            asset inputs:shaping:ies:file
+            double3 xformOp:rotateXYZ = (275.4259937312369, 8.872574897116124, -7.2647972160064)
+            double3 xformOp:scale = (1, 1, 1)
+            double3 xformOp:translate = (0, 0, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+        }
+    }
+}
+
+def "Environment"
+{
+    def Mesh "ground" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        float3[] extent = [(-5000, -5000, 0), (5000, 5000, 0)]
+        int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+        int[] faceVertexIndices = [5, 0, 6, 1, 6, 0, 6, 1, 7, 2, 7, 1, 7, 2, 8, 3, 8, 2, 8, 3, 9, 4, 9, 3, 10, 5, 11, 6, 11, 5, 11, 6, 12, 7, 12, 6, 12, 7, 13, 8, 13, 7, 13, 8, 14, 9, 14, 8, 15, 10, 16, 11, 16, 10, 16, 11, 17, 12, 17, 11, 17, 12, 18, 13, 18, 12, 18, 13, 19, 14, 19, 13, 20, 15, 21, 16, 21, 15, 21, 16, 22, 17, 22, 16, 22, 17, 23, 18, 23, 17, 23, 18, 24, 19, 24, 18]
+        rel material:binding = </Environment/Looks/Ground> (
+            bindMaterialAs = "strongerThanDescendants"
+        )
+        normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1)] (
+            interpolation = "faceVarying"
+        )
+        point3f[] points = [(-2500, -2500, 0), (-1250, -2500, 0), (0, -2500, 0), (1250, -2500, 0), (2500, -2500, 0), (-2500, -1250, 0), (-1250, -1250, 0), (0, -1250, 0), (1250, -1250, 0), (2500, -1250, 0), (-2500, 0, 0), (-1250, 0, 0), (0, 0, 0), (1250, 0, 0), (2500, 0, 0), (-2500, 1250, 0), (-1250, 1250, 0), (0, 1250, 0), (1250, 1250, 0), (2500, 1250, 0), (-2500, 2500, 0), (-1250, 2500, 0), (0, 2500, 0), (1250, 2500, 0), (2500, 2500, 0)]
+        bool primvars:isMatteObject = 0
+        texCoord2f[] primvars:st = [(-20.10899, -29.765083), (-7.6089993, -29.765093), (4.8910065, -29.765093), (17.391006, -29.765093), (29.891006, -29.765102), (-20.10899, -17.265083), (-7.6089897, -17.265093), (4.8910065, -17.265093), (17.39101, -17.265093), (29.89101, -17.265102), (-20.10899, -4.7650833), (-7.6089897, -4.765093), (4.8910103, -4.765093), (17.39101, -4.765093), (29.89101, -4.7651024), (-20.10899, 7.7349167), (-7.6089897, 7.734909), (4.891014, 7.734909), (17.39101, 7.734909), (29.89101, 7.7348976), (-20.10899, 20.234917), (-7.60898, 20.23491), (4.891014, 20.23491), (17.391014, 20.23491), (29.891014, 20.234898)] (
+            interpolation = "faceVarying"
+        )
+        int[] primvars:st:indices = [5, 0, 6, 1, 6, 0, 6, 1, 7, 2, 7, 1, 7, 2, 8, 3, 8, 2, 8, 3, 9, 4, 9, 3, 10, 5, 11, 6, 11, 5, 11, 6, 12, 7, 12, 6, 12, 7, 13, 8, 13, 7, 13, 8, 14, 9, 14, 8, 15, 10, 16, 11, 16, 10, 16, 11, 17, 12, 17, 11, 17, 12, 18, 13, 18, 12, 18, 13, 19, 14, 19, 13, 20, 15, 21, 16, 21, 15, 21, 16, 22, 17, 22, 16, 22, 17, 23, 18, 23, 17, 23, 18, 24, 19, 24, 18]
+        uniform token subdivisionScheme = "none"
+        token visibility = "inherited"
+        double3 xformOp:rotateXYZ = (-90, 0, 0)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+    }
+
+    def Scope "Looks"
+    {
+        def Material "Ground"
+        {
+            token outputs:mdl:displacement.connect = </Environment/Looks/Ground/Shader.outputs:out>
+            token outputs:mdl:surface.connect = </Environment/Looks/Ground/Shader.outputs:out>
+            token outputs:mdl:volume.connect = </Environment/Looks/Ground/Shader.outputs:out>
+
+            def Shader "Shader"
+            {
+                uniform token info:implementationSource = "sourceAsset"
+                uniform asset info:mdl:sourceAsset = @./file:/C:/users/mcodesal/appdata/local/ov/pkg/create-2023.2.5/extscache/omni.kit.environment.core-1.3.9/data/Ground.mdl@
+                uniform token info:mdl:sourceAsset:subIdentifier = "Ground"
+                token outputs:out (
+                    renderType = "material"
+                )
+            }
+        }
+    }
+}
+
