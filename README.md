@@ -13,6 +13,27 @@ work, and when and when it is appropriate to use each. The developer needs to be
 
 ---
 
+##  1.0- Before you start, things you need to know
+
+•	A **Prim** is a container for property data and nested PrimSpecs is the primary container object in USD. It can contain and order other prims or hold different kinds of data. They are composed of prim specs and property spec.
+
+•	**PrimSpec** is a container for property data and nested PrimSpecs.
+
+•	Composition arcs can only be applied on PrimSpecs
+
+•	A **PrimStack** is a list of PrimSpecs that contribute opinions for a composed prim’s metadata.
+
+•	A **primvar** is a special attribute that a renderer associates with a geometric primitive, and can vary (interpolate) the value of the attribute over the surface/volume of the primitive
+
+•	Composition is cached, value resolution is not
+
+•	Composition is internally multi-threaded, value resolution is meant to be client multi-threaded. USD’s primary guidance for clients wishing to maximize USD’s performance on multi-core systems is to perform as much simultaneous value resolution and data extraction as possible
+
+•	Composition rules vary by composition arc, value resolution rules vary by metadatum.
+
+•	An **index**, also referred to as a PrimIndex, is the result of composition. A prim’s index contains an ordered (from strongest to weakest) list of “Nodes”. All of the queries on USD classes except for stage-level metadata rely on prim indices to perform value resolution.
+
+
 ##  1.1- Creating Composition Arcs
 
 **Composition arcs** are the operators that allow **USD (Universal Scene Description)** to combine multiple layers of scene description in specific ways.
@@ -1092,23 +1113,7 @@ def Xform "World"
 
 In the above example if you examine the flattened RobotScene.usd you will see the effect of specializes on the specialized /World/Characters/Rosie/Materials/CorrodedMetal prim: we overrode both diffuseGain and specularRoughness on the base Metal material, but only the diffuseGain propagates onto /World/Characters/Rosie/Materials/CorrodedMetal, because specularRoughness was already refined on the referenced /Robot/Materials/CorrodedMetal prim. This also demonstrates the difference between specializes and inherits: if you change the specializes arc to inherits in Robot.usd and recompose the scene, you will see that both diffuseGain and specularRoughness propagate onto /World/Characters/Rosie/Materials/CorrodedMetal.
 
-## Important concepts 
 
-•	**PrimSpec** is a container for property data and nested PrimSpecs.
-
-•	composition arcs can only be applied on PrimSpecs
-
-•	A **PrimStack** is a list of PrimSpecs that contribute opinions for a composed prim’s metadata.
-
-•	A **primvar** is a special attribute that a renderer associates with a geometric primitive, and can vary (interpolate) the value of the attribute over the surface/volume of the primitive
-
-•	Composition is cached, value resolution is not
-
-•	Composition is internally multi-threaded, value resolution is meant to be client multi-threaded. USD’s primary guidance for clients wishing to maximize USD’s performance on multi-core systems is to perform as much simultaneous value resolution and data extraction as possible
-
-•	Composition rules vary by composition arc, value resolution rules vary by metadatum.
-
-•	An **index**, also referred to as a PrimIndex, is the result of composition. A prim’s index contains an ordered (from strongest to weakest) list of “Nodes”. All of the queries on USD classes except for stage-level metadata rely on prim indices to perform value resolution.
 
 # 2) Content Aggregation: Exam Weight 10%
 # 3) Customizing USD: Exam Weight 6%
