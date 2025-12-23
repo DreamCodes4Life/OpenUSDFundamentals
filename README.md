@@ -112,6 +112,115 @@ The following example shows how a **shot** composes multiple layers and includes
 </td>
 </table>
 
+Bellow is an example to introduce the concept of Flattering, we are running this script from the script editor in Omniverse, with the shot.usd stage opened. Each of the referenced layers has only an xform in their stages. You can also use the flatten option in the Layer's tab
+
+##### 🐍 Example Flattering the previous Example
+---
+<table>
+  <tr>
+    <th align="left">flattenShotUSD.py</th>
+    <th align="left">shot_flattened.py</th>
+  </tr>
+  <tr>
+    <td valign="top">
+  
+```usda
+from pxr import Usd
+import os
+import omni.usd
+
+# Get the currently open stage
+stage = omni.usd.get_context().get_stage()
+if not stage:
+    raise RuntimeError("No stage is currently open")
+
+# Get the root layer of the stage
+root_layer = stage.GetRootLayer()
+
+# Resolve the layer path
+input_path = root_layer.realPath or root_layer.identifier
+if not input_path:
+    raise RuntimeError("Unable to resolve root layer path")
+
+# Build output path in the same folder
+folder = os.path.dirname(input_path)
+base, ext = os.path.splitext(os.path.basename(input_path))
+output_path = os.path.join(folder, f"{base}_flattened{ext}")
+
+# Flatten the composed stage
+flattened_layer = stage.Flatten()
+
+# Export flattened layer
+if not flattened_layer.Export(output_path):
+    raise RuntimeError("Failed to export flattened USD")
+
+print(f"✅ Flattened stage saved to:\n{output_path}")
+
+```
+  </td > 
+    <td valign="top">
+  
+```usda
+#usda 1.0
+(
+
+    doc = """Generated from Composed Stage of root layer F:\\ISAACSIM\\OPEN_USD_COURSE\\1_Composition\\shot.usd
+"""
+    endTimeCode = 0
+    startTimeCode = -0.4
+    timeCodesPerSecond = 24
+)
+
+def Xform "World"
+{
+    def Xform "Dressing"
+    {
+        quatd xformOp:orient = (1, 0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Xform "Layout"
+    {
+        quatd xformOp:orient = (1, 0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Xform "FX"
+    {
+        quatd xformOp:orient = (1, 0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Xform "shotAnimationBake"
+    {
+        quatd xformOp:orient = (1, 0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Xform "shotFX"
+    {
+        quatd xformOp:orient = (1, 0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+}
+
+```
+  </td > 
+</table>
+
+
+In the next example, please note that your FPS will affect the real time.
+
 #### <ins>Layer Offsets for TimeSamples</ins>
 
 **Layer offsets** allow TimeSamples to be **shifted and scaled** when a layer is brought in via **Sublayers or References**.
