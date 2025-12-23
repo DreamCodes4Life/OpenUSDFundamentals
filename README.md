@@ -187,7 +187,11 @@ a second.
 </td> 
 </table>
 
-🧠 [Exercise 1 (Layers)](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/sublayers/working-with-sublayers.html)
+🧠 [Exercise 1 (SubLayers)](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/sublayers/working-with-sublayers.html)
+
+- [Files](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/sublayers)
+
+  
 
 ### 1.2.2 - Inherit
 Inherits is a composition arc that addresses the problem of adding a single, non-destructive edit (override) that can affect a whole class of distinct objects on a stage. Inherits acts as a non-destructive “broadcast” operator that applies opinions authored on one prim to every other prim that inherits the “source” prim; not only do property opinions broadcast over inherits arcs - all scene description, hierarchically from the source, inherits. 
