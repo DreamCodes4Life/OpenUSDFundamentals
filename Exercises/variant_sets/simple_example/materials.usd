@@ -1,0 +1,73 @@
+#usda 1.0
+(
+    defaultPrim = "Looks"
+    endTimeCode = 100
+    metersPerUnit = 0.01
+    startTimeCode = 0
+    timeCodesPerSecond = 24
+    upAxis = "Y"
+)
+
+def Scope "Looks"
+{
+    def Material "Red"
+    {
+        token outputs:displacement.connect = </Looks/Red/Shader.outputs:displacement>
+        token outputs:surface.connect = </Looks/Red/Shader.outputs:surface>
+
+        def Shader "Shader"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            color3f inputs:diffuseColor = (1, 0, 0) (
+                renderType = "color"
+            )
+            token outputs:displacement (
+                renderType = "material"
+            )
+            token outputs:surface (
+                renderType = "material"
+            )
+        }
+    }
+
+    def Material "Blue"
+    {
+        token outputs:displacement.connect = </Looks/Blue/Shader.outputs:displacement>
+        token outputs:surface.connect = </Looks/Blue/Shader.outputs:surface>
+
+        def Shader "Shader"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            color3f inputs:diffuseColor = (0, 0, 1) (
+                renderType = "color"
+            )
+            token outputs:displacement (
+                renderType = "material"
+            )
+            token outputs:surface (
+                renderType = "material"
+            )
+        }
+    }
+
+    def Material "Green"
+    {
+        token outputs:displacement.connect = </Looks/Green/Shader.outputs:displacement>
+        token outputs:surface.connect = </Looks/Green/Shader.outputs:surface>
+
+        def Shader "Shader"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            color3f inputs:diffuseColor = (0, 1, 0) (
+                renderType = "color"
+            )
+            token outputs:displacement (
+                renderType = "material"
+            )
+            token outputs:surface (
+                renderType = "material"
+            )
+        }
+    }
+}
+

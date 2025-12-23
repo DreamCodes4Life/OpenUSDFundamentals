@@ -1,0 +1,197 @@
+#usda 1.0
+(
+    upAxis = "Y"
+)
+
+over "World"
+{
+    def Scope "Looks"
+    {
+        def Material "border"
+        {
+            token outputs:displacement.connect = </World/Looks/border/border.outputs:displacement>
+            token outputs:surface.connect = </World/Looks/border/border.outputs:surface>
+
+            def Shader "border"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.56078434, 0.5686275, 0.6) (
+                    renderType = "color"
+                )
+                float inputs:metallic = 1
+                float inputs:roughness = 1
+                token outputs:displacement
+                token outputs:surface
+            }
+        }
+
+        def Material "window"
+        {
+            token outputs:displacement.connect = </World/Looks/window/window.outputs:displacement>
+            token outputs:surface.connect = </World/Looks/window/window.outputs:surface>
+
+            def Shader "window"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.7372549, 0.8862745, 1) (
+                    renderType = "color"
+                )
+                float inputs:metallic = 1
+                float inputs:roughness = 1
+                token outputs:displacement
+                token outputs:surface
+            }
+        }
+
+        def Material "material_defaultMat"
+        {
+            token outputs:displacement.connect = </World/Looks/material_defaultMat/material_defaultMat.outputs:displacement>
+            token outputs:surface.connect = </World/Looks/material_defaultMat/material_defaultMat.outputs:surface>
+
+            def Shader "material_defaultMat"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.764151, 0.764151, 0.764151) (
+                    renderType = "color"
+                )
+                float inputs:metallic = 1
+                float inputs:roughness = 1
+                token outputs:displacement
+                token outputs:surface
+            }
+        }
+
+        def Material "door"
+        {
+            token outputs:displacement.connect = </World/Looks/door/door.outputs:displacement>
+            token outputs:surface.connect = </World/Looks/door/door.outputs:surface>
+
+            def Shader "door"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.3882353, 0.4, 0.44705883)
+                float inputs:displacement = 0
+                color3f inputs:emissiveColor = (0, 0, 0)
+                float inputs:ior = 1.5
+                float inputs:metallic = 1
+                normal3f inputs:normal = (0, 0, 1)
+                float inputs:occlusion = 1
+                float inputs:opacity = 1
+                float inputs:opacityThreshold = 0
+                float inputs:roughness = 1
+                int inputs:useSpecularWorkflow = 0
+                token outputs:displacement
+                token outputs:surface
+            }
+        }
+
+        def Material "billboard_frame"
+        {
+            token outputs:displacement.connect = </World/Looks/billboard_frame/border.outputs:displacement>
+            token outputs:surface.connect = </World/Looks/billboard_frame/border.outputs:surface>
+
+            def Shader "border"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.56078434, 0.5686275, 0.6) (
+                    renderType = "color"
+                )
+                float inputs:metallic = 1
+                float inputs:roughness = 1
+                token outputs:displacement
+                token outputs:surface
+            }
+        }
+
+        def Material "ad"
+        {
+            token outputs:displacement.connect = </World/Looks/ad/roof.outputs:displacement>
+            token outputs:surface.connect = </World/Looks/ad/roof.outputs:surface>
+
+            def Shader "roof"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.4627451, 0.7254902, 0) (
+                    renderType = "color"
+                )
+                float inputs:metallic = 1
+                float inputs:roughness = 1
+                token outputs:displacement
+                token outputs:surface
+            }
+        }
+    }
+
+    over "Geometry"
+    {
+        over "sign_billboard"
+        {
+            over "border" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </World/Looks/billboard_frame> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+            }
+
+            over "roof" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </World/Looks/ad> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+            }
+
+            over "subset_defaultMat" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </World/Looks/material_defaultMat> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+            }
+        }
+
+        over "skyscraperF"
+        {
+            over "border" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </World/Looks/border> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+            }
+
+            over "window" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </World/Looks/window> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+            }
+
+            over "subset_defaultMat" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </World/Looks/material_defaultMat> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+            }
+
+            over "door" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </World/Looks/door> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+            }
+        }
+    }
+}
+
