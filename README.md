@@ -1424,7 +1424,8 @@ def Xform "TreeSpruce" (
  
 
 
-🧠 [Exercise (Variation Workstream)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-variation-workstream.html)
+
+🧠 [Exercise (Variation Workstream)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-variation-workstream.html) [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure)
 🔗 [More info](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/model-kinds.html)
 
 
