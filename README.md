@@ -586,6 +586,9 @@ Basically we are making a variantSet and attribute depending on other varianSets
 
 🧠 [Exercise 1 (Authoring Variants)](https://openusd.org/release/tut_authoring_variants.html)
 
+##### 🐍 [i.e. (Add VariantSets in Python)](https://github.com/DreamCodes4Life/OpenUSDFundamentals/blob/main/03_CompositionBasics/07_addVariantSetAndVariants.py)  🐍 [i.e. (Add Multiple Variants in Python)](https://github.com/DreamCodes4Life/OpenUSDFundamentals/blob/main/03_CompositionBasics/08_addMoreVariants.py)  🐍 [i.e. (Edit VariantSets in Python)](https://github.com/DreamCodes4Life/OpenUSDFundamentals/blob/main/03_CompositionBasics/09_editVariants.py)
+
+
 🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-variant)
 
 ### 1.2.4 - R(E)locates: 
@@ -983,6 +986,8 @@ def "PrimWithInherits"
 ```
 </td> 
 </table>
+
+##### 🐍 [i.e. (Relocates in Python)](https://github.com/DreamCodes4Life/OpenUSDFundamentals/blob/main/03_CompositionBasics/10_relocateScript.py)
 
 🔗 [More info](https://openusd.org/release/glossary.html#relocates)
 
