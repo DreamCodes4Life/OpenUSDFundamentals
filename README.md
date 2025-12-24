@@ -1385,8 +1385,8 @@ def Xform "Forest_set" (
 </table>
 
 Next exercises requires USDVIEW
-🧠 [Exercise (Groups)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-groups.html)
-🧠 [Exercise (Assemblies)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-assemblies.html)
+🧠 [Exercise (Groups)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-groups.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure)
+🧠 [Exercise (Assemblies)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-assemblies.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure)
 
 ### 2.1.2- Component
  A **component** is a reusable, self-contained asset that is complete and referenceable
@@ -1418,16 +1418,186 @@ def Xform "TreeSpruce" (
 </td> 
 </table>
 
-🧠 [Exercise (Components)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-components.html)
-
-
- 
-
-
+🧠 [Exercise (Components)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-components.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure)
 
 🧠 [Exercise (Variation Workstream)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-variation-workstream.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure)
 
 🔗 [More info](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/model-kinds.html)
+
+##  2.2- Stage Traversal
+ Stage traversal is the process of traversing the scenegraph of a stage with the purpose of querying or editing the scene data. We can traverse the scenegraph by iterating through child prims, accessing parent prims, and traversing the hierarchy to find specific prims of interest.
+
+##### 🐍 i.e. (Traversing Through the Stage)
+ <table>
+  <td valign="top">
+    
+```usda
+from pxr import Usd
+
+stage: Usd.Stage = Usd.Stage.Open("_assets/stage_traversal.usda")
+
+for prim in stage.Traverse():
+    # Print the path of each prim
+    print(prim.GetPath())
+```
+</td> 
+</table>
+
+##### 🐍 i.e. (Traversing USD Content for Specific Prim Types)
+ <table>
+  <td valign="top">
+    
+```usda
+from pxr import Usd, UsdGeom
+
+stage: Usd.Stage = Usd.Stage.Open("_assets/stage_traversal.usda")
+
+scope_count = 0
+xform_count = 0
+for prim in stage.Traverse():
+    if UsdGeom.Scope(prim):
+        scope_count += 1
+        print("Scope Type: ", prim.GetName())
+    elif UsdGeom.Xform(prim):
+        xform_count +=1
+        print("Xform Type: ", prim.GetName())
+
+print("Number of Scope prims: ", scope_count)
+print("Number of Xform prims: ", xform_count)
+```
+</td> 
+</table>
+
+##### 🐍 i.e. (Traversing Using Usd.PrimRange)
+ <table>
+  <td valign="top">
+    
+```usda
+from pxr import Usd
+stage: Usd.Stage = Usd.Stage.Open("_assets/stage_traversal.usda")
+prim_range = Usd.PrimRange(stage.GetPrimAtPath("/World/Box"))
+for prim in prim_range:
+    print(prim.GetPath())
+```
+</td> 
+</table>
+
+##### 🐍 i.e. (Traversal with Model Kinds)
+ <table>
+  <tr>
+    <th align="left">Python code</th>
+    <th align="left">USDA</th>
+  </tr>
+  <td valign="top">
+    
+```usda
+from pxr import Usd, UsdGeom, Kind, Gf
+
+# Create stage and model root
+file_path = "_assets/model_kinds_component.usda"
+stage = Usd.Stage.CreateNew(file_path)
+world_xform = UsdGeom.Xform.Define(stage, "/World")
+stage.SetDefaultPrim(world_xform.GetPrim())
+
+# Make /World a group so children can be models
+Usd.ModelAPI(world_xform.GetPrim()).SetKind(Kind.Tokens.group)
+
+# Non-model branch: Markers (utility geometry, no kind)
+markers = UsdGeom.Scope.Define(stage, world_xform.GetPath().AppendChild("Markers"))
+
+points = {
+    "PointA": Gf.Vec3d(-3, 0, -3), "PointB": Gf.Vec3d(-3, 0, 3),
+    "PointC": Gf.Vec3d(3, 0, -3), "PointD": Gf.Vec3d(3, 0, 3)
+    }
+for name, pos in points.items():
+    cone = UsdGeom.Cone.Define(stage, markers.GetPath().AppendChild(name))
+    UsdGeom.XformCommonAPI(cone).SetTranslate(pos)
+    cone.CreateDisplayColorPrimvar().Set([Gf.Vec3f(1.0, 0.85, 0.2)])
+
+# Model branch: a Component we want to place as a unit
+component = UsdGeom.Xform.Define(stage, world_xform.GetPath().AppendChild("Component"))
+Usd.ModelAPI(component.GetPrim()).SetKind(Kind.Tokens.component)
+body = UsdGeom.Cube.Define(stage, component.GetPath().AppendChild("Body"))
+body.CreateDisplayColorPrimvar().Set([(0.25, 0.55, 0.85)])
+UsdGeom.XformCommonAPI(body).SetScale((3.0, 1.0, 3.0))
+
+# Model-only traversal: affect models, ignore markers
+for prim in Usd.PrimRange(stage.GetPseudoRoot(), predicate=Usd.PrimIsModel):
+    if prim.IsComponent():
+        xformable = UsdGeom.Xformable(prim)
+        if xformable:
+            UsdGeom.XformCommonAPI(xformable).SetTranslate((0.0, 2.0, 0.0))
+
+# Show which prims were considered models
+model_paths = [p.GetPath().pathString for p in Usd.PrimRange(stage.GetPseudoRoot(), predicate=Usd.PrimIsModel)]
+print("Model prims seen by traversal:", model_paths)
+
+stage.Save()
+```
+</td> 
+  <td valign="top">
+    
+```usda
+#usda 1.0
+(
+    defaultPrim = "World"
+)
+
+def Xform "World" (
+    kind = "group"
+)
+{
+    def Scope "Markers"
+    {
+        def Cone "PointA"
+        {
+            color3f[] primvars:displayColor = [(1, 0.85, 0.2)]
+            double3 xformOp:translate = (-3, 0, -3)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cone "PointB"
+        {
+            color3f[] primvars:displayColor = [(1, 0.85, 0.2)]
+            double3 xformOp:translate = (-3, 0, 3)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cone "PointC"
+        {
+            color3f[] primvars:displayColor = [(1, 0.85, 0.2)]
+            double3 xformOp:translate = (3, 0, -3)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cone "PointD"
+        {
+            color3f[] primvars:displayColor = [(1, 0.85, 0.2)]
+            double3 xformOp:translate = (3, 0, 3)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+    }
+
+    def Xform "Component" (
+        kind = "component"
+    )
+    {
+        double3 xformOp:translate = (0, 2, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+
+        def Cube "Body"
+        {
+            color3f[] primvars:displayColor = [(0.25, 0.55, 0.85)]
+            float3 xformOp:scale = (3, 1, 3)
+            uniform token[] xformOpOrder = ["xformOp:scale"]
+        }
+    }
+}
+```
+</td> 
+</table>
+
+
 
 
 # 3) Customizing USD: Exam Weight 6%
