@@ -1221,7 +1221,7 @@ def "ReferencedModel" (
 </td> 
 </table>
 
-
+##### 🐍 [i.e. (Add Reference in Python)](https://github.com/DreamCodes4Life/OpenUSDFundamentals/blob/main/03_CompositionBasics/02_ReferenceExternalAsset.py)
 
 🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-references)
 
