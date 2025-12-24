@@ -1335,7 +1335,24 @@ large scenes.</strong>
 ##  2.1- Model Kinds
 Group, assembly, component all inherit from the base kind “model”
 Subcomponent is the outlier
-<img width="334" height="289" alt="image" src="https://github.com/user-attachments/assets/c9f83034-de1f-4de8-bd54-6dc52bee029c" />
+<table>
+  <tr>
+    <th align="left">Structure</th>
+    <th align="left">RobotScene.usd</th>
+  </tr>
+  <tr>
+  <td valign="top">
+    
+```usda
+model
+  component
+  group
+    assembly
+subcomponent
+```
+</td> 
+</table>
+
 
 
 # 3) Customizing USD: Exam Weight 6%
