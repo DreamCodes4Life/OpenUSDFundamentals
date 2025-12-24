@@ -584,6 +584,8 @@ stage.GetRootLayer().Save()
 
 Basically we are making a variantSet and attribute depending on other varianSets
 
+🧠 [Exercise 1 (Authoring Variants)](https://openusd.org/release/tut_authoring_variants.html)
+
 🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-variant)
 
 ### 1.2.4 - R(E)locates: 
