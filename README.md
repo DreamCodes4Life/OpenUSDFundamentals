@@ -1323,6 +1323,21 @@ In the above example if you examine the flattened RobotScene.usd you will see th
 
 
 # 2) Content Aggregation: Exam Weight 10%
+
+<p align="left">
+  <strong>Create modular, reusable components, leverage instancing (native and point) to optimize a scene, and apply different
+strategies for overriding an instanced asset for efficient, optimized, and collaborative aggregation of assets (models) to build
+large scenes.</strong>
+</p>
+
+##  2.0- Before you start, things you need to know
+
+##  2.1- Model Kinds
+Group, assembly, component all inherit from the base kind “model”
+Subcomponent is the outlier
+<img width="334" height="289" alt="image" src="https://github.com/user-attachments/assets/c9f83034-de1f-4de8-bd54-6dc52bee029c" />
+
+
 # 3) Customizing USD: Exam Weight 6%
 # 4) Data Exchange: Exam Weight 15%
 # 5) Data Modeling: Exam Weight 13%
