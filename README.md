@@ -1,6 +1,9 @@
 <img width="1458" height="442" alt="image" src="https://github.com/user-attachments/assets/cb3be4e7-cf02-4dfc-820d-7594be455aae" />
 
 🔗 [Exam Guide](https://nvdam.widen.net/s/6kxsqcsrrw/ncp-openusd-development-study-guide)
+🔗 [Dev Guide](https://docs.omniverse.nvidia.com/dev-guide/latest/programmer_ref/usd.html)
+
+
 
 # 1) Composition: Exam Weight 23%
 
@@ -1124,6 +1127,94 @@ def Xform "Marble" (
 ```
 </td> 
 </table>
+
+##### ⭐ Example "Referencing sub-root prims"
+
+<table>
+  <tr>
+    <th align="left">shot.usda</th>
+    <th align="left">asset.usda</th>
+  </tr>
+  <tr>
+  <td valign="top">
+    
+```usda
+#usda 1.0
+
+over "Class" 
+{              
+    over "B"    
+    {                                       
+        over "Model"
+        {      
+            int a = 3  
+        }        
+    }            
+}              
+
+over "A"                  
+{                    
+    over "B" (               
+        # variant selection won't be used
+        variants = {    
+            string type = "b"  
+        }              
+    )                
+    {                 
+    }                            
+}                             
+
+def "ReferencedModel" (        
+    references = @./asset.usda@</A/B/Model>
+)                          
+{                           
+}                           
+                          
+```
+</td> 
+  <td valign="top">
+
+```usda
+#usda 1.0
+
+ class "Class"
+ {
+ }
+
+ def "A" (
+    inherits = </Class>
+ )
+ {
+     token purpose = "render"
+
+     def "B" (
+        variantSets = "type"
+        variants = {
+             string type = "a"
+        }
+     )
+     {
+         variantSet "type" = {
+             "a" {
+                 def "Model"
+                 {
+                     int a = 1
+                 }
+             }
+             "b" {
+                 def "Model"
+                 {
+                     int a = 2
+                 }
+             }
+         }
+     }
+ }
+```
+</td> 
+</table>
+
+
 
 🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-references)
 
