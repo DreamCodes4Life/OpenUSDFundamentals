@@ -584,7 +584,7 @@ stage.GetRootLayer().Save()
 
 Basically we are making a variantSet and attribute depending on other varianSets
 
-🧠 [Exercise 1 (Authoring Variants)](https://openusd.org/release/tut_authoring_variants.html)
+🧠 [Exercise (Authoring Variants)](https://openusd.org/release/tut_authoring_variants.html)
 
 ##### 🐍 [i.e. (Add VariantSets in Python)](https://github.com/DreamCodes4Life/OpenUSDFundamentals/blob/main/03_CompositionBasics/07_addVariantSetAndVariants.py)  🐍 [i.e. (Add Multiple Variants in Python)](https://github.com/DreamCodes4Life/OpenUSDFundamentals/blob/main/03_CompositionBasics/08_addMoreVariants.py)  🐍 [i.e. (Edit VariantSets in Python)](https://github.com/DreamCodes4Life/OpenUSDFundamentals/blob/main/03_CompositionBasics/09_editVariants.py)
 
@@ -1338,21 +1338,94 @@ Subcomponent is the outlier
 <table>
   <tr>
     <th align="left">Structure</th>
-    <th align="left">RobotScene.usd</th>
   </tr>
   <tr>
   <td valign="top">
     
 ```usda
 model
-  component
-  group
-    assembly
+    component
+    group
+        assembly
 subcomponent
 ```
 </td> 
 </table>
 
+### 2.1.1- Group, assemblies
+Group models serve as containers that can have other model children (unlike component models which are leaves), with assemblies being a specific type of group. Whereas the specialized group-model kind assembly generally identifies group models that are published assets, groups tend to be simple “inlined” model prims defined inside and as part of assemblies. They are the “glue” that holds a model hierarchy together.
+ <table>
+  <tr>
+    <th align="left">Assembly example</th>
+  </tr>
+  <tr>
+  <td valign="top">
+    
+```usda
+def Xform "Forest_set" (
+    kind = "assembly"
+)
+{
+    def Xform "Outskirts" (
+        kind = "group"
+    )
+    {
+        # More deeply nested groups, bottoming out at references to other assemblies and components
+    }
+
+    def Xform "Glade" (
+        kind = "group"
+    )
+    {
+        # More deeply nested groups, bottoming out at references to other assemblies and components
+    }
+}
+```
+</td> 
+</table>
+
+Next exercises requires USDVIEW
+🧠 [Exercise (Groups)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-groups.html)
+🧠 [Exercise (Assemblies)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-assemblies.html)
+
+### 2.1.2- Component
+ A **component** is a reusable, self-contained asset that is complete and referenceable
+ Complete assets like props, characters, or set pieces. They can contain subcomponents but cannot contain other models
+ A component is a “leaf” kind of Model. Components can contain subcomponents, but no other models. Components can reference in other assets that are published as models, but they should override the kind of the referenced prim to “subcomponent”.
+
+ <table>
+  <tr>
+    <th align="left">overriding the kind of a “nested” asset reference</th>
+  </tr>
+  <tr>
+  <td valign="top">
+    
+```usda
+def Xform "TreeSpruce" (
+    kind = "component"
+)
+{
+    # Geometry and shading prims that define a Spruce tree...
+
+    def "Cone_1" (
+        kind = "subcomponent"
+        references = @Cones/PineConeA.usd@
+    )
+    {
+    }
+}
+```
+</td> 
+</table>
+
+🧠 [Exercise (Components)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-components.html)
+
+
+ 
+
+
+🧠 [Exercise (Variation Workstream)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-variation-workstream.html)
+🔗 [More info](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/model-kinds.html)
 
 
 # 3) Customizing USD: Exam Weight 6%
