@@ -1,0 +1,34 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 0.01
+    upAxis = "Y"
+)
+
+def Xform "World"
+{
+    def Xform "lrg_bldgF_01" (
+        prepend references = @./lrg_bldgF.usd@
+    )
+    {
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Xform "lrg_bldgF_02" (
+        prepend references = @./lrg_bldgF.usd@
+    )
+    {
+        double3 xformOp:translate = (300, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Xform "lrg_bldgF_03" (
+        prepend references = @./lrg_bldgF.usd@
+    )
+    {
+        double3 xformOp:translate = (600, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+}
+

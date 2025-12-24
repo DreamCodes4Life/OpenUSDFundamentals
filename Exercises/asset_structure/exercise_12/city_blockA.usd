@@ -1,0 +1,79 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 0.01
+    subLayers = [
+        @./contents/shading.usd@
+    ]
+    upAxis = "Y"
+)
+
+def Xform "World" (
+    kind = "assembly"
+)
+{
+    def Xform "North" (
+        kind = "group"
+    )
+    {
+        def Xform "lrg_bldgF_01" (
+            prepend references = @./lrg_bldgF/lrg_bldgF.usd@
+        )
+        {
+            float3 xformOp:rotateXYZ = (0, 0, 0)
+            double3 xformOp:translate = (0, 0, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+        }
+
+        def Xform "lrg_bldgF_02" (
+            prepend references = @./lrg_bldgF/lrg_bldgF.usd@
+        )
+        {
+            float3 xformOp:rotateXYZ = (0, 0, 0)
+            double3 xformOp:translate = (300, 0, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+        }
+
+        def Xform "lrg_bldgF_03" (
+            prepend references = @./lrg_bldgF/lrg_bldgF.usd@
+        )
+        {
+            float3 xformOp:rotateXYZ = (0, 0, 0)
+            double3 xformOp:translate = (600, 0, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+        }
+    }
+
+    def Xform "South" (
+        kind = "group"
+    )
+    {
+        def Xform "lrg_bldgF_01" (
+            prepend references = @./lrg_bldgF/lrg_bldgF.usd@
+        )
+        {
+            float3 xformOp:rotateXYZ = (0, 180, 0)
+            double3 xformOp:translate = (0, 0, 200)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+        }
+
+        def Xform "lrg_bldgF_02" (
+            prepend references = @./lrg_bldgF/lrg_bldgF.usd@
+        )
+        {
+            float3 xformOp:rotateXYZ = (0, 180, 0)
+            double3 xformOp:translate = (300, 0, 200)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+        }
+
+        def Xform "lrg_bldgF_03" (
+            prepend references = @./lrg_bldgF/lrg_bldgF.usd@
+        )
+        {
+            float3 xformOp:rotateXYZ = (0, 180, 0)
+            double3 xformOp:translate = (600, 0, 200)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+        }
+    }
+}
+
