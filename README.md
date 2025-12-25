@@ -1335,6 +1335,10 @@ large scenes.</strong>
 ##  2.1- Model Kinds
 Group, assembly, component all inherit from the base kind “model”
 Subcomponent is the outlier
+
+Only group models (group or assembly) can contain other models, and a prim can only be a model if its parent is also a group model (except the root).
+
+
 <table>
   <tr>
     <th align="left">Structure</th>
@@ -1596,6 +1600,45 @@ def Xform "World" (
 ```
 </td> 
 </table>
+
+##  2.3- Asset Structure 
+
+The Four Principles of Scalable Asset Structure
+- **Legibility** ensures your asset structure is easy to understand and interpret.
+- **Modularity** allows for flexibility and reusability.
+- **Performance** ensures your asset structure is efficient and optimized.
+- **Navigability** makes it easy for users to find and access the features and properties they need.
+
+### 2.3.1- Collections
+
+##### ⭐ Example "Collections"
+
+The following example shows a single prim with two collections. The relCollection collection is a relationship-mode collection that includes all objects at the /World/Clothing/Shirts and /World/Clothing/Pants paths. The expCollection collection is a pattern-based collection that matches all objects at the /World/Clothing/Shirts path that start with “Red”, and any descendants of those objects.
+
+ <table>
+  <td valign="top">
+    
+```usda
+def "CollectionPrim" (
+    prepend apiSchemas = ["CollectionAPI:relCollection", "CollectionAPI:expCollection"]
+)
+{
+    # Specify collection membership using "includes"
+    rel collection:relCollection:includes = [
+        </World/Clothing/Shirts>,
+        </World/Clothing/Pants>,
+    ]
+
+    # Specify collection membership using a path expression
+    pathExpression collection:expCollection:membershipExpression = "/World/Clothing/Shirts/Red*//"
+}
+```
+  </td>
+</table>
+
+
+🔗 [More info](https://openusd.org/release/user_guides/collections_and_patterns.html#collections-and-patterns)
+
 
 
 
