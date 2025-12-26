@@ -38,9 +38,6 @@ work, and when and when it is appropriate to use each. The developer needs to be
 
 •	A **[primvar](https://openusd.org/release/glossary.html#usdglossary-primvar)** (primitive variable) is a special kind of attribute that can vary and interpolate across a geometric primitive. You work with primvars through UsdGeomImageable and UsdGeomPrimvar. Review its **[class](https://openusd.org/release/api/class_usd_geom_primvar.html)**
 
-
-
-
 ##  1.1- Creating Composition Arcs
 
 **Composition arcs** are the operators that allow **USD (Universal Scene Description)** to combine multiple layers of scene description in specific ways.
@@ -458,8 +455,8 @@ Instancing in USD is a feature that allows many instances of “the same” obje
 
 Instancing in USD is a feature that allows many instances of “the same” object to share the same representation (composed prims) on a UsdStage. In exchange for this sharing of representation (which provides speed and memory benefits both for the USD core and, generally, for clients processing the UsdStage), we give up the ability to uniquely override opinions on prims beneath the “instance root”, although it is possible to override opinions that will affect all instances’ views of the data. 
 
-In the next example, we create a class "_Class_Cube_Red", then three cubes are instances of that class, the first two have modified position, the second has change opinion to a blue material, but is weaker so still will be red, the third is the same but this time is stronger, so the third cube will be blue without modifying the instance status.
----
+In the next example, we create a class _Class_Cube_Red, then three cubes are instances of that class, the first two have modified position, the second has change opinion to a blue material, but is weaker so still will be red, the third is the same but this time is stronger, so the third cube will be blue without modifying the instance status.
+
 ##### ⭐ Example "Instancing a red cube and change opinion in instances"
 
 <table>
