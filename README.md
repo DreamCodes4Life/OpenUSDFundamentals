@@ -36,6 +36,10 @@ work, and when and when it is appropriate to use each. The developer needs to be
 
 •	An **index**, also referred to as a PrimIndex, is the result of composition. A prim’s index contains an ordered (from strongest to weakest) list of “Nodes”. All of the queries on USD classes except for stage-level metadata rely on prim indices to perform value resolution.
 
+•	A **[primvar](https://openusd.org/release/glossary.html#usdglossary-primvar)** (primitive variable) is a special kind of attribute that can vary and interpolate across a geometric primitive. You work with primvars through UsdGeomImageable and UsdGeomPrimvar.
+
+
+
 
 ##  1.1- Creating Composition Arcs
 
@@ -1636,8 +1640,29 @@ def "CollectionPrim" (
   </td>
 </table>
 
+If you want go deeper in collections, in the next link you will find detailed info with examples.
 
 🔗 [More info](https://openusd.org/release/user_guides/collections_and_patterns.html#collections-and-patterns)
+
+### 2.3.1- Asset Interface
+
+Each asset designed to be opened as a stage or added to a scene through referencing has a root layer that serves as its foundation.
+
+🧠 [Exercise (Your First Asset)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-structure-principles/your-first-asset.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_01)
+
+🧠 [Exercise (Encapsulating Your Asset)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-structure-principles/encapsulating-your-asset.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_02)
+
+🧠 [Exercise (Organizing Prim Hierarchy)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-structure-principles/organizing-prim-hierarchy.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_03)
+
+### 2.3.2- WorkStreams
+
+Assets should model workstreams into layers.
+
+🧠 [Exercise (Adding User Workstreams)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/workstreams/adding-user-workstreams.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_04)
+
+
+
+
 
 
 
