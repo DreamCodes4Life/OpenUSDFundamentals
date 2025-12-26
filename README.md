@@ -327,9 +327,8 @@ a second.
 
 - [Files](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/sublayers)
 
-  
-
 ### 1.2.2 - Inherit
+
 Inherits is a composition arc that addresses the problem of adding a single, non-destructive edit (override) that can affect a whole class of distinct objects on a stage. Inherits acts as a non-destructive “broadcast” operator that applies opinions authored on one prim to every other prim that inherits the “source” prim; not only do property opinions broadcast over inherits arcs - all scene description, hierarchically from the source, inherits. 
 
 🔗 [More info]([https://openusd.org/release/glossary.html#liverps-strength-ordering](https://openusd.org/release/glossary.html#usdglossary-instancing))
@@ -459,10 +458,10 @@ Instancing in USD is a feature that allows many instances of “the same” obje
 
 Instancing in USD is a feature that allows many instances of “the same” object to share the same representation (composed prims) on a UsdStage. In exchange for this sharing of representation (which provides speed and memory benefits both for the USD core and, generally, for clients processing the UsdStage), we give up the ability to uniquely override opinions on prims beneath the “instance root”, although it is possible to override opinions that will affect all instances’ views of the data. 
 
-##### ⭐ Example "Instancing a red cube and change opinion in instances"
-
 In the next example, we create a class "_Class_Cube_Red", then three cubes are instances of that class, the first two have modified position, the second has change opinion to a blue material, but is weaker so still will be red, the third is the same but this time is stronger, so the third cube will be blue without modifying the instance status.
 ---
+##### ⭐ Example "Instancing a red cube and change opinion in instances"
+
 <table>
     <td valign="top">
   
