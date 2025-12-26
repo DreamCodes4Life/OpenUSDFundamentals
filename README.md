@@ -2031,10 +2031,21 @@ Assets should model workstreams into layers.
 ### 2.3.3- Asset Parameterization
 Asset parameterization enables the reuse of content by allowing certain fields and properties to vary downstream.
 
+🧠 [Exercise (Reuse content)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-parameterization/exercise-asset-parameterization.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_05)
+
+### 2.3.4- Reference/Payload Pattern
+
+Instead of expecting users to know whether a complex asset requires payloading, many assets adopt the “reference-payload” pattern. This means their interface file is designed to be referenced, with the payload structure internal to the asset.
 
 
 
+🧠 [Exercise (Reference/Payload Pattern)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/reference-payload-pattern/exercise-ref-payload-pattern.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_06)
 
+We use Lofting to show properties from payloaded assets to the layer from which we are referencing
+
+🧠 [Exercise (Lofting Primvars)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/reference-payload-pattern/lofting-primvars.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_07)
+
+🧠 [Exercise (Lofting Variant Sets)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/reference-payload-pattern/lofting-variant-sets.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_08)
 
 
 
