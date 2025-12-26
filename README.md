@@ -36,7 +36,7 @@ work, and when and when it is appropriate to use each. The developer needs to be
 
 •	An **index**, also referred to as a PrimIndex, is the result of composition. A prim’s index contains an ordered (from strongest to weakest) list of “Nodes”. All of the queries on USD classes except for stage-level metadata rely on prim indices to perform value resolution.
 
-•	A **[primvar](https://openusd.org/release/glossary.html#usdglossary-primvar)** (primitive variable) is a special kind of attribute that can vary and interpolate across a geometric primitive. You work with primvars through UsdGeomImageable and UsdGeomPrimvar.
+•	A **[primvar](https://openusd.org/release/glossary.html#usdglossary-primvar)** (primitive variable) is a special kind of attribute that can vary and interpolate across a geometric primitive. You work with primvars through UsdGeomImageable and UsdGeomPrimvar. Review its **[class](https://openusd.org/release/api/class_usd_geom_primvar.html)**
 
 
 
