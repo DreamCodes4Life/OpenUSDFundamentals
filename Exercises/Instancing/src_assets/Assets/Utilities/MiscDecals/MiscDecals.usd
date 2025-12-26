@@ -1,0 +1,88 @@
+#usda 1.0
+(
+    endTimeCode = 100
+    metersPerUnit = 0.01
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Z"
+)
+class "_MixinOverrides"
+{
+    over "DamagedStamp"
+    {
+        def Mesh "DamagedStamp_01" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </_MixinOverrides/DamagedStamp/Looks/M_DamagedStamp_01> (
+                bindMaterialAs = "weakerThanDescendants"
+            )
+            uniform token subdivisionScheme = "none"
+            int[] faceVertexCounts = [4]
+            int[] faceVertexIndices = [0, 1, 2, 3]
+            point3f[] points = [
+                (15.31, 5.00, 0),
+                (0, 5.00, 0),
+                (0, 0, 0),
+                (15.31, 0, 0)
+            ]
+            normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1)]
+            texCoord2f[] primvars:st = [(0.715, 0.233), (0.0, 0.233), (0.0, 0.0), (0.715, 0.0)](
+                interpolation = "faceVarying"
+            )
+            uniform int[] primvars:st:indices = [0, 1, 2, 3]
+
+            float3 xformOp:rotateXYZ = (90.0, 10.0, -90.0)
+            float3 xformOp:scale = (1, 1, 1)
+            double3 xformOp:translate = (-13.07, 7.0, 13.0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+        }
+        over "Looks"
+        {
+            def Material "M_DamagedStamp_01"
+            {
+                token outputs:surface.connect = </_MixinOverrides/DamagedStamp/Looks/M_DamagedStamp_01/UsdPreviewSurface.outputs:surface>
+                def Shader "UsdPreviewSurface"
+                {
+                    uniform token info:id = "UsdPreviewSurface"
+                    float inputs:clearcoat
+                    float inputs:clearcoatRoughness = 1
+                    color3f inputs:diffuseColor = (1.0, 0.0, 0.0)
+                    float inputs:ior = 1.7887884
+                    normal3f inputs:normal
+                    float inputs:opacity.connect = </_MixinOverrides/DamagedStamp/Looks/M_DamagedStamp_01/UsdUVTexture.outputs:r>
+                    token inputs:opacityMode = "presence"
+                    float inputs:opacityThreshold = 0.0
+                    float inputs:roughness = 1.0
+                    token outputs:surface
+                }
+
+                def Shader "UsdUVTexture"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    float4 inputs:bias = (0, 0, 0, 0)
+                    float4 inputs:fallback
+                    asset inputs:file = @./Textures/damaged_stamp_opacity.jpg@
+                    float4 inputs:scale = (1, 1, 1, 1)
+                    token inputs:sourceColorSpace = "sRGB"
+                    float2 inputs:st.connect = </_MixinOverrides/DamagedStamp/Looks/M_DamagedStamp_01/UsdPrimvarReader_float2.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float outputs:a
+                    float outputs:b
+                    float outputs:g
+                    float outputs:r
+                    float3 outputs:rgb
+                }
+
+                def Shader "UsdPrimvarReader_float2"
+                {
+                    uniform token info:id = "UsdPrimvarReader_float2"
+                    float2 inputs:fallback
+                    string inputs:varname = "st"
+                    float2 outputs:result
+                }
+            }
+        }
+    }
+}

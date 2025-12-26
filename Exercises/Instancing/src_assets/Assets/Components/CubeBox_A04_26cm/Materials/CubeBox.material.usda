@@ -1,0 +1,308 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    endTimeCode = 0
+    metersPerUnit = 0.01
+    startTimeCode = -1
+    upAxis = "Z"
+)
+
+def Scope "World"
+{
+    double3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate"]
+
+    def Material "M_CubeBox_Cardboard_01"
+    {
+        token outputs:mdl:displacement.connect = </World/M_CubeBox_Cardboard_01/Shader.outputs:out>
+        token outputs:mdl:surface.connect = </World/M_CubeBox_Cardboard_01/Shader.outputs:out>
+        token outputs:mdl:volume.connect = </World/M_CubeBox_Cardboard_01/Shader.outputs:out>
+        token outputs:surface.connect = </World/M_CubeBox_Cardboard_01/UsdPreviewSurface.outputs:surface>
+
+        def Shader "Shader"
+        {
+            uniform token info:implementationSource = "sourceAsset"
+            uniform asset info:mdl:sourceAsset = @./M_CubeBox_Cardboard_01.mdl@
+            uniform token info:mdl:sourceAsset:subIdentifier = "M_CubeBox_Cardboard_01"
+            token outputs:out (
+                renderType = "material"
+            )
+        }
+
+        def Shader "UsdPreviewSurface"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            float inputs:clearcoat
+            float inputs:clearcoatRoughness = 1
+            color3f inputs:diffuseColor.connect = </World/M_CubeBox_Cardboard_01/UsdUVTexture.outputs:rgb>
+            float inputs:displacement
+            color3f inputs:emissiveColor = (0, 0, 0)
+            float inputs:emissiveScale
+            bool inputs:enable_opacity
+            bool inputs:enable_specular_transmission
+            float inputs:ior = 1.7887884
+            float inputs:metallic.connect = </World/M_CubeBox_Cardboard_01/UsdUVTexture_01.outputs:r>
+            normal3f inputs:normal.connect = </World/M_CubeBox_Cardboard_01/UsdUVTexture_03.outputs:rgb>
+            float inputs:occlusion.connect = </World/M_CubeBox_Cardboard_01/UsdPrimvarReader_cleanness.outputs:result>
+            float inputs:roughness.connect = </World/M_CubeBox_Cardboard_01/UsdUVTexture_02.outputs:r>
+            color3f inputs:specularColor
+            int inputs:useSpecularWorkflow
+            token outputs:displacement
+            token outputs:surface
+        }
+
+        def Shader "UsdUVTexture"
+        {
+            uniform token info:id = "UsdUVTexture"
+            float4 inputs:bias = (0, 0, 0, 0)
+            float4 inputs:fallback
+            asset inputs:file = @./Textures/Cardboard/mtl-base_color.jpg@
+            float4 inputs:scale = (1, 1, 1, 1)
+            token inputs:sourceColorSpace = "sRGB"
+            float2 inputs:st.connect = </World/M_CubeBox_Cardboard_01/UsdPrimvarReader_float2.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float outputs:a
+            float outputs:b
+            float outputs:g
+            float outputs:r
+            float3 outputs:rgb
+        }
+
+        def Shader "UsdPrimvarReader_float2"
+        {
+            uniform token info:id = "UsdPrimvarReader_float2"
+            float2 inputs:fallback
+            string inputs:varname = "st"
+            float2 outputs:result
+        }
+
+        def Shader "UsdPrimvarReader_cleanness"
+        {
+            uniform token info:id = "UsdPrimvarReader_float"
+            float inputs:fallback = 1
+            string inputs:varname = "cleanness"
+            float outputs:result
+        }
+
+        def Shader "UsdUVTexture_01"
+        {
+            uniform token info:id = "UsdUVTexture"
+            float4 inputs:bias = (0, 0, 0, 0)
+            float4 inputs:fallback
+            asset inputs:file = @./Textures/Cardboard/mtl-metallic.jpg@
+            float4 inputs:scale = (1, 1, 1, 1)
+            token inputs:sourceColorSpace = "raw"
+            float2 inputs:st.connect = </World/M_CubeBox_Cardboard_01/UsdPrimvarReader_float2.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float outputs:a
+            float outputs:b
+            float outputs:g
+            float outputs:r
+            float3 outputs:rgb
+        }
+
+        def Shader "UsdUVTexture_02"
+        {
+            uniform token info:id = "UsdUVTexture"
+            float4 inputs:bias = (0, 0, 0, 0)
+            float4 inputs:fallback
+            asset inputs:file = @./Textures/Cardboard/mtl-roughness.jpg@
+            float4 inputs:scale = (1, 1, 1, 1)
+            token inputs:sourceColorSpace = "raw"
+            float2 inputs:st.connect = </World/M_CubeBox_Cardboard_01/UsdPrimvarReader_float2.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float outputs:a
+            float outputs:b
+            float outputs:g
+            float outputs:r
+            float3 outputs:rgb
+        }
+
+        def Shader "UsdUVTexture_03"
+        {
+            uniform token info:id = "UsdUVTexture"
+            float4 inputs:bias = (-1, -1, -1, 0)
+            float4 inputs:fallback
+            asset inputs:file = @./Textures/Cardboard/mtl-normal.jpg@
+            float4 inputs:scale = (2, 2, 2, 1)
+            token inputs:sourceColorSpace = "raw"
+            float2 inputs:st.connect = </World/M_CubeBox_Cardboard_01/UsdPrimvarReader_float2.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float outputs:a
+            float outputs:b
+            float outputs:g
+            float outputs:r
+            float3 outputs:rgb
+        }
+    }
+
+    def Material "M_CubeBox_Decal_01"
+    {
+        token outputs:mdl:displacement.connect = </World/M_CubeBox_Decal_01/Shader.outputs:out>
+        token outputs:mdl:surface.connect = </World/M_CubeBox_Decal_01/Shader.outputs:out>
+        token outputs:mdl:volume.connect = </World/M_CubeBox_Decal_01/Shader.outputs:out>
+        token outputs:surface.connect = </World/M_CubeBox_Decal_01/UsdPreviewSurface.outputs:surface>
+
+        def Shader "Shader"
+        {
+            uniform token info:implementationSource = "sourceAsset"
+            uniform asset info:mdl:sourceAsset = @./M_CubeBox_Decal_01.mdl@
+            uniform token info:mdl:sourceAsset:subIdentifier = "M_CubeBox_Decal_01"
+            token outputs:out (
+                renderType = "material"
+            )
+        }
+
+        def Shader "UsdPreviewSurface"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            float inputs:clearcoat
+            float inputs:clearcoatRoughness = 1
+            color3f inputs:diffuseColor.connect = </World/M_CubeBox_Decal_01/UsdUVTexture.outputs:rgb>
+            float inputs:displacement
+            color3f inputs:emissiveColor = (0, 0, 0)
+            float inputs:emissiveScale
+            bool inputs:enable_opacity
+            bool inputs:enable_specular_transmission
+            float inputs:ior = 1.7887884
+            float inputs:metallic.connect = </World/M_CubeBox_Decal_01/UsdUVTexture_01.outputs:r>
+            normal3f inputs:normal.connect = </World/M_CubeBox_Decal_01/UsdUVTexture_04.outputs:rgb>
+            float inputs:occlusion
+            float inputs:opacity.connect = </World/M_CubeBox_Decal_01/UsdUVTexture_03.outputs:r>
+            token inputs:opacityMode = "presence"
+                    float inputs:opacityThreshold = 0.0
+            float inputs:roughness.connect = </World/M_CubeBox_Decal_01/UsdUVTexture_02.outputs:r>
+            color3f inputs:specularColor
+            int inputs:useSpecularWorkflow
+            token outputs:displacement
+            token outputs:surface
+        }
+
+        def Shader "UsdUVTexture"
+        {
+            uniform token info:id = "UsdUVTexture"
+            float4 inputs:bias = (0, 0, 0, 0)
+            float4 inputs:fallback
+            asset inputs:file = @./Textures/Decal/mtl-base_color.jpg@
+            float4 inputs:scale = (1, 1, 1, 1)
+            token inputs:sourceColorSpace = "sRGB"
+            float2 inputs:st.connect = </World/M_CubeBox_Decal_01/UsdPrimvarReader_float2.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float outputs:a
+            float outputs:b
+            float outputs:g
+            float outputs:r
+            float3 outputs:rgb
+        }
+
+        def Shader "UsdPrimvarReader_float2"
+        {
+            uniform token info:id = "UsdPrimvarReader_float2"
+            float2 inputs:fallback
+            string inputs:varname = "st"
+            float2 outputs:result
+        }
+
+        def Shader "UsdUVTexture_01"
+        {
+            uniform token info:id = "UsdUVTexture"
+            float4 inputs:bias = (0, 0, 0, 0)
+            float4 inputs:fallback
+            asset inputs:file = @./Textures/Decal/mtl-metallic.jpg@
+            float4 inputs:scale = (1, 1, 1, 1)
+            token inputs:sourceColorSpace = "raw"
+            float2 inputs:st.connect = </World/M_CubeBox_Decal_01/UsdPrimvarReader_float2.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float outputs:a
+            float outputs:b
+            float outputs:g
+            float outputs:r
+            float3 outputs:rgb
+        }
+
+        def Shader "UsdUVTexture_02"
+        {
+            uniform token info:id = "UsdUVTexture"
+            float4 inputs:bias = (0, 0, 0, 0)
+            float4 inputs:fallback
+            asset inputs:file = @./Textures/Decal/mtl-roughness.jpg@
+            float4 inputs:scale = (1, 1, 1, 1)
+            token inputs:sourceColorSpace = "raw"
+            float2 inputs:st.connect = </World/M_CubeBox_Decal_01/UsdPrimvarReader_float2.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float outputs:a
+            float outputs:b
+            float outputs:g
+            float outputs:r
+            float3 outputs:rgb
+        }
+
+        def Shader "UsdUVTexture_03"
+        {
+            uniform token info:id = "UsdUVTexture"
+            float4 inputs:bias = (0, 0, 0, 0)
+            float4 inputs:fallback
+            asset inputs:file = @./Textures/Decal/mtl-opacity.jpg@
+            float4 inputs:scale = (1, 1, 1, 1)
+            token inputs:sourceColorSpace = "raw"
+            float2 inputs:st.connect = </World/M_CubeBox_Decal_01/UsdPrimvarReader_float2.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float outputs:a
+            float outputs:b
+            float outputs:g
+            float outputs:r
+            float3 outputs:rgb
+        }
+
+        def Shader "UsdUVTexture_04"
+        {
+            uniform token info:id = "UsdUVTexture"
+            float4 inputs:bias = (-1, -1, -1, 0)
+            float4 inputs:fallback
+            asset inputs:file = @./Textures/Decal/mtl-normal.jpg@
+            float4 inputs:scale = (2, 2, 2, 1)
+            token inputs:sourceColorSpace = "raw"
+            float2 inputs:st.connect = </World/M_CubeBox_Decal_01/UsdPrimvarReader_float2.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float outputs:a
+            float outputs:b
+            float outputs:g
+            float outputs:r
+            float3 outputs:rgb
+        }
+    }
+
+    over "SM_CubeBox_A04_Body_01"
+    {
+    }
+
+    over "SM_CubeBox_A04_Decal_01"
+    {
+    }
+
+    over "SM_CubeBox_A04_Scotch_01"
+    {
+    }
+
+    over "SM_CubeBox_A04_Body_02"
+    {
+    }
+
+    over "SM_CubeBox_A04_Decal_02"
+    {
+    }
+
+    over "SM_CubeBox_A04_Scotch_02"
+    {
+    }
+}
+

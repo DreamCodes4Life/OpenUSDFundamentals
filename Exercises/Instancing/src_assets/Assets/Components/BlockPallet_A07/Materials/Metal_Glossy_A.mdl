@@ -1,0 +1,26 @@
+mdl 1.4;
+
+using ::OmniPBR import OmniPBR;
+import ::tex::gamma_mode;
+import ::state::normal;
+import ::base::mono_mode;
+import ::anno::*;
+
+export material Metal_Glossy_A(*)
+[[
+    ::anno::display_name("Metal Glossy A"),
+    ::anno::description("Omni PBR, supports ORM textures"),
+    ::anno::version(1, 1, 0, ""),
+    ::anno::author("NVIDIA CORPORATION"),
+    ::anno::key_words(string[]("omni", "PBR", "omniverse", "metal", "glossy", "ORM")),
+    ::anno::physical_name("Metal")
+]]
+ = OmniPBR(
+	diffuse_texture: texture_2d("./Textures/T_Metal_Glossy_A_Albedo.png", ::tex::gamma_srgb),
+	enable_ORM_texture: true,
+	metallic_texture_influence: 1.0f,
+	specular_level: 0.85f,
+	normalmap_texture: texture_2d("./Textures/T_Metal_Glossy_A_Normal.png", ::tex::gamma_linear),
+	ORM_texture: texture_2d("./Textures/T_Metal_Glossy_A_ORM.png", ::tex::gamma_linear),
+	reflection_roughness_texture_influence: 1.0,
+	texture_scale: float2(2, 2));

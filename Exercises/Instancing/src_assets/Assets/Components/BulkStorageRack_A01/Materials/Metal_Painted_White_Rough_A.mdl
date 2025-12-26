@@ -1,0 +1,25 @@
+mdl 1.4;
+
+using ::OmniPBR import OmniPBR;
+import ::tex::gamma_mode;
+import ::state::normal;
+import ::base::mono_mode;
+import ::anno::*;
+
+export material Metal_Painted_White_Rough_A(*)
+[[
+    ::anno::display_name("Metal Painted White Rough A"),
+    ::anno::description("Omni PBR, supports ORM textures"),
+    ::anno::version(1, 1, 0, ""),
+    ::anno::author("NVIDIA CORPORATION"),
+    ::anno::key_words(string[]("omni", "PBR", "omniverse", "metal", "painted", "white", "rough")),
+    ::anno::physical_name("Metal")
+]]
+ = OmniPBR(
+	diffuse_texture: texture_2d("./Textures/T_Metal_Painted_White_Rough_A_Albedo.png", ::tex::gamma_srgb),
+	enable_ORM_texture: true,
+    metallic_texture_influence: 1.f,
+	specular_level: 0.05f,
+	normalmap_texture: texture_2d("./Textures/T_Metal_Painted_White_Rough_A_Normal.png", ::tex::gamma_linear),
+	ORM_texture: texture_2d("./Textures/T_Metal_Painted_White_Rough_A_ORM.png", ::tex::gamma_linear),
+	reflection_roughness_texture_influence: 1.0);
