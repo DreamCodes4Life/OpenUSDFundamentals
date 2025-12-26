@@ -449,381 +449,6 @@ A prim can inherit from any prim that is neither a descendant nor ancestor of it
 
 The key difference between references and inherits is that references fully encapsulate their targets, and therefore “disappear” when composed through another layer of referencing, whereas the relationship between inheritors and their inherits target remains “live” through arbitrary levels of referencing. 
 
-#### <ins>Instancing</ins> 
-
-Instancing in USD is a feature that allows many instances of “the same” object to share the same representation (composed prims) on a UsdStage. Instances can be overridden in stronger layers, so it is possible to “break” an instance when necessary, if it must be uniquified.
-
-Instancing in USD is a feature that allows many instances of “the same” object to share the same representation (composed prims) on a UsdStage. In exchange for this sharing of representation (which provides speed and memory benefits both for the USD core and, generally, for clients processing the UsdStage), we give up the ability to uniquely override opinions on prims beneath the “instance root”, although it is possible to override opinions that will affect all instances’ views of the data. 
-
-In the next example, we create a class _Class_Cube_Red, then three cubes are instances of that class, the first two have modified position, the second has change opinion to a blue material, but is weaker so still will be red, the third is the same but this time is stronger, so the third cube will be blue without modifying the instance status.
-
-##### ⭐ Example "Instancing a red cube and change opinion in instances"
-
-<table>
-    <td valign="top">
-  
-```usda
-#usda 1.0
-
-def Xform "World" (
-    prepend apiSchemas = ["MaterialBindingAPI"]
-)
-{
-    rel material:binding = </World/Looks/OmniPBR_Blue> (
-        bindMaterialAs = "weakerThanDescendants"
-    )
-
-    class Scope "_Class_Cube_Red"
-    {
-        def Mesh "Cube" (
-            prepend apiSchemas = ["MaterialBindingAPI"]
-        )
-        {
-            float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
-            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
-            int[] faceVertexIndices = [0, 1, 3, 2, 4, 6, 7, 5, 6, 2, 3, 7, 4, 5, 1, 0, 4, 0, 2, 6, 5, 7, 3, 1]
-            rel material:binding = </World/_Class_Cube_Red/Looks/OmniPBR_Red> (
-                bindMaterialAs = "weakerThanDescendants"
-            )
-            normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0)] (
-                interpolation = "faceVarying"
-            )
-            point3f[] points = [(-0.5, -0.5, 0.5), (0.5, -0.5, 0.5), (-0.5, 0.5, 0.5), (0.5, 0.5, 0.5), (-0.5, -0.5, -0.5), (0.5, -0.5, -0.5), (-0.5, 0.5, -0.5), (0.5, 0.5, -0.5)]
-            texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0), (0, 1), (0, 0), (1, 0), (1, 1), (0, 0), (1, 0), (1, 1), (0, 1), (0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0)] (
-                interpolation = "faceVarying"
-            )
-            uniform token subdivisionScheme = "none"
-            quatd xformOp:orient = (1, 0, 0, 0)
-            double3 xformOp:scale = (1, 1, 1)
-            double3 xformOp:translate = (0, 1, 1)
-            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-        }
-
-        def Scope "Looks"
-        {
-            def Material "OmniPBR_Red"
-            {
-                token outputs:mdl:displacement.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Red/Shader.outputs:out>
-                token outputs:mdl:surface.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Red/Shader.outputs:out>
-                token outputs:mdl:volume.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Red/Shader.outputs:out>
-
-                def Shader "Shader"
-                {
-                    uniform token info:implementationSource = "sourceAsset"
-                    uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
-                    uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
-                    color3f inputs:diffuse_tint = (0.90759075, 0.12366932, 0.01797209)
-                    token outputs:out (
-                        renderType = "material"
-                    )
-                }
-            }
-        }
-    }
-
-    def Xform "Cube_01" (
-        inherits = </World/_Class_Cube_Red>
-        instanceable = true
-    )
-    {
-        quatf xformOp:orient = (1, 0, 0, 0)
-        float3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (1.6772258843990702, 0, 0)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-    }
-
-    def Xform "Cube_02" (
-        prepend apiSchemas = ["MaterialBindingAPI"]
-        inherits = </World/_Class_Cube_Red>
-        instanceable = true
-    )
-    {
-        rel material:binding = </World/Looks/OmniPBR_Blue> (
-            bindMaterialAs = "strongerThanDescendants"
-        )
-        quatf xformOp:orient = (1, 0, 0, 0)
-        float3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 1.8461749821880287, 0)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-    }
-
-    def Xform "Cube_03" (
-        prepend apiSchemas = ["MaterialBindingAPI"]
-        inherits = </World/_Class_Cube_Red>
-        instanceable = true
-    )
-    {
-        rel material:binding = </World/Looks/OmniPBR_Blue> (
-            bindMaterialAs = "weakerThanDescendants"
-        )
-    }
-
-    def Scope "Looks"
-    {
-        def Material "OmniPBR_Yellow"
-        {
-            token outputs:mdl:displacement.connect = </World/Looks/OmniPBR_Yellow/Shader.outputs:out>
-            token outputs:mdl:surface.connect = </World/Looks/OmniPBR_Yellow/Shader.outputs:out>
-            token outputs:mdl:volume.connect = </World/Looks/OmniPBR_Yellow/Shader.outputs:out>
-
-            def Shader "Shader"
-            {
-                uniform token info:implementationSource = "sourceAsset"
-                uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
-                uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
-                color3f inputs:diffuse_tint = (0.882679, 0.90759075, 0.06889302)
-                token outputs:out (
-                    renderType = "material"
-                )
-            }
-        }
-
-        def Material "OmniPBR_Blue"
-        {
-            token outputs:mdl:displacement.connect = </World/Looks/OmniPBR_Blue/Shader.outputs:out>
-            token outputs:mdl:surface.connect = </World/Looks/OmniPBR_Blue/Shader.outputs:out>
-            token outputs:mdl:volume.connect = </World/Looks/OmniPBR_Blue/Shader.outputs:out>
-
-            def Shader "Shader"
-            {
-                uniform token info:implementationSource = "sourceAsset"
-                uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
-                uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
-                color3f inputs:diffuse_tint = (0.029408854, 0.08059826, 0.8910891)
-                token outputs:out (
-                    renderType = "material"
-                )
-            }
-        }
-    }
-}
-
-```
-  </td >   
-</table>
-
-<img width="1955" height="1108" alt="image" src="https://github.com/user-attachments/assets/34141fad-0f83-432a-ae3a-74fff5f77bf7" />
-
-##### ⭐ Example "Adding variants to the previous example"
----
-<table>
-    <td valign="top">
-  
-```usda
-def Xform "World"
-{
-    class Scope "_Class_Cube_Red"
-    {
-        def Mesh "Cube" (
-            prepend apiSchemas = ["MaterialBindingAPI"]
-            variants = {
-                string ChangeColor = "Variant"
-            }
-            prepend variantSets = "ChangeColor"
-        )
-        {
-            float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
-            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
-            int[] faceVertexIndices = [0, 1, 3, 2, 4, 6, 7, 5, 6, 2, 3, 7, 4, 5, 1, 0, 4, 0, 2, 6, 5, 7, 3, 1]
-            normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0)] (
-                interpolation = "faceVarying"
-            )
-            point3f[] points = [(-0.5, -0.5, 0.5), (0.5, -0.5, 0.5), (-0.5, 0.5, 0.5), (0.5, 0.5, 0.5), (-0.5, -0.5, -0.5), (0.5, -0.5, -0.5), (-0.5, 0.5, -0.5), (0.5, 0.5, -0.5)]
-            texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0), (0, 1), (0, 0), (1, 0), (1, 1), (0, 0), (1, 0), (1, 1), (0, 1), (0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0)] (
-                interpolation = "faceVarying"
-            )
-            uniform token subdivisionScheme = "none"
-            quatd xformOp:orient = (1, 0, 0, 0)
-            double3 xformOp:scale = (1, 1, 1)
-            double3 xformOp:translate = (0, 1, 1)
-            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-            variantSet "ChangeColor" = {
-                "Variant" (
-                    prepend apiSchemas = ["MaterialBindingAPI"]
-                    customData = {
-                        string[] variantPrimPaths = ["."]
-                    }
-                ) {
-                    rel material:binding = </World/Cube_01/Looks/OmniPBR_Yellow> (
-                        bindMaterialAs = "weakerThanDescendants"
-                    )
-
-                }
-                "Variant_1" (
-                    prepend apiSchemas = ["MaterialBindingAPI"]
-                    customData = {
-                        string[] variantPrimPaths = ["."]
-                    }
-                ) {
-                    rel material:binding = </World/Looks/OmniPBR_Blue> (
-                        bindMaterialAs = "weakerThanDescendants"
-                    )
-
-                }
-            }
-        }
-
-        def Scope "Looks"
-        {
-            def Material "OmniPBR_Red"
-            {
-                token outputs:mdl:displacement.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Red/Shader.outputs:out>
-                token outputs:mdl:surface.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Red/Shader.outputs:out>
-                token outputs:mdl:volume.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Red/Shader.outputs:out>
-
-                def Shader "Shader"
-                {
-                    uniform token info:implementationSource = "sourceAsset"
-                    uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
-                    uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
-                    color3f inputs:diffuse_tint = (0.90759075, 0.12366932, 0.01797209)
-                    token outputs:out (
-                        renderType = "material"
-                    )
-                }
-            }
-
-            def Material "OmniPBR_Yellow"
-            {
-                token outputs:mdl:displacement.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Yellow/Shader.outputs:out>
-                token outputs:mdl:surface.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Yellow/Shader.outputs:out>
-                token outputs:mdl:volume.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Yellow/Shader.outputs:out>
-                custom uniform bool paused = 0 (
-                    customData = {
-                        bool nonpersistant = 1
-                    }
-                    hidden = true
-                )
-
-                def Shader "Shader"
-                {
-                    uniform token info:implementationSource = "sourceAsset"
-                    uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
-                    uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
-                    color3f inputs:diffuse_tint = (0.882679, 0.90759075, 0.06889302)
-                    token outputs:out (
-                        renderType = "material"
-                    )
-                }
-            }
-        }
-    }
-
-    def Xform "Cube_01" (
-        inherits = </World/_Class_Cube_Red>
-        instanceable = true
-    )
-    {
-        quatf xformOp:orient = (1, 0, 0, 0)
-        float3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (1.6772258843990702, 0, 0)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-    }
-
-    def Xform "Cube_02" (
-        prepend apiSchemas = ["MaterialBindingAPI"]
-        inherits = </World/_Class_Cube_Red>
-        instanceable = true
-    )
-    {
-        rel material:binding = </World/Looks/OmniPBR_Blue> (
-            bindMaterialAs = "strongerThanDescendants"
-        )
-        quatf xformOp:orient = (1, 0, 0, 0)
-        float3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 1.8461749821880287, 0)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-    }
-
-    def Xform "Cube_03" (
-        prepend apiSchemas = ["MaterialBindingAPI"]
-        inherits = </World/_Class_Cube_Red>
-        instanceable = true
-    )
-    {
-        rel material:binding = </World/Looks/OmniPBR_Blue> (
-            bindMaterialAs = "weakerThanDescendants"
-        )
-    }
-
-    def Xform "Cube_04" (
-        inherits = </World/_Class_Cube_Red>
-        instanceable = true
-    )
-    {
-        color3f[] primvars:displayColor = [(0, 1, 0)] (
-            interpolation = "constant"
-        )
-        uniform token purpose = "default"
-        token visibility = "inherited"
-        quatf xformOp:orient = (1, 0, 0, 0)
-        float3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (1.4336037158412456, 1.6727603814796503, 0)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-    }
-
-    def Cube "Cube_05" (
-    )
-    {
-        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
-        color3f[] primvars:displayColor = [(0, 1, 0)] (
-            interpolation = "constant"
-        )
-        double size = 1
-        quatd xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (3.2250553274445837, 0, 0)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-    }    
-
-    def Scope "Looks"
-    {
-        def Material "OmniPBR_Yellow"
-        {
-            token outputs:mdl:displacement.connect = </World/Looks/OmniPBR_Yellow/Shader.outputs:out>
-            token outputs:mdl:surface.connect = </World/Looks/OmniPBR_Yellow/Shader.outputs:out>
-            token outputs:mdl:volume.connect = </World/Looks/OmniPBR_Yellow/Shader.outputs:out>
-
-            def Shader "Shader"
-            {
-                uniform token info:implementationSource = "sourceAsset"
-                uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
-                uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
-                color3f inputs:diffuse_tint = (0.882679, 0.90759075, 0.06889302)
-                token outputs:out (
-                    renderType = "material"
-                )
-            }
-        }
-
-        def Material "OmniPBR_Blue"
-        {
-            token outputs:mdl:displacement.connect = </World/Looks/OmniPBR_Blue/Shader.outputs:out>
-            token outputs:mdl:surface.connect = </World/Looks/OmniPBR_Blue/Shader.outputs:out>
-            token outputs:mdl:volume.connect = </World/Looks/OmniPBR_Blue/Shader.outputs:out>
-
-            def Shader "Shader"
-            {
-                uniform token info:implementationSource = "sourceAsset"
-                uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
-                uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
-                color3f inputs:diffuse_tint = (0.029408854, 0.08059826, 0.8910891)
-                token outputs:out (
-                    renderType = "material"
-                )
-            }
-        }
-    }
-}
-
-```
-  </td >   
-</table>
-
-<img width="2116" height="976" alt="image" src="https://github.com/user-attachments/assets/33b8fda0-3d34-4409-8440-8215754cd8d5" />
-
-🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-instancing)
-
 ### 1.2.3 - VariantSets and Variants:
 
 Apply the resolved variant selections to all VariantSets that affect the PrimSpec at path in the LayerStack, and iterate through the selected Variants on each VariantSet. For each target, recursively apply LIVERP evaluation on the targeted LayerStack - Note that the “S” is not present - we ignore Specializes arcs while recursing
@@ -1698,7 +1323,7 @@ large scenes.</strong>
 
 ##  2.0- Before you start, things you need to know
 
-##  2.1- Model Kinds
+##  2.1- Model Kinds, Model Hierarchy
 Group, assembly, component all inherit from the base kind “model”
 Subcomponent is the outlier
 
@@ -2007,7 +1632,7 @@ If you want go deeper in collections, in the next link you will find detailed in
 
 🔗 [More info](https://openusd.org/release/user_guides/collections_and_patterns.html#collections-and-patterns)
 
-### 2.3.1- Asset Interface
+### 2.3.2- Asset Interface
 
 Each asset designed to be opened as a stage or added to a scene through referencing has a root layer that serves as its foundation.
 
@@ -2017,18 +1642,18 @@ Each asset designed to be opened as a stage or added to a scene through referenc
 
 ##### 🧠 [Exercise (Organizing Prim Hierarchy)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-structure-principles/organizing-prim-hierarchy.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_03)
 
-### 2.3.2- WorkStreams
+### 2.3.3- WorkStreams
 
 Assets should model workstreams into layers.
 
 ##### 🧠 [Exercise (Adding User Workstreams)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/workstreams/adding-user-workstreams.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_04)
 
-### 2.3.3- Asset Parameterization
+### 2.3.4- Asset Parameterization
 Asset parameterization enables the reuse of content by allowing certain fields and properties to vary downstream.
 
 ##### 🧠 [Exercise (Reuse content)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-parameterization/exercise-asset-parameterization.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_05)
 
-### 2.3.4- Reference/Payload Pattern
+### 2.3.5- Reference/Payload Pattern
 
 Instead of expecting users to know whether a complex asset requires payloading, many assets adopt the “reference-payload” pattern. This means their interface file is designed to be referenced, with the payload structure internal to the asset.
 
@@ -2040,7 +1665,383 @@ We use Lofting to show properties from payloaded assets to the layer from which 
 
 ##### 🧠 [Exercise (Lofting Variant Sets)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/reference-payload-pattern/lofting-variant-sets.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_08)
 
-### 2.3.5- Model Hierarchy
+## 2.4- Asset Modularity and Instancing
+
+#### <ins>Instancing</ins> 
+
+Instancing in USD is a feature that allows many instances of “the same” object to share the same representation (composed prims) on a UsdStage. Instances can be overridden in stronger layers, so it is possible to “break” an instance when necessary, if it must be uniquified.
+
+Instancing in USD is a feature that allows many instances of “the same” object to share the same representation (composed prims) on a UsdStage. In exchange for this sharing of representation (which provides speed and memory benefits both for the USD core and, generally, for clients processing the UsdStage), we give up the ability to uniquely override opinions on prims beneath the “instance root”, although it is possible to override opinions that will affect all instances’ views of the data. 
+
+In the next example, we create a class _Class_Cube_Red, then three cubes are instances of that class, the first two have modified position, the second has change opinion to a blue material, but is weaker so still will be red, the third is the same but this time is stronger, so the third cube will be blue without modifying the instance status.
+
+##### ⭐ Example "Instancing a red cube and change opinion in instances"
+
+<table>
+    <td valign="top">
+  
+```usda
+#usda 1.0
+
+def Xform "World" (
+    prepend apiSchemas = ["MaterialBindingAPI"]
+)
+{
+    rel material:binding = </World/Looks/OmniPBR_Blue> (
+        bindMaterialAs = "weakerThanDescendants"
+    )
+
+    class Scope "_Class_Cube_Red"
+    {
+        def Mesh "Cube" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [0, 1, 3, 2, 4, 6, 7, 5, 6, 2, 3, 7, 4, 5, 1, 0, 4, 0, 2, 6, 5, 7, 3, 1]
+            rel material:binding = </World/_Class_Cube_Red/Looks/OmniPBR_Red> (
+                bindMaterialAs = "weakerThanDescendants"
+            )
+            normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0)] (
+                interpolation = "faceVarying"
+            )
+            point3f[] points = [(-0.5, -0.5, 0.5), (0.5, -0.5, 0.5), (-0.5, 0.5, 0.5), (0.5, 0.5, 0.5), (-0.5, -0.5, -0.5), (0.5, -0.5, -0.5), (-0.5, 0.5, -0.5), (0.5, 0.5, -0.5)]
+            texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0), (0, 1), (0, 0), (1, 0), (1, 1), (0, 0), (1, 0), (1, 1), (0, 1), (0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0)] (
+                interpolation = "faceVarying"
+            )
+            uniform token subdivisionScheme = "none"
+            quatd xformOp:orient = (1, 0, 0, 0)
+            double3 xformOp:scale = (1, 1, 1)
+            double3 xformOp:translate = (0, 1, 1)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+        }
+
+        def Scope "Looks"
+        {
+            def Material "OmniPBR_Red"
+            {
+                token outputs:mdl:displacement.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Red/Shader.outputs:out>
+                token outputs:mdl:surface.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Red/Shader.outputs:out>
+                token outputs:mdl:volume.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Red/Shader.outputs:out>
+
+                def Shader "Shader"
+                {
+                    uniform token info:implementationSource = "sourceAsset"
+                    uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
+                    uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
+                    color3f inputs:diffuse_tint = (0.90759075, 0.12366932, 0.01797209)
+                    token outputs:out (
+                        renderType = "material"
+                    )
+                }
+            }
+        }
+    }
+
+    def Xform "Cube_01" (
+        inherits = </World/_Class_Cube_Red>
+        instanceable = true
+    )
+    {
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (1.6772258843990702, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Xform "Cube_02" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+        inherits = </World/_Class_Cube_Red>
+        instanceable = true
+    )
+    {
+        rel material:binding = </World/Looks/OmniPBR_Blue> (
+            bindMaterialAs = "strongerThanDescendants"
+        )
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 1.8461749821880287, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Xform "Cube_03" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+        inherits = </World/_Class_Cube_Red>
+        instanceable = true
+    )
+    {
+        rel material:binding = </World/Looks/OmniPBR_Blue> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+    }
+
+    def Scope "Looks"
+    {
+        def Material "OmniPBR_Yellow"
+        {
+            token outputs:mdl:displacement.connect = </World/Looks/OmniPBR_Yellow/Shader.outputs:out>
+            token outputs:mdl:surface.connect = </World/Looks/OmniPBR_Yellow/Shader.outputs:out>
+            token outputs:mdl:volume.connect = </World/Looks/OmniPBR_Yellow/Shader.outputs:out>
+
+            def Shader "Shader"
+            {
+                uniform token info:implementationSource = "sourceAsset"
+                uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
+                uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
+                color3f inputs:diffuse_tint = (0.882679, 0.90759075, 0.06889302)
+                token outputs:out (
+                    renderType = "material"
+                )
+            }
+        }
+
+        def Material "OmniPBR_Blue"
+        {
+            token outputs:mdl:displacement.connect = </World/Looks/OmniPBR_Blue/Shader.outputs:out>
+            token outputs:mdl:surface.connect = </World/Looks/OmniPBR_Blue/Shader.outputs:out>
+            token outputs:mdl:volume.connect = </World/Looks/OmniPBR_Blue/Shader.outputs:out>
+
+            def Shader "Shader"
+            {
+                uniform token info:implementationSource = "sourceAsset"
+                uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
+                uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
+                color3f inputs:diffuse_tint = (0.029408854, 0.08059826, 0.8910891)
+                token outputs:out (
+                    renderType = "material"
+                )
+            }
+        }
+    }
+}
+
+```
+  </td >   
+</table>
+
+<img width="1955" height="1108" alt="image" src="https://github.com/user-attachments/assets/34141fad-0f83-432a-ae3a-74fff5f77bf7" />
+
+##### ⭐ Example "Adding variants to the previous example"
+---
+<table>
+    <td valign="top">
+  
+```usda
+def Xform "World"
+{
+    class Scope "_Class_Cube_Red"
+    {
+        def Mesh "Cube" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+            variants = {
+                string ChangeColor = "Variant"
+            }
+            prepend variantSets = "ChangeColor"
+        )
+        {
+            float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [0, 1, 3, 2, 4, 6, 7, 5, 6, 2, 3, 7, 4, 5, 1, 0, 4, 0, 2, 6, 5, 7, 3, 1]
+            normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0)] (
+                interpolation = "faceVarying"
+            )
+            point3f[] points = [(-0.5, -0.5, 0.5), (0.5, -0.5, 0.5), (-0.5, 0.5, 0.5), (0.5, 0.5, 0.5), (-0.5, -0.5, -0.5), (0.5, -0.5, -0.5), (-0.5, 0.5, -0.5), (0.5, 0.5, -0.5)]
+            texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0), (0, 1), (0, 0), (1, 0), (1, 1), (0, 0), (1, 0), (1, 1), (0, 1), (0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0)] (
+                interpolation = "faceVarying"
+            )
+            uniform token subdivisionScheme = "none"
+            quatd xformOp:orient = (1, 0, 0, 0)
+            double3 xformOp:scale = (1, 1, 1)
+            double3 xformOp:translate = (0, 1, 1)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            variantSet "ChangeColor" = {
+                "Variant" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    customData = {
+                        string[] variantPrimPaths = ["."]
+                    }
+                ) {
+                    rel material:binding = </World/Cube_01/Looks/OmniPBR_Yellow> (
+                        bindMaterialAs = "weakerThanDescendants"
+                    )
+
+                }
+                "Variant_1" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    customData = {
+                        string[] variantPrimPaths = ["."]
+                    }
+                ) {
+                    rel material:binding = </World/Looks/OmniPBR_Blue> (
+                        bindMaterialAs = "weakerThanDescendants"
+                    )
+
+                }
+            }
+        }
+
+        def Scope "Looks"
+        {
+            def Material "OmniPBR_Red"
+            {
+                token outputs:mdl:displacement.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Red/Shader.outputs:out>
+                token outputs:mdl:surface.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Red/Shader.outputs:out>
+                token outputs:mdl:volume.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Red/Shader.outputs:out>
+
+                def Shader "Shader"
+                {
+                    uniform token info:implementationSource = "sourceAsset"
+                    uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
+                    uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
+                    color3f inputs:diffuse_tint = (0.90759075, 0.12366932, 0.01797209)
+                    token outputs:out (
+                        renderType = "material"
+                    )
+                }
+            }
+
+            def Material "OmniPBR_Yellow"
+            {
+                token outputs:mdl:displacement.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Yellow/Shader.outputs:out>
+                token outputs:mdl:surface.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Yellow/Shader.outputs:out>
+                token outputs:mdl:volume.connect = </World/_Class_Cube_Red/Looks/OmniPBR_Yellow/Shader.outputs:out>
+                custom uniform bool paused = 0 (
+                    customData = {
+                        bool nonpersistant = 1
+                    }
+                    hidden = true
+                )
+
+                def Shader "Shader"
+                {
+                    uniform token info:implementationSource = "sourceAsset"
+                    uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
+                    uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
+                    color3f inputs:diffuse_tint = (0.882679, 0.90759075, 0.06889302)
+                    token outputs:out (
+                        renderType = "material"
+                    )
+                }
+            }
+        }
+    }
+
+    def Xform "Cube_01" (
+        inherits = </World/_Class_Cube_Red>
+        instanceable = true
+    )
+    {
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (1.6772258843990702, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Xform "Cube_02" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+        inherits = </World/_Class_Cube_Red>
+        instanceable = true
+    )
+    {
+        rel material:binding = </World/Looks/OmniPBR_Blue> (
+            bindMaterialAs = "strongerThanDescendants"
+        )
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 1.8461749821880287, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Xform "Cube_03" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+        inherits = </World/_Class_Cube_Red>
+        instanceable = true
+    )
+    {
+        rel material:binding = </World/Looks/OmniPBR_Blue> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+    }
+
+    def Xform "Cube_04" (
+        inherits = </World/_Class_Cube_Red>
+        instanceable = true
+    )
+    {
+        color3f[] primvars:displayColor = [(0, 1, 0)] (
+            interpolation = "constant"
+        )
+        uniform token purpose = "default"
+        token visibility = "inherited"
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (1.4336037158412456, 1.6727603814796503, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Cube "Cube_05" (
+    )
+    {
+        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+        color3f[] primvars:displayColor = [(0, 1, 0)] (
+            interpolation = "constant"
+        )
+        double size = 1
+        quatd xformOp:orient = (1, 0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (3.2250553274445837, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }    
+
+    def Scope "Looks"
+    {
+        def Material "OmniPBR_Yellow"
+        {
+            token outputs:mdl:displacement.connect = </World/Looks/OmniPBR_Yellow/Shader.outputs:out>
+            token outputs:mdl:surface.connect = </World/Looks/OmniPBR_Yellow/Shader.outputs:out>
+            token outputs:mdl:volume.connect = </World/Looks/OmniPBR_Yellow/Shader.outputs:out>
+
+            def Shader "Shader"
+            {
+                uniform token info:implementationSource = "sourceAsset"
+                uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
+                uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
+                color3f inputs:diffuse_tint = (0.882679, 0.90759075, 0.06889302)
+                token outputs:out (
+                    renderType = "material"
+                )
+            }
+        }
+
+        def Material "OmniPBR_Blue"
+        {
+            token outputs:mdl:displacement.connect = </World/Looks/OmniPBR_Blue/Shader.outputs:out>
+            token outputs:mdl:surface.connect = </World/Looks/OmniPBR_Blue/Shader.outputs:out>
+            token outputs:mdl:volume.connect = </World/Looks/OmniPBR_Blue/Shader.outputs:out>
+
+            def Shader "Shader"
+            {
+                uniform token info:implementationSource = "sourceAsset"
+                uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
+                uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
+                color3f inputs:diffuse_tint = (0.029408854, 0.08059826, 0.8910891)
+                token outputs:out (
+                    renderType = "material"
+                )
+            }
+        }
+    }
+}
+
+```
+  </td >   
+</table>
+
+<img width="2116" height="976" alt="image" src="https://github.com/user-attachments/assets/33b8fda0-3d34-4409-8440-8215754cd8d5" />
+
+🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-instancing)
+
 
 
 
