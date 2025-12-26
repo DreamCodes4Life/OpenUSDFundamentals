@@ -79,10 +79,9 @@ Composition arcs are evaluated according to **strength ordering** (from weakest 
 This makes sublayers ideal for **non-destructive layering** of work from multiple departments.
 
 ---
+The following example shows how a **shot** composes multiple layers and includes an entire **sequence**, which itself is composed of additional layers.
 
 ##### ⭐ Example: Shot → Sequence Composition
-
-The following example shows how a **shot** composes multiple layers and includes an entire **sequence**, which itself is composed of additional layers.
 
 <table>
 <tr>
@@ -324,7 +323,7 @@ a second.
 </td> 
 </table>
 
-🧠 [Exercise 1 (SubLayers)](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/sublayers/working-with-sublayers.html)
+##### 🧠 [Exercise 1 (SubLayers)](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/sublayers/working-with-sublayers.html)
 
 - [Files](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/sublayers)
 
@@ -827,7 +826,6 @@ def Xform "World"
 
 <img width="2116" height="976" alt="image" src="https://github.com/user-attachments/assets/33b8fda0-3d34-4409-8440-8215754cd8d5" />
 
-
 🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-instancing)
 
 ### 1.2.3 - VariantSets and Variants:
@@ -956,7 +954,7 @@ stage.GetRootLayer().Save()
 
 Basically we are making a variantSet and attribute depending on other varianSets
 
-🧠 [Exercise (Authoring Variants)](https://openusd.org/release/tut_authoring_variants.html)
+##### 🧠 [Exercise (Authoring Variants)](https://openusd.org/release/tut_authoring_variants.html)
 
 ##### 🐍 [i.e. (Add VariantSets in Python)](https://github.com/DreamCodes4Life/OpenUSDFundamentals/blob/main/03_CompositionBasics/07_addVariantSetAndVariants.py)  🐍 [i.e. (Add Multiple Variants in Python)](https://github.com/DreamCodes4Life/OpenUSDFundamentals/blob/main/03_CompositionBasics/08_addMoreVariants.py)  🐍 [i.e. (Edit VariantSets in Python)](https://github.com/DreamCodes4Life/OpenUSDFundamentals/blob/main/03_CompositionBasics/09_editVariants.py)
 
@@ -2017,34 +2015,34 @@ If you want go deeper in collections, in the next link you will find detailed in
 
 Each asset designed to be opened as a stage or added to a scene through referencing has a root layer that serves as its foundation.
 
-🧠 [Exercise (Your First Asset)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-structure-principles/your-first-asset.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_01)
+##### 🧠 [Exercise (Your First Asset)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-structure-principles/your-first-asset.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_01)
 
-🧠 [Exercise (Encapsulating Your Asset)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-structure-principles/encapsulating-your-asset.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_02)
+##### 🧠 [Exercise (Encapsulating Your Asset)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-structure-principles/encapsulating-your-asset.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_02)
 
-🧠 [Exercise (Organizing Prim Hierarchy)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-structure-principles/organizing-prim-hierarchy.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_03)
+##### 🧠 [Exercise (Organizing Prim Hierarchy)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-structure-principles/organizing-prim-hierarchy.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_03)
 
 ### 2.3.2- WorkStreams
 
 Assets should model workstreams into layers.
 
-🧠 [Exercise (Adding User Workstreams)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/workstreams/adding-user-workstreams.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_04)
+##### 🧠 [Exercise (Adding User Workstreams)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/workstreams/adding-user-workstreams.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_04)
 
 ### 2.3.3- Asset Parameterization
 Asset parameterization enables the reuse of content by allowing certain fields and properties to vary downstream.
 
-🧠 [Exercise (Reuse content)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-parameterization/exercise-asset-parameterization.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_05)
+##### 🧠 [Exercise (Reuse content)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-parameterization/exercise-asset-parameterization.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_05)
 
 ### 2.3.4- Reference/Payload Pattern
 
 Instead of expecting users to know whether a complex asset requires payloading, many assets adopt the “reference-payload” pattern. This means their interface file is designed to be referenced, with the payload structure internal to the asset.
 
-🧠 [Exercise (Reference/Payload Pattern)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/reference-payload-pattern/exercise-ref-payload-pattern.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_06)
+##### 🧠 [Exercise (Reference/Payload Pattern)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/reference-payload-pattern/exercise-ref-payload-pattern.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_06)
 
 We use Lofting to show properties from payloaded assets to the layer from which we are referencing
 
-🧠 [Exercise (Lofting Primvars)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/reference-payload-pattern/lofting-primvars.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_07)
+##### 🧠 [Exercise (Lofting Primvars)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/reference-payload-pattern/lofting-primvars.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_07)
 
-🧠 [Exercise (Lofting Variant Sets)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/reference-payload-pattern/lofting-variant-sets.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_08)
+##### 🧠 [Exercise (Lofting Variant Sets)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/reference-payload-pattern/lofting-variant-sets.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_08)
 
 ### 2.3.5- Model Hierarchy
 
