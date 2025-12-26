@@ -1761,8 +1761,9 @@ def Xform "Forest_set" (
 </table>
 
 Next exercises requires USDVIEW
-🧠 [Exercise (Groups)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-groups.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure)
-🧠 [Exercise (Assemblies)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-assemblies.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure)
+##### 🧠 [Exercise (Groups)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-groups.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure)
+
+##### 🧠 [Exercise (Assemblies)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/model-hierarchy/exercise-assemblies.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure)
 
 ### 2.1.2- Component
  A **component** is a reusable, self-contained asset that is complete and referenceable
@@ -2037,8 +2038,6 @@ Asset parameterization enables the reuse of content by allowing certain fields a
 
 Instead of expecting users to know whether a complex asset requires payloading, many assets adopt the “reference-payload” pattern. This means their interface file is designed to be referenced, with the payload structure internal to the asset.
 
-
-
 🧠 [Exercise (Reference/Payload Pattern)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/reference-payload-pattern/exercise-ref-payload-pattern.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_06)
 
 We use Lofting to show properties from payloaded assets to the layer from which we are referencing
@@ -2046,6 +2045,8 @@ We use Lofting to show properties from payloaded assets to the layer from which 
 🧠 [Exercise (Lofting Primvars)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/reference-payload-pattern/lofting-primvars.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_07)
 
 🧠 [Exercise (Lofting Variant Sets)](https://docs.nvidia.com/learn-openusd/latest/asset-structure/reference-payload-pattern/lofting-variant-sets.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/asset_structure/exercise_08)
+
+### 2.3.5- Model Hierarchy
 
 
 
