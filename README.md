@@ -2077,6 +2077,61 @@ Nested instancing is when an instance subgraph has instances within it.
 
 ##### 🧠 [Exercise (Refinement Using Variant Sets)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/refining-scenegraph-instances/scenegraph-variant-set-refinement.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_sg_varset_refine)
 
+Changes on inherited ancestral properties, like transforms, do not create any new prototypes; they simply leverage inheritance to efficiently introduce variety or control across instances.
+
+You can also use primvars.
+
+##### ⭐ Example "Refine Instances with primvars"
+
+ <table>
+  <td valign="top">
+    
+```usda
+#usda 1.0
+(
+    defaultPrim = "Warehouse"
+    metersPerUnit = 0.01
+    upAxis = "Z"
+)
+def Xform "Warehouse"
+{
+    def "RobotArm_01" (
+        references = @./RobotArm.usd@
+        instanceable = true
+    )
+    {
+        color3f[] primvars:arm_color = [(0.61, 0.75, 0.24)] (
+            interpolation = "constant"
+        )
+    }
+    def "RobotArm_02" (
+        references = @./RobotArm.usd@
+        instanceable = true
+    )
+    {
+    }
+    def "RobotArm_03" (
+        references = @./RobotArm.usd@
+        instanceable = true
+    )
+    {
+        color3f[] primvars:arm_color = [(0.08, 0.70, 0.52)] (
+            interpolation = "constant"
+        )
+    }
+    
+}
+```
+  </td>
+</table>
+
+##### 🧠 [Exercise (Hierarchical Refinement Using Primvars)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/refining-scenegraph-instances/scenegraph-hierarchical-refinement.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_sg_primvar_refine)
+
+##### 🧠 [Exercise (Ad Hoc Arcs Refinement)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/refining-scenegraph-instances/scenegraph-ad-hoc-arcs-refinement.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_sg_add_arc_refine)
+
+##### 🧠 [Exercise (Broadcasted Refinement)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/refining-scenegraph-instances/scenegraph-broadcasted-refinement.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_sg_broadcasted_refine)
+
+
 
 
 
