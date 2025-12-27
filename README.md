@@ -2142,11 +2142,18 @@ The PointInstancer includes the following mandatory properties:
 - protoIndices Declares an instance of a prototype. Each element in the array maps a point to a prototype id.
 - positions The points in local space where each instance is located.
 
-##### 🧠 [Exercise (Broadcasted Refinement)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/authoring-point-instancing/exercise-authoring-point-instancing.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_pt_author)
+##### 🧠 [Exercise (Authoring Point Instancing)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/authoring-point-instancing/exercise-authoring-point-instancing.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_pt_author)
 
+### 2.4.5- Refining Point Instances
 
+##### 🧠 [Exercise (Refining Point Instances)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/refining-point-instances.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_pt_refine)
+
+Note: Prototype prims do not exist in scene description – they are generated and managed internally by UsdStage. This allows UsdStage to create and remove prototypes as needed in response to scene description changes. For example, if some of the Car prims in ParkingLot.usd were changed to reference different assets, UsdStage would generate new prototype prims as needed. See Finding and Traversing Prototypes for information on how to use prototype prims.
 
 🔗 [More info](https://openusd.org/release/api/class_usd_geom_point_instancer.html#details)
+🔗 [More info 2](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_pt_refine)
+
+
 
 # 3) Customizing USD: Exam Weight 6%
 # 4) Data Exchange: Exam Weight 15%
