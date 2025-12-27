@@ -26,7 +26,7 @@ work, and when and when it is appropriate to use each. The developer needs to be
 
 •	A **PrimStack** is a list of PrimSpecs that contribute opinions for a composed prim’s metadata.
 
-•	A **primvar** is a special attribute that a renderer associates with a geometric primitive, and can vary (interpolate) the value of the attribute over the surface/volume of the primitive
+•   A **[primvar](https://openusd.org/release/glossary.html#usdglossary-primvar)** (primitive variable) is a special kind of attribute that can vary and interpolate across a geometric primitive. You work with primvars through UsdGeomImageable and UsdGeomPrimvar. Review its **[class](https://openusd.org/release/api/class_usd_geom_primvar.html)**. See **[Primvar Data Management](https://docs.omniverse.nvidia.com/usd/code-docs/usd-exchange-sdk/latest/api/group__primvars.html)**
 
 •	Composition is cached, value resolution is not
 
@@ -36,7 +36,6 @@ work, and when and when it is appropriate to use each. The developer needs to be
 
 •	An **index**, also referred to as a PrimIndex, is the result of composition. A prim’s index contains an ordered (from strongest to weakest) list of “Nodes”. All of the queries on USD classes except for stage-level metadata rely on prim indices to perform value resolution.
 
-•	A **[primvar](https://openusd.org/release/glossary.html#usdglossary-primvar)** (primitive variable) is a special kind of attribute that can vary and interpolate across a geometric primitive. You work with primvars through UsdGeomImageable and UsdGeomPrimvar. Review its **[class](https://openusd.org/release/api/class_usd_geom_primvar.html)**
 
 ##  1.1- Creating Composition Arcs
 
@@ -127,7 +126,7 @@ Bellow is an example to introduce the concept of Flattering, we are running this
   <tr>
     <td valign="top">
   
-```usda
+```py
 from pxr import Usd
 import os
 import omni.usd
@@ -543,7 +542,7 @@ VariantSets can be nested directly inside each other, on the same prim.
   <tr>
     <td valign="top">
   
-```usda
+```py
 from pxr import Sdf, Usd
 stage = Usd.Stage.CreateNew("nestedVariants.usd")
 prim = stage.DefinePrim("/Employee")
@@ -1427,7 +1426,7 @@ def Xform "TreeSpruce" (
  <table>
   <td valign="top">
     
-```usda
+```py
 from pxr import Usd
 
 stage: Usd.Stage = Usd.Stage.Open("_assets/stage_traversal.usda")
@@ -1443,7 +1442,7 @@ for prim in stage.Traverse():
  <table>
   <td valign="top">
     
-```usda
+```py
 from pxr import Usd, UsdGeom
 
 stage: Usd.Stage = Usd.Stage.Open("_assets/stage_traversal.usda")
@@ -1468,7 +1467,7 @@ print("Number of Xform prims: ", xform_count)
  <table>
   <td valign="top">
     
-```usda
+```py
 from pxr import Usd
 stage: Usd.Stage = Usd.Stage.Open("_assets/stage_traversal.usda")
 prim_range = Usd.PrimRange(stage.GetPrimAtPath("/World/Box"))
@@ -1486,7 +1485,7 @@ for prim in prim_range:
   </tr>
   <td valign="top">
     
-```usda
+```py
 from pxr import Usd, UsdGeom, Kind, Gf
 
 # Create stage and model root
@@ -1592,6 +1591,8 @@ def Xform "World" (
 ```
 </td> 
 </table>
+
+##### 🧠 [Exercise/Tutorial (Traversing a Stage)](https://openusd.org/release/tut_traversing_stage.html)
 
 ##  2.3- Asset Structure 
 
@@ -2205,15 +2206,288 @@ stage = get_context().get_stage()
 
 🔗 [Full Guide](https://docs.omniverse.nvidia.com/usd/code-docs/usd-exchange-sdk/latest/docs/getting-started.html)
 
+##### 🐍 Example: Hello usdex
+
+<table>
+<tr>
+<th align="left">From App</th>
+<th align="left">From Python env</th>
+</tr>
+<tr>
+    
+<td valign="top">
+    
+```py
+# hello_usdex.py
+import pathlib
+import usdex.core
+from pxr import Gf, Usd, UsdGeom
+from omni.usd import get_context
+
+stage = get_context().get_stage()
+root_layer = stage.GetRootLayer()
+identifier = root_layer.identifier
+
+UsdGeom.SetStageUpAxis(stage, UsdGeom.Tokens.y)
+UsdGeom.SetStageMetersPerUnit(stage, 0.01)
+
+# Create and Xform and set the transform on it
+xform = usdex.core.defineXform(stage, "/Scene")
+cube = UsdGeom.Cube.Define(stage, xform.GetPrim().GetPath().AppendChild("Cube"))
+usdex.core.setLocalTransform(
+    prim=cube.GetPrim(),
+    translation=Gf.Vec3d(10.459, 49.592, 17.792),
+    pivot=Gf.Vec3d(0.0),
+    rotation=Gf.Vec3f(-0.379, 56.203, 0.565),
+    rotationOrder=usdex.core.RotationOrder.eXyz,
+    scale=Gf.Vec3f(1),
+)
+
+# Save the stage
+stage.Save()
+
+print(f"Created USD stage '{pathlib.Path('./'+identifier).absolute()}' using:")
+print(f"\tOpenUSD version: {Usd.GetVersion()}")
+print(f"\tOpenUSD Exchange SDK version: {usdex.core.version()}")
+```
+</td> 
+<td valign="top">
+
+```py
+# hello_usdex.py
+import pathlib
+import usdex.core
+from pxr import Gf, Usd, UsdGeom
+
+# Create a new USD stage
+identifier = "hello_world.usda"
+stage = usdex.core.createStage(identifier, "Scene", UsdGeom.Tokens.y, 0.01, "OpenUSD Exchange SDK Example")
+
+# Create and Xform and set the transform on it
+xform = usdex.core.defineXform(stage, "/Scene")
+cube = UsdGeom.Cube.Define(stage, xform.GetPrim().GetPath().AppendChild("Cube"))
+usdex.core.setLocalTransform(
+    prim=cube.GetPrim(),
+    translation=Gf.Vec3d(10.459, 49.592, 17.792),
+    pivot=Gf.Vec3d(0.0),
+    rotation=Gf.Vec3f(-0.379, 56.203, 0.565),
+    rotationOrder=usdex.core.RotationOrder.eXyz,
+    scale=Gf.Vec3f(1),
+)
+
+# Save the stage
+stage.Save()
+
+print(f"Created USD stage '{pathlib.Path('./'+identifier).absolute()}' using:")
+print(f"\tOpenUSD version: {Usd.GetVersion()}")
+print(f"\tOpenUSD Exchange SDK version: {usdex.core.version()}")
+```
+</td>
+</table>
+
+When authoring UsdStages it is important to configure certain metrics & metadata on the root SdfLayer of the stage.
+Available Functions: configureStage, createStage, saveStage. Detailed in the next link.
+
+🔗 [Review Functions](https://docs.omniverse.nvidia.com/usd/code-docs/usd-exchange-sdk/latest/api/group__stage__metadata.html)
+
+When authoring UsdPrims to a Stage, you will need to specify an SdfPath that identifies a unique location for the Prim. The nature of OpenUSD’s composition algorithm (know as “LIVERPS”) makes it fairly complex to determine whether your chosen location is valid for authoring. 
+
+🔗 [Review Functions](https://docs.omniverse.nvidia.com/usd/code-docs/usd-exchange-sdk/latest/api/group__stage__hierarchy.html)
+
+Introspection of USD layers
+
+🔗 [Review Functions](https://docs.omniverse.nvidia.com/usd/code-docs/usd-exchange-sdk/latest/api/group__layers.html)
+
+##### 🧠 [Exercise (Anatomy of a Converter)](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-exchange/exercise.html)
 
 
+## 4.2- Data Extraction
+
+To achieve a direct and faithful extraction between two data formats, [conceptual](https://docs.omniverse.nvidia.com/usd/latest/technical_reference/conceptual_data_mapping/index.html) data mapping is crucial. This process involves analyzing how to map data models from one format to another.
+
+🔗 [More Info](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-extraction/what-is-data-extraction.html)
+
+##### 🧠 [Exercise (Extracting Geometry)](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-exchange/exercise.html)
+
+##### 🧠 [Exercise (Extracting Materials)](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-extraction/exercise-extracting-materials.html)
+
+##### 🐍 Example: Full Data Exchange from OBJ
+
+<table>
+<tr>
+<th align="left">Final result from previous exercises</th>
+</tr>
+<tr>
+    
+<td valign="top">
+    
+```py
+
+import argparse
+import logging
+import math
+from enum import Enum
+from pathlib import Path
+
+import assimp_py
+from pxr import Gf, Sdf, Tf, Usd, UsdGeom, UsdShade
+
+logger = logging.getLogger("obj2usd")
 
 
+class UpAxis(Enum):
+    Y = UsdGeom.Tokens.y
+    Z = UsdGeom.Tokens.z
+
+    def __str__(self):
+        return self.value
+
+# ADD CODE BELOW HERE
+# vvvvvvvvvvvvvvvvvvv
+
+def extract(input_file: Path, output_file: Path) -> Usd.Stage:
+    logger.info("Executing extraction phase...")
+    process_flags = 0
+    # Load the obj using Assimp 
+    scene = assimp_py.ImportFile(str(input_file), process_flags)
+    # Define the stage where the output will go 
+    stage: Usd.Stage = Usd.Stage.CreateNew(str(output_file))
+
+    for mesh in scene.meshes:
+        # Replace any invalid characters with underscores.
+        sanitized_mesh_name = Tf.MakeValidIdentifier(mesh.name)
+        usd_mesh = UsdGeom.Mesh.Define(stage, f"/{sanitized_mesh_name}")
+        # You can use the Vt APIs here instead of Python lists.
+        # Especially keep this in mind for C++ implementations.
+        face_vertex_counts = []
+        face_vertex_indices = []
+        for indices in mesh.indices:
+            # Convert the indices to a flat list
+            face_vertex_indices.extend(indices)
+            # Append the number of vertices for each face
+            face_vertex_counts.append(len(indices))
+        
+        usd_mesh.CreatePointsAttr(mesh.vertices)
+        usd_mesh.CreateFaceVertexCountsAttr().Set(face_vertex_counts)
+        usd_mesh.CreateFaceVertexIndicesAttr().Set(face_vertex_indices)
+        # Treat the mesh as a polygonal mesh and not a subdivision surface.
+        # Respect the normals or lack of normals from OBJ.
+        usd_mesh.CreateSubdivisionSchemeAttr(UsdGeom.Tokens.none)
+        if mesh.normals:
+            usd_mesh.CreateNormalsAttr(mesh.normals)
+        
+        # Get the mesh's material by index
+        # scene.materials is a dictionary consisting of assimp material properties
+        mtl = scene.materials[mesh.material_index]
+        if not mtl:
+            continue
+        sanitized_mat_name = Tf.MakeValidIdentifier(mtl["NAME"])
+        material_path = Sdf.Path(f"/{sanitized_mat_name}")
+        # Create the material prim
+        material: UsdShade.Material = UsdShade.Material.Define(stage, material_path)
+        # Create a UsdPreviewSurface Shader prim.
+        shader: UsdShade.Shader = UsdShade.Shader.Define(stage, material_path.AppendChild("Shader"))
+        shader.CreateIdAttr("UsdPreviewSurface")
+        # Connect shader surface output as an output for the material graph.
+        material.CreateSurfaceOutput().ConnectToSource(shader.ConnectableAPI(), UsdShade.Tokens.surface)
+        # Get colors
+        diffuse_color = mtl["COLOR_DIFFUSE"]
+        emissive_color = mtl["COLOR_EMISSIVE"]
+        specular_color = mtl["COLOR_SPECULAR"]
+        # Convert specular shininess to roughness.
+        roughness = 1 - math.sqrt(mtl["SHININESS"] / 1000.0)
+
+        shader.CreateInput("useSpecularWorkflow", Sdf.ValueTypeNames.Int).Set(1)
+        shader.CreateInput("diffuseColor", Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(diffuse_color))
+        shader.CreateInput("emissiveColor", Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(emissive_color))
+        shader.CreateInput("specularColor", Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(specular_color))
+        shader.CreateInput("roughness", Sdf.ValueTypeNames.Float).Set(roughness)
+        binding_api = UsdShade.MaterialBindingAPI.Apply(usd_mesh.GetPrim())
+        binding_api.Bind(material)
+
+    return stage
 
 
+def transform(stage: Usd.Stage, args: argparse.Namespace):
+    logger.info("Executing transformation phase...")
 
 
+def main(args: argparse.Namespace):
+    # Extract the .obj
+    stage: Usd.Stage = extract(args.input, args.output)
+    # Transformations to be applied to the scene hierarchy
+    transform(stage, args)
+    # Save the Stage after editing
+    stage.Save()
 
+# ^^^^^^^^^^^^^^^^^^^^
+# ADD CODE ABOVE HERE
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
+    parser = argparse.ArgumentParser(
+        "obj2usd", description="An OBJ to USD converter script."
+    )
+    parser.add_argument("input", help="Input OBJ file", type=Path)
+    parser.add_argument("-o", "--output", help="Specify an output USD file", type=Path)
+    export_opts = parser.add_argument_group("Export Options")
+    export_opts.add_argument(
+        "-u",
+        "--up-axis",
+        help="Specify the up axis for the exported USD stage.",
+        type=UpAxis,
+        choices=list(UpAxis),
+        default=UpAxis.Y,
+    )
+
+    args = parser.parse_args()
+    if args.output is None:
+        args.output = args.input.parent / f"{args.input.stem}.usda"
+
+    logger.info(f"Converting {args.input}...")
+    main(args)
+    logger.info(f"Converted results output as: {args.output}.")
+    logger.info(f"Done.")
+
+```
+</td> 
+
+</table>
+
+## 4.3- Asset Validation
+
+Omniverse Asset Validator is based on usdchecker and provides a GUI for asset validation. The asset validator includes:
+- User interface
+- Command line interface
+- Python API
+- Automatic fixes for failed validations
+- Ability to add new rules
+
+##### 🧠 [Exercise (Asset Validation and Testing)](https://docs.nvidia.com/learn-openusd/latest/data-exchange/asset-validation/exercise-asset-validation-testing.html)
+
+## 4.4- Data Transformation
+
+Key aspects of data transformation include:
+- Export options
+- Content re-structuring
+- Optimizations, e.g., mesh merging
+
+A transformation step doesn’t need to happen in the same process as extraction or other transformation steps. It could be a separate process or a cloud service. You can even consider transformations that may occur as post-processes after a stage has been exported or converted.
+
+##### 🧠 [Exercise (Transforming the Prim Hierarchy)](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-transformation/transformation-hierarchy.html)
+
+##### 🧠 [Exercise/Tutorial (Converting Between Layer Formats)](https://openusd.org/release/tut_converting_between_layer_formats.html)
+
+## 4.5- Converting Between Layer Formats
+
+File formats:
+
+| Order | Arc Type |
+|-----|---------|
+| **.usda** | Human-readable UTF-8 text |
+| **.usdc** | Random-access “Crate” binary |
+| **.usd** | Either of the above |
 
 
 
