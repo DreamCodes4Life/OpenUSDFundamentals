@@ -2156,7 +2156,34 @@ Note: Prototype prims do not exist in scene description – they are generated a
 
 
 # 3) Customizing USD: Exam Weight 6%
+
 # 4) Data Exchange: Exam Weight 15%
+
+In USD, Data Exchange refers to the ability to share, modify, and synchronize scene data across different tools, applications, and teams using a layered, non-destructive composition model, where data from a source application is mapped and translated into a format that the destination application can understand. This mapping ensures that structure, meaning, and intent are preserved across systems, enabling geometry, materials, transforms, variants, and metadata to be exchanged consistently without destructive overwrites or loss of context.
+
+There are four common implementations for adding OpenUSD support for your data format or application:
+- Importers
+- Exporters
+- Standalone converters: a script, executable or microservice dedicated to translating to and from another file format.
+- File format plugins. They allow OpenUSD to compose with additional file formats and even non-file-based sources, such as databases and procedurally generated content. They can be used as standalone converters with tools like usdcat.
+
+Two-phase approach: extract and transform. This is loosely inspired by Extract-Transform-Load (ETL)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # 5) Data Modeling: Exam Weight 13%
 # 6) Debugging and Troubleshooting: Exam Weight 11%
 # 7) Pipeline Development: Exam Weight 14%
