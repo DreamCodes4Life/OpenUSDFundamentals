@@ -2171,6 +2171,38 @@ Two-phase approach: extract and transform. This is loosely inspired by Extract-T
 
 ## 4.1- Install OpenUSD Exchange SDK
 
+ <table>
+   <tr>
+    <th align="left">Windows</th>
+    <th align="left">Linux</th>
+  </tr>
+  <td valign="top">
+
+    # Create a virtual environment
+    python -m venv usdex-env
+
+    # Activate the virtual environment
+    usdex-env\Scripts\activate
+
+    # Install the OpenUSD Exchange modules
+    pip install usd-exchange
+  </td>
+    <td valign="top">
+
+    # Create a virtual environment
+    python -m venv usdex-env
+
+    # Activate the virtual environment
+    source usdex-env/bin/activate
+
+    # Install the OpenUSD Exchange modules
+    pip install usd-exchange
+  </td>
+</table>
+
+from omni.usd import get_context
+stage = get_context().get_stage()
+
 🔗 [Full Guide](https://docs.omniverse.nvidia.com/usd/code-docs/usd-exchange-sdk/latest/docs/getting-started.html)
 
 
