@@ -323,6 +323,50 @@ a second.
 
 - [Files](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/sublayers)
 
+What happens to “overs” when their underlying prim is moved to a different location in the scenegraph?
+
+##### ⭐ Example "Sequence.usd"
+---
+<table>
+  <tr>
+    <th align="left">Sequence.usd/th>
+    <th align="left">notes</th>
+  </tr>
+  <tr>
+    <td valign="top">
+  
+```usda
+#usda 1.0
+
+def Xform "World"
+{
+    def Xform "Sets"
+    {
+        def Xform "Bookshelf"
+        {
+            def Xform "Book_1"
+            {
+                string name = "Toy Story"
+            }
+        }
+
+        def Xform "Desk"
+        {
+        }
+    }
+}
+
+```
+  </td> 
+  <td valign="top">
+    
+```usda
+In this example, the book defined in sequence.usda has the title “Toy Story”. However, this layer is brought in to shot.usda via a sublayer statement, and the book’s title is overridden to “Wall-E.” The question is: what happens if a user independently working on sequence.usda moves Book_1 to Desk, or if Book_1 is renamed to Video_1? In such a case, the “over” in shot.usda would be “orphaned” and be ignored when composing and evaluating /World/Sets/Desk/Book_1 in shot.usda. It is the responsibility of the user working on sequence.usda to ensure that shot.usda is updated to avoid this problem.
+```
+</td> 
+</table>
+
+
 ### 1.2.2 - Inherit
 
 Inherits is a composition arc that addresses the problem of adding a single, non-destructive edit (override) that can affect a whole class of distinct objects on a stage. Inherits acts as a non-destructive “broadcast” operator that applies opinions authored on one prim to every other prim that inherits the “source” prim; not only do property opinions broadcast over inherits arcs - all scene description, hierarchically from the source, inherits. 
@@ -2488,6 +2532,68 @@ File formats:
 | **.usda** | Human-readable UTF-8 text |
 | **.usdc** | Random-access “Crate” binary |
 | **.usd** | Either of the above |
+
+usdcat can be used to convert files between file formats. With plain, .usd files, you can change them using the --usdFormat option.
+
+$ usdcat file.usd --out file.usd --usdFormat usda
+
+🔗 [More Info](https://openusd.org/release/usdfaq.html#so-what-file-formats-does-usd-support)
+
+**Converting between .usda and .usdc Files**
+
+A .usd file can be either a text or binary format file. When USD opens a .usd file, it detects the underlying format and handles the file appropriately. You can convert any .usda or .usdc file to a .usd file simply by renaming it. 
+
+Consider Sphere.usda
+To convert this file to binary, we can specify an output filename with the .usdc extension:
+$ usdcat -o NewSphere.usdc Sphere.usda
+This produces a binary file named Sphere.usdc in the current directory containing the same content as Sphere.usda. We can verify this using usddiff:
+$ usddiff Sphere.usda NewSphere.usdc
+
+Same goes for the other way around
+
+🔗 [Full details](https://openusd.org/release/tut_converting_between_layer_formats.html)
+
+Usdz File Format Specification
+
+A single object, from marshaling and transmission perspectives
+Potentially streamable
+Usable without unpacking to a filesystem
+
+A usdz package is an uncompressed zip archive that is allowed to contain the following file types:
+
+| Kind | Allowed File Types |
+|-----|---------|
+| USD | usda, usdc, usd |
+| Image | png, jpeg, exr, avif |
+| Audio | M4A, MP3, WAV |
+
+- A usdz package is a zero compression, unencrypted zip archive.
+- it is possible to reference individual files within a package from outside the package
+- packages can themselves contain other packages
+- A usdz file is read-only - editing its contents requires first unpacking the package and editing its constituent parts using appropriate tools. Since usdz is a “core” USD file format, one can use usdcat and usdedit on packages:
+
+🔗 [Full details](https://openusd.org/release/spec_usdz.html)
+
+## 4.6- Maximizing USD Performance
+
+### 4.6.1- Use an allocator optimized for multithreading
+
+### 4.6.2- Use binary “.usd” files for geometry and shading caches
+
+For files that contain more than a few small definitions or overrides, the binary “usdc” format will open faster and consume substantially much less memory while held open (a UsdStage keeps open all the layers that participate in a composition). You should not need to exert any extra effort to get this behavior since creating a new layer or stage with a filename someFile.usd will, by default, create a usdc file.
+
+### 4.6.3- Package assets with payloads
+
+
+
+
+
+
+
+
+
+
+
 
 
 
