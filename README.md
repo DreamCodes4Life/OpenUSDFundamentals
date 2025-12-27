@@ -2169,7 +2169,9 @@ There are four common implementations for adding OpenUSD support for your data f
 
 Two-phase approach: extract and transform. This is loosely inspired by Extract-Transform-Load (ETL)
 
+## 4.1- Install OpenUSD Exchange SDK
 
+🔗 [Full Guide](https://docs.omniverse.nvidia.com/usd/code-docs/usd-exchange-sdk/latest/docs/getting-started.html)
 
 
 
