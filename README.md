@@ -1667,7 +1667,7 @@ We use Lofting to show properties from payloaded assets to the layer from which 
 
 ## 2.4- Asset Modularity and Instancing
 
-#### <ins>Instancing</ins> 
+### 2.4.1- Instancing
 
 Instancing in USD is a feature that allows many instances of “the same” object to share the same representation (composed prims) on a UsdStage. Instances can be overridden in stronger layers, so it is possible to “break” an instance when necessary, if it must be uniquified.
 
@@ -2041,6 +2041,41 @@ def Xform "World"
 <img width="2116" height="976" alt="image" src="https://github.com/user-attachments/assets/33b8fda0-3d34-4409-8440-8215754cd8d5" />
 
 🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-instancing)
+
+### 2.4.2- Authoring Scenegraph Instancing
+
+Scenegraph–or native–instancing is the first implementation of instancing in OpenUSD.
+
+There are four key terms involved in scenegraph instancing that you need to be aware of:
+
+- Prototype: A unique, shared sub-structure
+
+- Instance: A repetition of a prototype within a scene
+
+- Instanceable Prim or Instance Prim: The mutable root of an instance
+
+- Instance Proxy: A read-only addressable stand-in of the prototype prims of an instance
+
+To enable scenegraph instancing in USD, you need to set one value, the instanceable prim metadata. Setting instanceable = true tells OpenUSD to create one shared version (prototype) of an object that many instances can use as long as they share composition arcs.
+
+Proxies and instance subgraphs are immutable, but the instanceable prim is mutable.
+
+##### 🧠 [Exercise (Author Scenegraph Instancing)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/authoring-scenegraph-instancing/exercise-authoring-scenegraph-instancing.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_sg_author_inst)
+
+<u>Nested Instancing</u>
+___
+
+Nested instancing is when an instance subgraph has instances within it. 
+
+##### 🧠 [Exercise (Nested Scenegraph Instancing)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/authoring-scenegraph-instancing/exercise-nested-instancing.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_sg_nested_inst)
+
+### 2.4.3- Refining Scenegraph Instances
+
+##### 🧠 [Exercise (Instance Editability)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/refining-scenegraph-instances/scenegraph-instance-refinement.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_sg_editability)
+
+##### 🧠 [Exercise (Deinstance Refinement)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/refining-scenegraph-instances/scenegraph-deinstance-refinement.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_sg_deinstance_refine)
+
+##### 🧠 [Exercise (Refinement Using Variant Sets)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/refining-scenegraph-instances/scenegraph-variant-set-refinement.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_sg_varset_refine)
 
 
 
