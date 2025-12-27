@@ -2131,9 +2131,22 @@ def Xform "Warehouse"
 
 ##### 🧠 [Exercise (Broadcasted Refinement)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/refining-scenegraph-instances/scenegraph-broadcasted-refinement.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_sg_broadcasted_refine)
 
+### 2.4.4- Authoring Point Instancing
+
+Point instancing is implemented as a schema in OpenUSD–the PointInstancer prim type.
+
+PointInstancer uses array attributes to describe points in 3D space. Additionally, explicit prototypes represented by prim hierarchies in the stage are specified as relationship targets on the PointInstancer. By combining the points, prototypes, and an index array to map the points to prototypes, OpenUSD is able to handle hundreds of thousands of repetitions very compactly in this vectorized format.
+
+The PointInstancer includes the following mandatory properties:
+- prototypes: A relationship targeting the prim hierarchies that the PointInstancer should use as instance prototypes.
+- protoIndices Declares an instance of a prototype. Each element in the array maps a point to a prototype id.
+- positions The points in local space where each instance is located.
+
+##### 🧠 [Exercise (Broadcasted Refinement)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/authoring-point-instancing/exercise-authoring-point-instancing.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/Instancing/ex_pt_author)
 
 
 
+🔗 [More info](https://openusd.org/release/api/class_usd_geom_point_instancer.html#details)
 
 # 3) Customizing USD: Exam Weight 6%
 # 4) Data Exchange: Exam Weight 15%
