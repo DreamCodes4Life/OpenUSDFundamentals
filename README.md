@@ -2207,11 +2207,11 @@ Note: Prototype prims do not exist in scene description – they are generated a
 
 - **Model Kinds** (Refer to 2.1)
 
-## 3.1- Generating New Schema Classes
+## 3.1- Schema Classes
 
 Configure Environment: [Watch the tutorial on YouTube](https://youtu.be/ulZMQLSNgyQ)
 
-A schema class is simply a container of a UsdPrim that provides a layer of specific, named API atop the underlying scene graph. USD provides a code generator script called ‘usdGenSchema’ for creating new schema classes
+A schema class is simply a container of a UsdPrim that provides a layer of specific, named API atop the underlying scene graph. 
 
 Two types:
 
@@ -2228,9 +2228,49 @@ Two types:
 | Typical usage                        | “This prim **is a** light, mesh, scope, etc.”                             | “This prim **has** collections, clips, material bindings, render props, etc.”                     |
 | Example from core USD                | `UsdGeomScope`, `UsdGeomMesh`, `UsdGeomImageable` (non-concrete). :contentReference[oaicite:13]{index=13} | `UsdModelAPI`, `UsdClipsAPI`, `UsdCollectionAPI`, `UsdGeomModelAPI`, `UsdGeomMotionAPI`. :contentReference[oaicite:14]{index=14} |
 
+## 3.2- Generating New Schema Classes
 
+USD provides a code generator script called ‘usdGenSchema’ for creating new schema classesThe schema generation script ‘usdGenSchema’ is driven by a USD layer.
+- Must specify the libraryName as layer metadata.
+- usd/schema.usda must exist in the layer stack, not necessarily as a direct subLayer.
+- Schema typenames must be unique across all libraries.
+- Attribute names and tokens must be camelCased valid identifiers.
 
+base layer (or starting point) for creating new schema classes
 
+<table>
+  <tr>
+    <th>Example <code>schema.usda</code> file for code generation</th>
+  </tr>
+  <tr>
+    <td>
+<pre><code>#usda 1.0
+(
+    """ This file describes an example schema for code generation using
+        usdGenSchema.
+    """
+    subLayers = [
+        # To refer to schema types defined in schema.usda files from other
+        # libraries, simply add comma-separated lines of the form
+        # @&lt;library name&gt;/schema.usda@. In this example, we're referring
+        # to schema types from 'usd'. If you were adding sub-classes of
+        # UsdGeom schema types, you would use usdGeom/schema.usda instead.
+        @usd/schema.usda@
+    ]
+)
+
+over "GLOBAL" (
+    customData = {
+        string libraryName       = "usdSchemaExamples"
+        string libraryPath       = "./"
+        string libraryPrefix     = "UsdSchemaExamples"
+    }
+) {
+}
+</code></pre>
+    </td>
+  </tr>
+</table>
 
 
 # 4) Data Exchange: Exam Weight 15%
