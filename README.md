@@ -2238,10 +2238,11 @@ USD provides a code generator script called ‘usdGenSchema’ for creating new 
 
 base layer (or starting point) for creating new schema classes
 
-##### ⭐ Example "schema.usda" file for code generation
+##### ⭐ Example "base layer (or starting point) for creating new schema classes "
 
-<table>
+ <table>
   <td valign="top">
+    
 ```usda
 #usda 1.0
 (
@@ -2266,9 +2267,9 @@ over "GLOBAL" (
     }
 ) {
 }
+```
   </td>
 </table>
-
 
 
 # 4) Data Exchange: Exam Weight 15%
