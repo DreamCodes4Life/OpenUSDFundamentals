@@ -2242,7 +2242,6 @@ base layer (or starting point) for creating new schema classes
 
 <table>
   <td valign="top">
-    
 ```usda
 #usda 1.0
 (
@@ -2267,7 +2266,8 @@ over "GLOBAL" (
     }
 ) {
 }
-
+  </td>
+</table>
 
 
 
