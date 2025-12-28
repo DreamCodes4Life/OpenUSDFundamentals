@@ -3572,6 +3572,143 @@ def Xform "World"
 </table>
 
 
+##### 🐍 Example: Material Binding Relationships
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">relationships_ex3.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom, UsdShade, Gf, Sdf
+
+file_path = "_assets/relationships_ex3.usda"
+stage = Usd.Stage.CreateNew(file_path)
+
+world_xform: UsdGeom.Xform = UsdGeom.Xform.Define(stage, "/World")
+
+
+cube_1: UsdGeom.Cube = UsdGeom.Cube.Define(stage, world_xform.GetPath().AppendPath("Cube_1"))
+cube_2: UsdGeom.Cube = UsdGeom.Cube.Define(stage, world_xform.GetPath().AppendPath("Cube_2"))
+UsdGeom.XformCommonAPI(cube_2).SetTranslate(Gf.Vec3d(5, 0, 0))
+cube_3: UsdGeom.Cube = UsdGeom.Cube.Define(stage, world_xform.GetPath().AppendPath("Cube_3"))
+UsdGeom.XformCommonAPI(cube_3).SetTranslate(Gf.Vec3d(10, 0, 0))
+
+# Create typeless container for the materials
+looks = stage.DefinePrim("/World/Looks")
+
+# Create simple green material for preview
+green: UsdShade.Material = UsdShade.Material.Define(stage, looks.GetPath().AppendPath("GreenMat"))
+green_ps = UsdShade.Shader.Define(stage, green.GetPath().AppendPath("PreviewSurface"))
+green_ps.CreateIdAttr("UsdPreviewSurface")
+green_ps.CreateInput("diffuseColor", Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(0.0, 1.0, 0.0))
+green.CreateSurfaceOutput().ConnectToSource(green_ps.ConnectableAPI(), "surface")
+
+# Create simple red material for preview
+red: UsdShade.Material = UsdShade.Material.Define(stage, looks.GetPath().AppendPath("RedMat"))
+red_ps = UsdShade.Shader.Define(stage, red.GetPath().AppendPath("PreviewSurface"))
+red_ps.CreateIdAttr("UsdPreviewSurface")
+red_ps.CreateInput("diffuseColor", Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(1.0, 0.0, 0.0))
+red.CreateSurfaceOutput().ConnectToSource(red_ps.ConnectableAPI(), "surface")
+
+# Bind materials to Prims
+UsdShade.MaterialBindingAPI.Apply(cube_1.GetPrim()).Bind(green)
+UsdShade.MaterialBindingAPI.Apply(cube_2.GetPrim()).Bind(green)
+UsdShade.MaterialBindingAPI.Apply(cube_3.GetPrim()).Bind(red)
+
+# Verify by reading the direct binding
+for prim in [cube_1, cube_2, cube_3]:
+    mat = UsdShade.MaterialBindingAPI(prim).GetDirectBinding().GetMaterial()
+    print(f"{prim.GetPath()} -> {mat.GetPath() if mat else 'None'}")
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def Xform "World"
+{
+    def Cube "Cube_1" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </World/Looks/GreenMat>
+    }
+
+    def Cube "Cube_2" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </World/Looks/GreenMat>
+        double3 xformOp:translate = (5, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cube "Cube_3" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </World/Looks/RedMat>
+        double3 xformOp:translate = (10, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def "Looks"
+    {
+        def Material "GreenMat"
+        {
+            token outputs:surface.connect = </World/Looks/GreenMat/PreviewSurface.outputs:surface>
+
+            def Shader "PreviewSurface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0, 1, 0)
+                token outputs:surface
+            }
+        }
+
+        def Material "RedMat"
+        {
+            token outputs:surface.connect = </World/Looks/RedMat/PreviewSurface.outputs:surface>
+
+            def Shader "PreviewSurface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (1, 0, 0)
+                token outputs:surface
+            }
+        }
+    }
+}
+
+
+
+```
+</td> 
+
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### 5.1.4- Time Codes and Time Samples
 ### 5.1.5- Prim and Property Paths
 ### 5.1.6- OpenUSD File Formats
