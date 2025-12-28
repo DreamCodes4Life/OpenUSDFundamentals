@@ -2240,10 +2240,13 @@ base layer (or starting point) for creating new schema classes
 
 <table>
   <tr>
-    <th>Example <code>schema.usda</code> file for code generation</th>
+    <th style="text-align:left; padding: 8px 12px;">
+      Example <code>schema.usda</code> file for code generation
+    </th>
   </tr>
   <tr>
-    <td>
+    <td style="padding: 0;">
+      <div style="padding: 12px 16px;">
 <pre><code>#usda 1.0
 (
     """ This file describes an example schema for code generation using
@@ -2268,9 +2271,11 @@ over "GLOBAL" (
 ) {
 }
 </code></pre>
+      </div>
     </td>
   </tr>
 </table>
+
 
 
 # 4) Data Exchange: Exam Weight 15%
