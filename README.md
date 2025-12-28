@@ -1370,6 +1370,8 @@ large scenes.</strong>
 
 Model kinds are prim‑level metadata that classify a prim’s role in the model hierarchy.
 
+The model hierarchy defines a contiguous set of prims descending from a root prim on a stage, all of which are models. Model hierarchy is an index of the scene that is, strictly, a prefix, of the entire scene.
+
 Group, assembly, component all inherit from the base kind “model”
 Subcomponent is the outlier
 
@@ -2205,11 +2207,44 @@ Note: Prototype prims do not exist in scene description – they are generated a
 
 # 3) Customizing USD: Exam Weight 6%
 
-- **Model Kinds** (Refer to 2.1)
+- **Model Kinds & Model Hierarchy** (Refer to 2.1)
 
 ## 3.1- Schema Classes
 
-Configure Environment: [Watch the tutorial on YouTube](https://youtu.be/ulZMQLSNgyQ)
+In the OpenUSD ecosystem, a schema is a blueprint that may define a new Prim type or Properties for describing a particular data model.  For example, a Geometry schema might specify how to define the vertices and topology of a 3D mesh, while a Shading schema could outline how to describe parameters for materials and textures.
+
+##### ⭐ Example "schema for a sphere and ussage"
+
+ <table>
+  <tr>
+    <th align="left">class Sphere</th>
+    <th align="left">ussage</th>
+  </tr>
+  <td valign="top">
+    
+```py
+class Sphere "Sphere" (
+ 
+    inherits = </Gprim>
+ 
+) {
+ 
+    double radius = 1.0
+ 
+    float3[] extent = [(-1.0, -1.0, -1.0), (1.0, 1.0, 1.0)] 
+ 
+}
+```
+  </td>
+  <td valign="top">
+    
+```py
+def Sphere "MySphere" {
+ 
+}
+```
+  </td>
+</table>
 
 A schema class is simply a container of a UsdPrim that provides a layer of specific, named API atop the underlying scene graph. 
 
@@ -2228,7 +2263,21 @@ Two types:
 | Typical usage                        | “This prim **is a** light, mesh, scope, etc.”                             | “This prim **has** collections, clips, material bindings, render props, etc.”                     |
 | Example from core USD                | `UsdGeomScope`, `UsdGeomMesh`, `UsdGeomImageable` (non-concrete). :contentReference[oaicite:13]{index=13} | `UsdModelAPI`, `UsdClipsAPI`, `UsdCollectionAPI`, `UsdGeomModelAPI`, `UsdGeomMotionAPI`. :contentReference[oaicite:14]{index=14} |
 
-## 3.2- Generating New Schema Classes
+### 3.1.1- Generating New Schema Classes
+
+Basic Guide To Creating Custom Schemas:
+
+---
+
+Creating new Prim types can range from simple definitions to complex structures like a Mesh. Here’s a brief on generating new schema classes:
+
+Configure the Environment: Ensure Python modules like “jinja2” and “argparse” are installed.
+Define the Schema Class: A schema class is a container of a UsdPrim. It provides a specific API atop the underlying scene graph.
+Types of Schema Classes:
+IsA schema: Imparts a typeName to a Prim, can be concrete or abstract.
+API schema: Provides an interface but doesn’t specify a typeName.
+
+Configure Environment: [Watch the tutorial on YouTube](https://youtu.be/ulZMQLSNgyQ)
 
 USD provides a code generator script called ‘usdGenSchema’ for creating new schema classesThe schema generation script ‘usdGenSchema’ is driven by a USD layer.
 - Must specify the libraryName as layer metadata.
@@ -2383,8 +2432,46 @@ You can find the previous examples in the USD_ROOT in the next path:
 | 2 | Re-run codegen so everything is in sync (optional but clean) | `.\scripts\usdGenSchema.bat share\usd\examples\plugin\usdSchemaExamples\resources\usdSchemaExamples\schema.usda share\usd\examples\plugin\usdSchemaExamples\resources\usdSchemaExamples` |
 | 3 | Files created by `usdInitSchema` (if missing) | - `CMakeLists.txt`<br>- `__init__.py`<br>- `module.cpp`<br>- `schemaUserDoc.usda` |
 
+🔗 [Full Guide](https://openusd.org/release/api/_usd__page__generating_schemas.html)
 
 
+## 3.2- Extending the KindRegistry
+
+The kind registry can be extended using the facilities provided by PlugRegistry, by adding a 'Kinds' sub-dictionary to the plugInfo.json file of any module within your "pixar-base aware" build environment. The dictionary entries will look like the following:
+
+##### ⭐ Example Applied API Schema
+
+ <table>
+  <tr>SimplePrim.usda</tr>
+  <td valign="top">
+    
+```py
+"Info": {
+    "Kinds": {
+        "chargroup": {
+            "baseKind": "assembly",
+            "description": "A chargroup is an assembly comprised of a single character plus some associated models -- typically hair, garments, and charprops."
+        },
+        "charprop": {
+            "baseKind": "component"
+        },
+        "newRootKind": {
+        }
+    }
+}
+```
+  </td>
+</table>
+
+🔗 [Full Guide](https://openusd.org/release/api/kind_page_front.html)
+
+## 3.3- Registering Plug-ins
+
+🔗 [More Info](https://openusd.org/release/api/class_plug_registry.html#plug_RegisteringPlugins)
+
+## 3.4- Asset Resolution
+
+🔗 [More Info](https://openusd.org/release/api/ar_page_front.html)
 
 # 4) Data Exchange: Exam Weight 15%
 
@@ -2768,21 +2855,12 @@ For files that contain more than a few small definitions or overrides, the binar
 
 ### 4.6.3- Package assets with payloads
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # 5) Data Modeling: Exam Weight 13%
+
+
+
+
+
 # 6) Debugging and Troubleshooting: Exam Weight 11%
 # 7) Pipeline Development: Exam Weight 14%
 # 8) Visualization: Exam Weight 8%
