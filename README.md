@@ -2857,6 +2857,32 @@ For files that contain more than a few small definitions or overrides, the binar
 
 # 5) Data Modeling: Exam Weight 13%
 
+## 5.1- Setting the Stage
+
+### 5.1.1- Stage
+
+At its core, an OpenUSD stage presents the scenegraph, which dictates what is in our scene.
+
+##### 🐍 Example: Create a USD File and Load it as a Stage
+
+<table>  
+    <td valign="top">
+    ```py
+# Import the `Usd` module from the `pxr` package:
+from pxr import Usd
+
+# Define a file path name:
+file_path = "_assets/first_stage.usda"
+# Create a stage at the given `file_path`:
+stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
+print(stage.ExportToString(addSourceFileComment=False))
+
+    ```
+    </td>
+</table>
+
+
+🔗 [Full details](https://docs.nvidia.com/learn-openusd/latest/stage-setting/stage.html)
 
 
 
