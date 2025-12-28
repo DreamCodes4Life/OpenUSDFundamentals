@@ -2238,16 +2238,13 @@ USD provides a code generator script called ‘usdGenSchema’ for creating new 
 
 base layer (or starting point) for creating new schema classes
 
+##### ⭐ Example "schema.usda" file for code generation
+
 <table>
-  <tr>
-    <th style="text-align:left; padding: 8px 12px;">
-      Example <code>schema.usda</code> file for code generation
-    </th>
-  </tr>
-  <tr>
-    <td style="padding: 0;">
-      <div style="padding: 12px 16px;">
-<pre><code>#usda 1.0
+  <td valign="top">
+    
+```usda
+#usda 1.0
 (
     """ This file describes an example schema for code generation using
         usdGenSchema.
@@ -2255,7 +2252,7 @@ base layer (or starting point) for creating new schema classes
     subLayers = [
         # To refer to schema types defined in schema.usda files from other
         # libraries, simply add comma-separated lines of the form
-        # @&lt;library name&gt;/schema.usda@. In this example, we're referring
+        # @<library name>/schema.usda@. In this example, we're referring
         # to schema types from 'usd'. If you were adding sub-classes of
         # UsdGeom schema types, you would use usdGeom/schema.usda instead.
         @usd/schema.usda@
@@ -2270,11 +2267,7 @@ over "GLOBAL" (
     }
 ) {
 }
-</code></pre>
-      </div>
-    </td>
-  </tr>
-</table>
+
 
 
 
