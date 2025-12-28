@@ -319,9 +319,10 @@ a second.
 </td> 
 </table>
 
-##### 🧠 [Exercise 1 (SubLayers)](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/sublayers/working-with-sublayers.html)
+##### 🧠 [Exercise (SubLayers)](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/sublayers/working-with-sublayers.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/sublayers)
 
-- [Files](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/sublayers)
+##### 🧠 [Tutorial (Transformations, Animation, and Layer Offsets)](https://openusd.org/release/tut_xforms.html) 
+
 
 What happens to “overs” when their underlying prim is moved to a different location in the scenegraph?
 
@@ -361,6 +362,7 @@ def Xform "World"
   <td valign="top">
     
 ```py
+
 In this example, the book defined in sequence.usda has the title “Toy Story”. However, this layer is brought in to shot.usda via a sublayer statement, and the book’s title is overridden to “Wall-E.” The question is: what happens if a user independently working on sequence.usda moves Book_1 to Desk, or if Book_1 is renamed to Video_1? In such a case, the “over” in shot.usda would be “orphaned” and be ignored when composing and evaluating /World/Sets/Desk/Book_1 in shot.usda. It is the responsibility of the user working on sequence.usda to ensure that shot.usda is updated to avoid this problem.
 ```
 </td> 
@@ -2864,12 +2866,11 @@ For files that contain more than a few small definitions or overrides, the binar
 At its core, an OpenUSD stage presents the scenegraph, which dictates what is in our scene.
 
 
-
-##### 🐍 Example: Full Data Exchange from OBJ
+##### 🐍 Example: Create a USD File and Load it as a Stage
 
 <table>
 <tr>
-<th align="left">Final result from previous exercises</th>
+<th align="left">first_stage.usda</th>
 </tr>
 <tr>
     
@@ -2891,7 +2892,712 @@ print(stage.ExportToString(addSourceFileComment=False))
 </table>
 
 
+##### 🐍 Example: Create a USD File and Load it as a Stage
+
+<table>
+<tr>
+<th align="left">first_stage.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+    
+```py
+
+# Import the `Usd` module from the `pxr` package:
+from pxr import Usd
+
+# Define a file path name:
+file_path = "_assets/first_stage.usda"
+# Create a stage at the given `file_path`:
+stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
+print(stage.ExportToString(addSourceFileComment=False))
+```
+</td> 
+
+</table>
+
+##### 🐍 Example: Open and Save USD Stages
+
+<table>
+<tr>
+<th align="left">first_stage.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+    
+```py
+
+from pxr import Usd
+
+# Open an existing USD stage from disk:
+stage: Usd.Stage = Usd.Stage.Open("_assets/first_stage.usda")
+
+# Add a simple prim so we can see a change in the saved file:
+stage.DefinePrim("/World", "Xform")
+
+# Save the stage back to disk:
+stage.Save()
+
+# Print the stage as text so we can inspect the result:
+print(stage.ExportToString(addSourceFileComment=False))
+```
+</td> 
+
+</table>
+
+
+##### 🐍 Example: Create a Stage in Memory
+
+Sometimes you may want to create a stage without immediately writing it to disk. This is useful when generating temporary data, running tests, or building a stage that you only want to save after validating its contents.
+
+<table>
+<tr>
+<th align="left">in_memory_stage.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+    
+```py
+
+from pxr import Usd
+
+# Create a new stage stored only in memory:
+stage: Usd.Stage = Usd.Stage.CreateInMemory()
+
+# Add a prim so the stage contains some data:
+stage.DefinePrim("/World", "Xform")
+
+# Print the stage's contents:
+print("In-memory stage:")
+print(stage.ExportToString(addSourceFileComment=False))
+
+# Export the stage to disk if needed:
+stage.Export("_assets/in_memory_stage.usda")
+```
+</td> 
+
+</table>
+
+##### 🐍 Example: Working With the Root Layer
+
+When you create a stage with CreateNew(), the file you pass becomes its root layer.
+
+<table>
+<tr>
+<th align="left">root_layer_example.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+    
+```py
+
+from pxr import Usd, Sdf
+import os
+
+# Create a new stage:
+stage: Usd.Stage = Usd.Stage.CreateNew("_assets/root_layer_example.usda")
+
+# Get the root layer object:
+root_layer: Sdf.Layer = stage.GetRootLayer()
+# Use relpath to avoid printing build machine filesystem info.
+print("Root layer identifier:", os.path.relpath(root_layer.identifier))
+
+# Add a simple prim so the stage is not empty:
+stage.DefinePrim("/World", "Xform")
+
+# Create an additional layer (in a different format) and add it as a sublayer:
+extra_layer: Sdf.Layer = Sdf.Layer.CreateNew("_assets/extra_layer.usdc")
+# Anchor the path relative to the root layer for better portability
+rel_path = "./" + os.path.basename(extra_layer.identifier)
+root_layer.subLayerPaths.append(rel_path)
+
+# Save both layers:
+stage.Save()
+extra_layer.Save()
+
+# Print the contents of the root layer:
+print("Root layer contents:")
+print(root_layer.ExportToString())
+```
+</td> 
+
+</table>
+
 🔗 [Full details](https://docs.nvidia.com/learn-openusd/latest/stage-setting/stage.html)
+
+### 5.1.2- Prims
+
+If you followed the previous subjects you have already worked a lot with prims. A prim is the primary container object in USD. It can contain other prims and properties holding data.
+
+##### 🐍 Example: Defining a Prim
+
+DefinePrim() API provides a generic way to create any type of prim:
+
+<table>
+<tr>
+<th align="left">Python snippet</th>
+<th align="left">prims.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+    
+```py
+# Import the `Usd` module from the `pxr` package:
+from pxr import Usd
+
+# Create a new USD stage with root layer named "prims.usda":
+stage: Usd.Stage = Usd.Stage.CreateNew("_assets/prims.usda")
+
+# Define a new primitive at the path "/hello" on the current stage:
+stage.DefinePrim("/hello")
+
+# Define a new primitive at the path "/world" on the current stage with the prim type, Sphere.
+stage.DefinePrim("/world", "Sphere")
+
+stage.Save()
+```
+</td> 
+<td valign="top">
+    
+```py
+#usda 1.0
+
+def "hello"
+{
+}
+
+def Sphere "world"
+{
+}
+```
+</td> 
+
+</table>
+
+##### 🐍 Example: Defining a Sphere Prim
+
+Using a specific API to create a prim
+
+<table>
+<tr>
+<th align="left">Python snippet</th>
+<th align="left">sphere_prim.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom
+
+file_path = "_assets/sphere_prim.usda"
+stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
+
+# Define a prim of type `Sphere` at path `/hello`:
+sphere: UsdGeom.Sphere = UsdGeom.Sphere.Define(stage, "/hello")
+sphere.CreateRadiusAttr().Set(2)
+
+# Save the stage:
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def Sphere "hello"
+{
+    double radius = 2
+}
+
+
+```
+</td> 
+
+</table>
+
+##### 🐍 Example: Creating a Prim Hierarchy
+
+<table>
+<tr>
+<th align="left">python</th>
+<th align="left"></th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom
+
+file_path = "_assets/prim_hierarchy.usda"
+stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
+
+# Define a Scope prim in stage at `/Geometry`
+geom_scope: UsdGeom.Scope = UsdGeom.Scope.Define(stage, "/Geometry")
+# Define an Xform prim in the stage as a child of /Geometry called GroupTransform
+xform: UsdGeom.Xform = UsdGeom.Xform.Define(stage, geom_scope.GetPath().AppendPath("GroupTransform"))
+# Define a Cube in the stage as a child of /Geometry/GroupTransform, called Box
+cube: UsdGeom.Cube = UsdGeom.Cube.Define(stage, xform.GetPath().AppendPath("Box"))
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def Scope "Geometry"
+{
+    def Xform "GroupTransform"
+    {
+        def Cube "Box"
+        {
+        }
+    }
+}
+
+
+```
+</td> 
+
+</table>
+
+
+##### 🐍 Example: Does the Prim Exist?
+
+<table>
+<tr>
+<th align="left">python</th>
+<th align="left">prim_hierarchy.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd
+
+file_path = "_assets/prim_hierarchy.usda"
+stage: Usd.Stage = Usd.Stage.Open(file_path)
+
+prim: Usd.Prim = stage.GetPrimAtPath("/Geometry")
+child_prim: Usd.Prim
+if child_prim := prim.GetChild("Box"):
+    print("Child prim exists")
+else:
+    print("Child prim DOES NOT exist")
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def Scope "Geometry"
+{
+    def Xform "GroupTransform"
+    {
+        def Cube "Box"
+        {
+        }
+    }
+}
+
+
+```
+</td> 
+
+</table>
+
+
+### 5.1.3- Properties
+
+Prims can have two types of properties: attributes and relationships.
+
+ - **Attributes**
+
+ Each attribute can have a default value, and it can also have different values at different points in time, called time samples.
+
+##### 🐍 Example: Retrieving Properties of a Prim
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">attributes_ex1.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom, Gf
+
+file_path = "_assets/attributes_ex1.usda"
+
+stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
+
+world_xform: UsdGeom.Xform = UsdGeom.Xform.Define(stage, "/World")
+
+# Define a sphere under the World xForm:
+sphere: UsdGeom.Sphere = UsdGeom.Sphere.Define(stage, world_xform.GetPath().AppendPath("Sphere"))
+
+# Define a cube under the World xForm and set it to be 5 units away from the sphere:
+cube: UsdGeom.Cube = UsdGeom.Cube.Define(stage, world_xform.GetPath().AppendPath("Cube"))
+UsdGeom.XformCommonAPI(cube).SetTranslate(Gf.Vec3d(5, 0, 0))
+
+# Get the property names of the cube prim:
+cube_prop_names = cube.GetPrim().GetPropertyNames()
+
+# Print the property names:
+for prop_name in cube_prop_names:
+    print(prop_name)
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def Xform "World"
+{
+    def Sphere "Sphere"
+    {
+    }
+
+    def Cube "Cube"
+    {
+        double3 xformOp:translate = (5, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+}
+
+
+```
+</td> 
+
+</table>
+ 
+##### 🐍 Example: Getting Attribute Values
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">attributes_ex2.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom, Gf
+
+file_path = "_assets/attributes_ex2.usda"
+stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
+
+world_xform: UsdGeom.Xform = UsdGeom.Xform.Define(stage, "/World")
+
+sphere: UsdGeom.Sphere = UsdGeom.Sphere.Define(stage, world_xform.GetPath().AppendPath("Sphere"))
+cube: UsdGeom.Cube = UsdGeom.Cube.Define(stage, world_xform.GetPath().AppendPath("Cube"))
+UsdGeom.XformCommonAPI(cube).SetTranslate(Gf.Vec3d(5, 0, 0))
+
+# Get the attributes of the cube prim
+cube_attrs = cube.GetPrim().GetAttributes()
+for attr in cube_attrs:
+    print(attr)
+
+# Get the size, display color, and extent attributes of the cube
+cube_size: Usd.Attribute = cube.GetSizeAttr()
+cube_displaycolor: Usd.Attribute = cube.GetDisplayColorAttr()
+cube_extent: Usd.Attribute = cube.GetExtentAttr()
+
+print(f"Size: {cube_size.Get()}")
+print(f"Display Color: {cube_displaycolor.Get()}")
+print(f"Extent: {cube_extent.Get()}")
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+def Xform "World"
+{
+    def Sphere "Sphere"
+    {
+    }
+
+    def Cube "Cube"
+    {
+        double3 xformOp:translate = (5, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+}
+
+
+```
+</td> 
+
+</table>
+
+##### 🐍 Example: Setting Attribute Values
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">attributes_ex3.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom, Gf
+
+file_path = "_assets/attributes_ex3.usda"
+stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
+
+world_xform: UsdGeom.Xform = UsdGeom.Xform.Define(stage, "/World")
+
+sphere: UsdGeom.Sphere = UsdGeom.Sphere.Define(stage, world_xform.GetPath().AppendPath("Sphere"))
+cube: UsdGeom.Cube = UsdGeom.Cube.Define(stage, world_xform.GetPath().AppendPath("Cube"))
+UsdGeom.XformCommonAPI(cube).SetTranslate(Gf.Vec3d(5,0,0))
+
+# Get the size, display color, and extent attributes of the cube
+cube_size: Usd.Attribute = cube.GetSizeAttr()
+cube_displaycolor: Usd.Attribute = cube.GetDisplayColorAttr()
+cube_extent: Usd.Attribute = cube.GetExtentAttr()
+
+# Modify the size, extent, and display color attributes:
+cube_size.Set(cube_size.Get() * 2)
+cube_extent.Set(cube_extent.Get() * 2)
+cube_displaycolor.Set([(0.0, 1.0, 0.0)])
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def Xform "World"
+{
+    def Sphere "Sphere"
+    {
+    }
+
+    def Cube "Cube"
+    {
+        float3[] extent = [(-2, -2, -2), (2, 2, 2)]
+        color3f[] primvars:displayColor = [(0, 1, 0)]
+        double size = 4
+        double3 xformOp:translate = (5, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+}
+
+
+```
+</td> 
+
+</table>
+
+ 🔗 [More Info](https://docs.nvidia.com/learn-openusd/latest/stage-setting/properties/attributes.html)
+
+  - **Relationships**
+
+Relationships establish connections between prims, acting as pointers or links between objects in the scene hierarchy. A relationship allows a prim to target or refer to other prims, attributes, or even other relationships. This establishes dependencies between scenegraph objects.
+
+##### 🐍 Example: Prim Collections with Relationships
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">relationships_ex1.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom, Gf
+
+file_path = "_assets/relationships_ex1.usda"
+stage = Usd.Stage.CreateNew(file_path)
+
+world_xform: UsdGeom.Xform = UsdGeom.Xform.Define(stage, "/World")
+
+# Define a sphere under the World Xform:
+sphere: UsdGeom.Sphere = UsdGeom.Sphere.Define(stage, world_xform.GetPath().AppendPath("Sphere"))
+
+# Define a cube under the World Xform and set it to be 5 units away from the sphere:
+cube: UsdGeom.Cube = UsdGeom.Cube.Define(stage, world_xform.GetPath().AppendPath("Cube"))
+UsdGeom.XformCommonAPI(cube).SetTranslate(Gf.Vec3d(5, 0, 0))
+
+# Create typeless container for the group
+group = stage.DefinePrim("/World/Group") 
+
+# Define the relationship
+group.CreateRelationship("members", custom=True).SetTargets(
+    [sphere.GetPath(), cube.GetPath()]
+)
+
+# List relationship targets
+members_rel = group.GetRelationship("members")
+print("Group members:", [str(p) for p in members_rel.GetTargets()])
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def Xform "World"
+{
+    def Sphere "Sphere"
+    {
+    }
+
+    def Cube "Cube"
+    {
+        double3 xformOp:translate = (5, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def "Group"
+    {
+        custom rel members = [
+            </World/Sphere>,
+            </World/Cube>,
+        ]
+    }
+}
+
+
+
+```
+</td> 
+
+</table>
+
+##### 🐍 Example: Using a Built‑in Relationship (proxyPrim)
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">relationships_ex2.usda</th>
+</tr>
+<tr>
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom
+
+file_path = "_assets/relationships_ex2.usda"
+stage = Usd.Stage.CreateNew(file_path)
+
+world_xform: UsdGeom.Xform = UsdGeom.Xform.Define(stage, "/World")
+
+# Define a "high cost" Sphere Prim under the World Xform:
+high: UsdGeom.Sphere = UsdGeom.Sphere.Define(stage, world_xform.GetPath().AppendPath("HiRes"))
+
+# Define a "low cost" Cube Prim under World Xfrom
+low: UsdGeom.Cube = UsdGeom.Cube.Define(stage, world_xform.GetPath().AppendPath("Proxy"))
+
+UsdGeom.Imageable(high).GetPurposeAttr().Set("render")
+UsdGeom.Imageable(low).GetPurposeAttr().Set("proxy")
+
+# Author the proxy link on the render Prim
+UsdGeom.Imageable(high).GetProxyPrimRel().SetTargets([low.GetPath()])
+
+# Tools that honor proxyPrim should draw the proxy in preview
+draw_prim = UsdGeom.Imageable(high).ComputeProxyPrim()  # returns Usd.Prim
+print("Preview should draw:", str(draw_prim[0].GetPath() if draw_prim else high.GetPath()))
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def Xform "World"
+{
+    def Sphere "HiRes"
+    {
+        rel proxyPrim = </World/Proxy>
+        uniform token purpose = "render"
+    }
+
+    def Cube "Proxy"
+    {
+        uniform token purpose = "proxy"
+    }
+}
+
+
+
+```
+</td> 
+
+</table>
+
+
+### 5.1.4- Time Codes and Time Samples
+### 5.1.5- Prim and Property Paths
+### 5.1.6- OpenUSD File Formats
+### 5.1.7- OpenUSD Modules
+### 5.1.8- Metadata
+
+
+## 5.2- Scene Description Blueprints
+
+### 5.2.1- Schemas
+### 5.2.2- Scope
+### 5.2.3- Xform
+### 5.2.4- XformCommonAPI
+### 5.2.5- Lights
+
+
+## 5.3- Beyond the Basics
+
+### 5.2.1- Primvars
+### 5.2.2- Value Resolution
+### 5.2.3- Custom Properties
+### 5.2.4- Active and Inactive Prims
+### 5.2.5- Model Kinds -> (go to 2.1)
+### 5.2.6- Stage Traversal
+### 5.2.7- Hydra
+
 
 
 
@@ -2902,26 +3608,49 @@ print(stage.ExportToString(addSourceFileComment=False))
 
 
 
-##### 🐍
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##### 🐍 Example: 
 
 <table>
-  <tr>
-    <th align="left"></th>
-  </tr>
-  <tr>
-  <td valign="top">
+<tr>
+<th align="left"></th>
+<th align="left"></th>
+</tr>
+<tr>
     
+<td valign="top">
+
 ```py
+
+
 
 ```
 </td> 
+<td valign="top">
+
+```py
+
+
+
+```
+</td> 
+
 </table>
 
 
 
 
-
-
-
-
-
+https://docs.nvidia.com/learn-openusd/latest/stage-setting/properties/attributes.html
