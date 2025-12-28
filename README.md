@@ -2243,7 +2243,7 @@ base layer (or starting point) for creating new schema classes
  <table>
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 (
     """ This file describes an example schema for code generation using
@@ -2277,7 +2277,7 @@ over "GLOBAL" (
   <tr>SimplePrim.usda</tr>
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 class "SimplePrim" (
     doc = """An example of an untyped schema prim. Note that it does not
@@ -2298,6 +2298,74 @@ class "SimplePrim" (
     rel target (
         doc = """A relationship called target that could point to another
                  prim or a property"""
+    )
+}
+```
+  </td>
+</table>
+
+##### ⭐ Example Concrete IsA Schema
+
+ <table>
+  <tr>SimplePrim.usda</tr>
+  <td valign="top">
+    
+```py
+#usda 1.0
+class ComplexPrim "ComplexPrim" (
+    doc = """An example of a untyped IsA schema prim"""
+    # Inherits from </SimplePrim> defined in simple.usda.
+    inherits = </SimplePrim>
+    customData = {
+        string className = "Complex"
+    }
+)  {
+    string complexString = "somethingComplex"
+}
+
+```
+  </td>
+</table>
+
+
+##### ⭐ Example Applied API Schema
+
+ <table>
+  <tr>SimplePrim.usda</tr>
+  <td valign="top">
+    
+```py
+#usda 1.0
+# API schemas only provide an interface to the prim's qualities.
+# They are not allowed to specify a typeName.
+class "ParamsAPI" (
+    # IsA schemas should derive from </APISchemaBase>, which is defined in
+    # the sublayer usd/schema.usda.
+    inherits = </APISchemaBase>
+    customData = {
+        token apiSchemaType = "singleApply"
+    }
+)
+{
+    double params:mass (
+        # Informs schema generator to create GetMassAttr() instead of
+        # GetParamsMassAttr() method
+        customData = {
+            string apiName = "mass"
+        }
+        doc = "Double value denoting mass"
+    )
+    double params:velocity (
+        customData = {
+            string apiName = "velocity"
+        }
+        doc = "Double value denoting velocity"
+    )
+    double params:volume (
+        customData = {
+            string apiName = "volume"
+        }
+        doc = "Double value denoting volume"
     )
 }
 ```
