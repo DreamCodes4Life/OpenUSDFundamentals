@@ -2209,6 +2209,24 @@ Note: Prototype prims do not exist in scene description – they are generated a
 
 ## 3.1- Generating New Schema Classes
 
+Configure Environment: [Watch the tutorial on YouTube](https://youtu.be/ulZMQLSNgyQ)
+
+A schema class is simply a container of a UsdPrim that provides a layer of specific, named API atop the underlying scene graph. USD provides a code generator script called ‘usdGenSchema’ for creating new schema classes
+
+Two types:
+
+| Aspect                               | IsA schema                                                                 | API schema                                                                                         |
+|--------------------------------------|----------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| Main role                            | Defines *what a prim is* (its typed schema / prim type).                  | Adds *behaviors or properties* to an existing prim type.                                          |
+| typeName                             | **Can author a `typeName`** for the prim, so the prim “is a” that type. :contentReference[oaicite:0]{index=0} | **Cannot author a `typeName`**; never defines the prim’s type. :contentReference[oaicite:1]{index=1} |
+| Concrete vs abstract                 | Can be **concrete** (instantiable typed prim) or **non-concrete** (abstract base). :contentReference[oaicite:2]{index=2} | Considered **non-concrete** with respect to prim typing (they don’t create a new prim type). :contentReference[oaicite:3]{index=3} |
+| Base class                           | Must derive (directly or indirectly) from **`UsdTyped`**. :contentReference[oaicite:4]{index=4}              | Derives from **`UsdAPISchemaBase`** (or `APISchemaBase` in the schema file). :contentReference[oaicite:5]{index=5} |
+| How many per prim                    | A prim can have **at most one** IsA schema (one `typeName`). :contentReference[oaicite:6]{index=6}          | A prim can have **many** API schemas applied at once. :contentReference[oaicite:7]{index=7}          |
+| How it’s attached to a prim          | By setting the prim’s `typeName` to the IsA schema’s type.                | By applying it via API (e.g. `Apply()`), recorded in prim metadata (`apiSchemas`) for applied APIs. :contentReference[oaicite:8]{index=8} |
+| Fallback properties & schema registry| Definitions go into the schema registry and can provide fallback values. :contentReference[oaicite:9]{index=9} | Applied API schemas also go into the registry and can add built-ins with fallbacks. :contentReference[oaicite:10]{index=10} |
+| Inheritance                          | Can form inheritance hierarchies (abstract → concrete typed schemas). :contentReference[oaicite:11]{index=11} | Cannot inherit from other API schemas (only from `UsdAPISchemaBase` / compatible API type). :contentReference[oaicite:12]{index=12} |
+| Typical usage                        | “This prim **is a** light, mesh, scope, etc.”                             | “This prim **has** collections, clips, material bindings, render props, etc.”                     |
+| Example from core USD                | `UsdGeomScope`, `UsdGeomMesh`, `UsdGeomImageable` (non-concrete). :contentReference[oaicite:13]{index=13} | `UsdModelAPI`, `UsdClipsAPI`, `UsdCollectionAPI`, `UsdGeomModelAPI`, `UsdGeomMotionAPI`. :contentReference[oaicite:14]{index=14} |
 
 
 
