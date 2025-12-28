@@ -88,7 +88,7 @@ The following example shows how a **shot** composes multiple layers and includes
     
 <td valign="top">
     
-```usda
+```py
 #usda 1.0
 (
     subLayers = [
@@ -101,7 +101,7 @@ The following example shows how a **shot** composes multiple layers and includes
 </td> 
 <td valign="top">
 
-```usda
+```py
 #usda 1.0
 (
     subLayers = [
@@ -162,7 +162,7 @@ print(f"✅ Flattened stage saved to:\n{output_path}")
   </td > 
     <td valign="top">
   
-```usda
+```py
 #usda 1.0
 (
 
@@ -242,7 +242,7 @@ They are commonly used to:
   <tr>
     <td>
   
-```usda
+```py
 #usda 1.0
 (
     subLayers = [
@@ -253,7 +253,7 @@ They are commonly used to:
   </td> 
   <td>
     
-```usda
+```py
 This USD will resolve as next:
 A timesample of 30 in the someAnimation will be
 resolved here at: 30*0.5 + 10 = 25.
@@ -275,7 +275,7 @@ The ordered set of layers resulting from the recursive gathering of all SubLayer
   <tr>
     <td>
   
-```usda
+```py
 #usda 1.0
 (
     timeCodesPerSecond = 24
@@ -300,7 +300,7 @@ def Xform "Asset"
   </td> 
   <td>
     
-```usda
+```py
 TimeCode 240 corresponds to 10 seconds of real time
 
 If the left example layer was referenced into another
@@ -335,7 +335,7 @@ What happens to “overs” when their underlying prim is moved to a different l
   <tr>
     <td valign="top">
   
-```usda
+```py
 #usda 1.0
 
 def Xform "World"
@@ -360,7 +360,7 @@ def Xform "World"
   </td> 
   <td valign="top">
     
-```usda
+```py
 In this example, the book defined in sequence.usda has the title “Toy Story”. However, this layer is brought in to shot.usda via a sublayer statement, and the book’s title is overridden to “Wall-E.” The question is: what happens if a user independently working on sequence.usda moves Book_1 to Desk, or if Book_1 is renamed to Video_1? In such a case, the “over” in shot.usda would be “orphaned” and be ignored when composing and evaluating /World/Sets/Desk/Book_1 in shot.usda. It is the responsibility of the user working on sequence.usda to ensure that shot.usda is updated to avoid this problem.
 ```
 </td> 
@@ -384,7 +384,7 @@ Inherits is a composition arc that addresses the problem of adding a single, non
   <tr>
     <td valign="top">
   
-```usda
+```py
 #usda 1.0
 
 class Xform "_class_Tree"
@@ -421,7 +421,7 @@ def "TreeB" (
   </td> 
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 
 # A new prim, of the same name as the original inherits target,
@@ -451,7 +451,7 @@ def "TreeB_1" (
 </td> 
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 
 class Xform "_class_Tree"
@@ -509,7 +509,7 @@ A variant can contain overriding opinions (for properties, metadata, and more), 
   <tr>
     <td valign="top">
   
-```usda
+```py
 #usda 1.0
 
 def Xform "Implicits" (
@@ -549,7 +549,7 @@ def Xform "Implicits" (
   </td > 
   <td valign="top">
     
-```usda
+```py
 over "Model" (
     prepend variantSets = "referenceVariantSet"
     variants = {
@@ -639,7 +639,7 @@ Relocates is a composition arc that maps a prim path defined in a remote LayerSt
   <tr>
     <td valign="top">
   
-```usda
+```py
 def "PrimA" ()
 {
     def "PrimAChild" ()
@@ -652,7 +652,7 @@ def "PrimA" ()
   </td> 
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 (
     relocates = {
@@ -672,7 +672,7 @@ def "MainPrim" (
 </td> 
   <td valign="top">
     
-```usda
+```py
 def "MainPrim"
 {
     def "RenamedPrimAChild"
@@ -699,7 +699,7 @@ def "MainPrim"
   <tr>
     <td valign="top">
   
-```usda
+```py
 #usda 1.0
 (
     relocates = {
@@ -728,7 +728,7 @@ def "MainPrim" (
   </td> 
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 (
     relocates = {
@@ -766,7 +766,7 @@ In the next flattened stage, /Model/Rig/LRig in model.usda has inherited from /C
   <tr>
     <td valign="top">
   
-```usda
+```py
 #usda 1.0
 (
     relocates = {
@@ -802,7 +802,7 @@ def "Model" (
   </td> 
   <td valign="top">
     
-```usda
+```py
 def "Model_1" (
     references = @./model.usda@</Model>
 )
@@ -831,7 +831,7 @@ class "ClassA"
 </td> 
   <td valign="top">
     
-```usda
+```py
 def "Model_1"
 {
     def "Rig"
@@ -868,7 +868,7 @@ Next with the relocates for /PrimA/Child to /PrimWithInherits/Child, the ancestr
   <tr>
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 (
     relocates = {
@@ -916,7 +916,7 @@ def "PrimWithInherits"
 </td> 
   <td valign="top">
     
-```usda
+```py
 def "PrimWithInherits"
 {
     def "Child"
@@ -941,7 +941,7 @@ Next we see as ancestral variant arcs will still compose with relocate
   <tr>
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 (
     relocates = {
@@ -1007,7 +1007,7 @@ def "PrimWithInherits"
 </td> 
   <td valign="top">
     
-```usda
+```py
 def "PrimWithInherits"
 {
     def "Child"
@@ -1040,7 +1040,7 @@ Resolve the References affecting the prim at path, and iterate through the resul
   <tr>
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 (
     defaultPrim = "Marble"
@@ -1059,7 +1059,7 @@ def Xform "Marble" (
 </td> 
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 
 def Xform "MarbleCollection" (
@@ -1092,7 +1092,7 @@ def Xform "MarbleCollection" (
 </td> 
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 
 def Xform "MarbleCollection" (
@@ -1144,7 +1144,7 @@ A Relationship is a “namespace pointer” that is robust in the face of compos
   <tr>
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 (
     defaultPrim = "Marble"
@@ -1179,7 +1179,7 @@ def Xform "Marble" (
   <tr>
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 
 over "Class" 
@@ -1215,7 +1215,7 @@ def "ReferencedModel" (
 </td> 
   <td valign="top">
 
-```usda
+```py
 #usda 1.0
 
  class "Class"
@@ -1279,7 +1279,7 @@ Specializes is a composition arc that allows a specialized prim to be continuous
   <tr>
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 
 def Xform "Robot"
@@ -1327,7 +1327,7 @@ def Xform "Robot"
 </td> 
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 def Xform "World"
 {
@@ -1383,7 +1383,7 @@ Only group models (group or assembly) can contain other models, and a prim can o
   <tr>
   <td valign="top">
     
-```usda
+```py
 model
     component
     group
@@ -1402,7 +1402,7 @@ Group models serve as containers that can have other model children (unlike comp
   <tr>
   <td valign="top">
     
-```usda
+```py
 def Xform "Forest_set" (
     kind = "assembly"
 )
@@ -1442,7 +1442,7 @@ Next exercises requires USDVIEW
   <tr>
   <td valign="top">
     
-```usda
+```py
 def Xform "TreeSpruce" (
     kind = "component"
 )
@@ -1579,7 +1579,7 @@ stage.Save()
 </td> 
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 (
     defaultPrim = "World"
@@ -1658,7 +1658,7 @@ The following example shows a single prim with two collections. The relCollectio
  <table>
   <td valign="top">
     
-```usda
+```py
 def "CollectionPrim" (
     prepend apiSchemas = ["CollectionAPI:relCollection", "CollectionAPI:expCollection"]
 )
@@ -1728,7 +1728,7 @@ In the next example, we create a class _Class_Cube_Red, then three cubes are ins
 <table>
     <td valign="top">
   
-```usda
+```py
 #usda 1.0
 
 def Xform "World" (
@@ -1875,7 +1875,7 @@ def Xform "World" (
 <table>
     <td valign="top">
   
-```usda
+```py
 def Xform "World"
 {
     class Scope "_Class_Cube_Red"
@@ -2134,7 +2134,7 @@ You can also use primvars.
  <table>
   <td valign="top">
     
-```usda
+```py
 #usda 1.0
 (
     defaultPrim = "Warehouse"
@@ -2371,6 +2371,20 @@ class "ParamsAPI" (
 ```
   </td>
 </table>
+
+You can find the previous examples in the USD_ROOT in the next path:
+.\usd_root\share\usd\examples\plugin\usdSchemaExamples\resources\usdSchemaExamples\schema.usda
+
+##### 🧠 Exercise [Generate and use the previouse schema samples](https://openusd.org/release/tut_generating_new_schema.html)
+
+| Step | Description | Command / Output |
+|------|-------------|------------------|
+| 1 | Initialize the schema module (creates build helper files) | `.\scripts\usdInitSchema.bat share\usd\examples\plugin\usdSchemaExamples\resources\usdSchemaExamples .` |
+| 2 | Re-run codegen so everything is in sync (optional but clean) | `.\scripts\usdGenSchema.bat share\usd\examples\plugin\usdSchemaExamples\resources\usdSchemaExamples\schema.usda share\usd\examples\plugin\usdSchemaExamples\resources\usdSchemaExamples` |
+| 3 | Files created by `usdInitSchema` (if missing) | - `CMakeLists.txt`<br>- `__init__.py`<br>- `module.cpp`<br>- `schemaUserDoc.usda` |
+
+
+
 
 # 4) Data Exchange: Exam Weight 15%
 
