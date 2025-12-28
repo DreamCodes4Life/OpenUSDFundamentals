@@ -2865,20 +2865,25 @@ At its core, an OpenUSD stage presents the scenegraph, which dictates what is in
 
 ##### 🐍 Example: Create a USD File and Load it as a Stage
 
-<table>  
-    <td valign="top">
-    ```py
-# Import the `Usd` module from the `pxr` package:
-from pxr import Usd
 
-# Define a file path name:
-file_path = "_assets/first_stage.usda"
-# Create a stage at the given `file_path`:
-stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
-print(stage.ExportToString(addSourceFileComment=False))
+<table>
+  <tr>
+    <th align="left"></th>
+  </tr>
+  <tr>
 
-    ```
-    </td>
+  <td valign="top">
+```py
+    # Import the `Usd` module from the `pxr` package:
+    from pxr import Usd
+
+    # Define a file path name:
+    file_path = "_assets/first_stage.usda"
+    # Create a stage at the given `file_path`:
+    stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
+    print(stage.ExportToString(addSourceFileComment=False))
+```
+</td> 
 </table>
 
 
@@ -2893,9 +2898,20 @@ print(stage.ExportToString(addSourceFileComment=False))
 
 
 
+##### 🐍
 
+<table>
+  <tr>
+    <th align="left"></th>
+  </tr>
+  <tr>
+  <td valign="top">
+    
+```py
 
-
+```
+</td> 
+</table>
 
 
 
