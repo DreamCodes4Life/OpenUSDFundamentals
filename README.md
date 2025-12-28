@@ -1367,6 +1367,9 @@ large scenes.</strong>
 ##  2.0- Before you start, things you need to know
 
 ##  2.1- Model Kinds, Model Hierarchy
+
+Model kinds are prim‑level metadata that classify a prim’s role in the model hierarchy.
+
 Group, assembly, component all inherit from the base kind “model”
 Subcomponent is the outlier
 
@@ -2201,6 +2204,16 @@ Note: Prototype prims do not exist in scene description – they are generated a
 
 
 # 3) Customizing USD: Exam Weight 6%
+
+- **Model Kinds** (Refer to 2.1)
+
+## 3.1- Generating New Schema Classes
+
+
+
+
+
+
 
 # 4) Data Exchange: Exam Weight 15%
 
