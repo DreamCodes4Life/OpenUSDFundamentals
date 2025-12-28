@@ -265,59 +265,6 @@ Layer offsets cannot vary themselves over time
 #### <ins>LayerStack:</ins> 
 The ordered set of layers resulting from the recursive gathering of all SubLayers of a Layer, plus the layer itself as first and strongest.
 
-##### ⭐ Example "TimeCodes Scaled to Real Time"
----
-<table>
-  <tr>
-    <th align="left">example.usd</th>
-    <th align="left">notes</th>
-  </tr>
-  <tr>
-    <td>
-  
-```py
-#usda 1.0
-(
-    timeCodesPerSecond = 24
-    framesPerSecond = 12
-    endTimeCode = 240
-    startTimeCode = 1
-)
-
-def Xform "Asset"
-{
-    def Sphere "Sphere"
-    {
-        double3 xformOp:translate.timeSamples = {
-            1: (0, 5.0, 0),
-            240: (0, -5.0, 0),
-        }
-        uniform token[] xformOpOrder = ["xformOp:translate"]
-    }
-}
-
-```
-  </td> 
-  <td>
-    
-```py
-TimeCode 240 corresponds to 10 seconds of real time
-
-If the left example layer was referenced into another
-layer that specified a timeCodesPerSecond value of 48
-the TimeSample at TimeCode 240 would be scaled to TimeCode
-480 to ensure that the translation still occurs at 10
-seconds of real time.
-
-If the left example layer specified a framesPerSecond
-of 12, this would not change the scaling of the TimeSample
-at TimeCode 240, and instead change the playback rate in a
-playback device to march forward by two TimeCodes for each
-consecutive rendered frame, which will be held for 1/12 of
-a second.
-```
-</td> 
-</table>
 
 ##### 🧠 [Exercise (SubLayers)](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/sublayers/working-with-sublayers.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/sublayers)
 
@@ -3692,6 +3639,129 @@ def Xform "World"
 
 
 
+
+
+
+```
+</td> 
+
+</table>
+
+
+### 5.1.4- Time Codes and Time Samples
+
+##### 🐍 Example: Bouncing ball sim
+
+<table>
+<tr>
+<th align="left">Code 1 - Create timecode_sample.usda</th>
+<th align="left">Code 2 - Create animation</th>
+<th align="left">timecode_ex.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+# Import the necessary modules from the `pxr` library:
+from pxr import Usd, UsdGeom, Gf
+
+# Create a new USD stage file named "timecode_ex.usda":
+file_path = "_assets/timecode_sample.usda"
+stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
+
+# Define a transform ("Xform") primitive at the "/World" path:
+world: UsdGeom.Xform = UsdGeom.Xform.Define(stage, "/World")
+
+# Define a Sphere primitive as a child of the transform at "/World/Sphere" path:
+sphere: UsdGeom.Sphere = UsdGeom.Sphere.Define(stage, world.GetPath().AppendPath("Sphere"))
+
+# Define a blue Cube as a background prim:
+box: UsdGeom.Cube = UsdGeom.Cube.Define(stage, world.GetPath().AppendPath("Backdrop"))
+box.GetDisplayColorAttr().Set([(0.0, 0.0, 1.0)])
+cube_xform_api = UsdGeom.XformCommonAPI(box)
+cube_xform_api.SetScale(Gf.Vec3f(5, 5, 0.1))
+cube_xform_api.SetTranslate(Gf.Vec3d(0, 0, -2))
+
+# Save the stage to the file:
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom, Gf
+
+# Open stage from example 2a
+stage: Usd.Stage = Usd.Stage.Open("_assets/timecode_ex.usda")
+
+sphere: UsdGeom.Sphere = UsdGeom.Sphere.Get(stage, "/World/Sphere")
+
+if scale_attr := sphere.GetScaleOp().GetAttr():
+    scale_attr.Clear()
+
+sphere_xform_api = UsdGeom.XformCommonAPI(sphere)
+
+# Set scale of the sphere at time 1
+sphere_xform_api.SetScale(Gf.Vec3f(1.00, 1.00, 1.00), time=1)  
+# Set scale of the sphere at time 30
+sphere_xform_api.SetScale(Gf.Vec3f(1.00, 1.00, 1.00), time=30)   
+# Set scale of the sphere at time 45
+sphere_xform_api.SetScale(Gf.Vec3f(1.00, 0.20, 1.25), time=45)   
+# Set scale of the sphere at time 50
+sphere_xform_api.SetScale(Gf.Vec3f(0.75, 2.00, 0.75), time=50)  
+# Set scale of the sphere at time 60
+sphere_xform_api.SetScale(Gf.Vec3f(1.00, 1.00, 1.00), time=60)  
+
+# Export to a new flattened layer for this example.
+stage.Export("_assets/timecode_ex2b.usda", addSourceFileComment=False)
+
+
+```
+</td> 
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+(
+    endTimeCode = 60
+    startTimeCode = 1
+)
+
+def Xform "World"
+{
+    def Sphere "Sphere"
+    {
+        float3 xformOp:scale.timeSamples = {
+            1: (1, 1, 1),
+            30: (1, 1, 1),
+            45: (1, 0.2, 1.25),
+            50: (0.75, 2, 0.75),
+            60: (1, 1, 1),
+        }
+        double3 xformOp:translate.timeSamples = {
+            1: (0, 5.5, 0),
+            30: (0, -4.5, 0),
+            45: (0, -5, 0),
+            50: (0, -3.25, 0),
+            60: (0, 5.5, 0),
+        }
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "Backdrop"
+    {
+        color3f[] primvars:displayColor = [(0, 0, 1)]
+        float3 xformOp:scale = (5, 5, 0.1)
+        double3 xformOp:translate = (0, 0, -2)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+}
+
+
 ```
 </td> 
 
@@ -3700,16 +3770,60 @@ def Xform "World"
 
 
 
+##### ⭐ Example "TimeCodes Scaled to Real Time"
+---
+<table>
+  <tr>
+    <th align="left">example.usd</th>
+    <th align="left">notes</th>
+  </tr>
+  <tr>
+    <td>
+  
+```py
+#usda 1.0
+(
+    timeCodesPerSecond = 24
+    framesPerSecond = 12
+    endTimeCode = 240
+    startTimeCode = 1
+)
 
+def Xform "Asset"
+{
+    def Sphere "Sphere"
+    {
+        double3 xformOp:translate.timeSamples = {
+            1: (0, 5.0, 0),
+            240: (0, -5.0, 0),
+        }
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+}
 
+```
+  </td> 
+  <td>
+    
+```py
+TimeCode 240 corresponds to 10 seconds of real time
 
+If the left example layer was referenced into another
+layer that specified a timeCodesPerSecond value of 48
+the TimeSample at TimeCode 240 would be scaled to TimeCode
+480 to ensure that the translation still occurs at 10
+seconds of real time.
 
+If the left example layer specified a framesPerSecond
+of 12, this would not change the scaling of the TimeSample
+at TimeCode 240, and instead change the playback rate in a
+playback device to march forward by two TimeCodes for each
+consecutive rendered frame, which will be held for 1/12 of
+a second.
+```
+</td> 
+</table>
 
-
-
-
-
-### 5.1.4- Time Codes and Time Samples
 ### 5.1.5- Prim and Property Paths
 ### 5.1.6- OpenUSD File Formats
 ### 5.1.7- OpenUSD Modules
