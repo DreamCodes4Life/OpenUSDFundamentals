@@ -2271,6 +2271,38 @@ over "GLOBAL" (
   </td>
 </table>
 
+##### ⭐ Example Typed, Non-Concrete, IsA Schema
+
+ <table>
+  <tr>SimplePrim.usda</tr>
+  <td valign="top">
+    
+```usda
+#usda 1.0
+class "SimplePrim" (
+    doc = """An example of an untyped schema prim. Note that it does not
+             specify a typeName"""
+    # IsA schemas should derive from </Typed>, which is defined in the
+    # sublayer usd/schema.usda.
+    inherits = </Typed>
+    customData = {
+        # Provide a different class name for the C++ and python schema
+        # classes. This will be prefixed with libraryPrefix.
+        # In this case, the class name becomes UsdSchemaExamplesSimple.
+        string className = "Simple"
+    }
+)  {
+    int intAttr = 0 (
+        doc = "An integer attribute with fallback value of 0."
+    )
+    rel target (
+        doc = """A relationship called target that could point to another
+                 prim or a property"""
+    )
+}
+```
+  </td>
+</table>
 
 # 4) Data Exchange: Exam Weight 15%
 
