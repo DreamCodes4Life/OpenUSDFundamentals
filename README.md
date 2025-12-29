@@ -4056,30 +4056,14 @@ def "World"
 
 OpenUSD modules are organized libraries within the USD codebase that expose specific functionality for building, querying, or extending USD scenes. They help structure USD’s capabilities into cohesive APIs for different purposes such as scene authoring, composition, geometry, math utilities, and more. 
 
-**OpenUSD Package & Module Overview**
-| Name           | Type             | Description                                                                           |
-| -------------- | ---------------- | ------------------------------------------------------------------------------------- |
-| **base**       | Core Package     | Foundational utilities and shared low-level functionality used across all USD modules |
-| **usd**        | Core Package     | Core APIs for authoring, composing, and reading USD scene data                        |
-| **imaging**    | Optional Package | Rendering and visualization support for USD scenes                                    |
-| **usdImaging** | Optional Package | USD-specific imaging adapters and renderer integration                                |
+Core USD Packages
+<table width="100%"> <colgroup> <col style="width:20%"> <col style="width:25%"> <col style="width:55%"> </colgroup> <thead> <tr> <th>Name</th> <th>Type</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td><b>base</b></td> <td>Core Package</td> <td>Foundational utilities and shared low-level functionality used across all USD modules</td> </tr> <tr> <td><b>usd</b></td> <td>Core Package</td> <td>Core APIs for authoring, composing, and reading USD scene data</td> </tr> <tr> <td><b>imaging</b></td> <td>Optional Package</td> <td>Rendering and visualization support for USD scenes</td> </tr> <tr> <td><b>usdImaging</b></td> <td>Optional Package</td> <td>USD-specific imaging adapters and renderer integration</td> </tr> </tbody> </table>
 
-**Commonly Used USD Modules**
-| Name    | Type              | Description                                                                        |
-| ------- | ----------------- | ---------------------------------------------------------------------------------- |
-| **Usd** | Core Module       | High-level API for stages, prims, properties, metadata, and composition arcs       |
-| **Sdf** | Foundation Module | Scene description foundation for layers, paths, serialization, and data structures |
-| **Gf**  | Utility Module    | Math and geometry types such as vectors, matrices, and quaternions                 |
+Commonly Used USD Modules
+<table width="100%"> <colgroup> <col style="width:20%"> <col style="width:25%"> <col style="width:55%"> </colgroup> <thead> <tr> <th>Name</th> <th>Type</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td><b>Usd</b></td> <td>Core Module</td> <td>High-level API for stages, prims, properties, metadata, and composition arcs</td> </tr> <tr> <td><b>Sdf</b></td> <td>Foundation Module</td> <td>Scene description foundation for layers, paths, serialization, and data structures</td> </tr> <tr> <td><b>Gf</b></td> <td>Utility Module</td> <td>Math and geometry types such as vectors, matrices, and quaternions</td> </tr> </tbody> </table>
 
-**Schema Modules**
-| Name           | Type          | Description                                           |
-| -------------- | ------------- | ----------------------------------------------------- |
-| **UsdGeom**    | Schema Module | Geometry primitives, transforms, and spatial data     |
-| **UsdShade**   | Schema Module | Materials, shaders, and shading networks              |
-| **UsdPhysics** | Schema Module | Physical properties, simulation, and physics metadata |
-
-
-
+Schema Modules
+<table width="100%"> <colgroup> <col style="width:20%"> <col style="width:25%"> <col style="width:55%"> </colgroup> <thead> <tr> <th>Name</th> <th>Type</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td><b>UsdGeom</b></td> <td>Schema Module</td> <td>Geometry primitives, transforms, and spatial data</td> </tr> <tr> <td><b>UsdShade</b></td> <td>Schema Module</td> <td>Materials, shaders, and shading networks</td> </tr> <tr> <td><b>UsdPhysics</b></td> <td>Schema Module</td> <td>Physical properties, simulation, and physics metadata</td> </tr> </tbody> </table>
 
 ### 5.1.8- Metadata
 
