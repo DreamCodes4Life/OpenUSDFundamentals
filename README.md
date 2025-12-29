@@ -2162,6 +2162,88 @@ Note: Prototype prims do not exist in scene description – they are generated a
 
 In the OpenUSD ecosystem, a schema is a blueprint that may define a new Prim type or Properties for describing a particular data model.  For example, a Geometry schema might specify how to define the vertices and topology of a 3D mesh, while a Shading schema could outline how to describe parameters for materials and textures.
 
+##### 🐍 Example: 
+
+<table>
+<tr>
+<th align="left">Generic</th>
+<th align="left">UsdGeom</th>
+<th align="left">UsdLux</th>
+<th align="left">UsdPhysics</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+# Retrieve the schema info for a registered schema
+Usd.SchemaRegistry.FindSchemaInfo()
+
+# Retrieve the schema typeName
+Usd.SchemaRegistry.GetSchemaTypeName()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+# Import related classes
+from pxr import UsdGeom
+
+# Define a sphere in the stage
+sphere = UsdGeom.Sphere.Define(stage, "/World/Sphere")
+	
+# Get and Set the radius attribute of the sphere
+sphere.GetRadiusAttr().Set(10)
+
+
+```
+</td> 
+
+</td> 
+<td valign="top">
+
+```py
+# Import related classes
+from pxr import UsdLux
+
+# Define a disk light in the stage
+disk_light = UsdLux.DiskLight.Define(stage, "/World/Lights/DiskLight")
+	
+# Get all Attribute names that are a part of the DiskLight schema
+dl_attribute_names = disk_light.GetSchemaAttributeNames()
+	
+# Get and Set the radius and intensity of the disk light prim
+disk_light.GetRadiusAttr().Set(0.4)  # from DiskLight typed schema
+disk_light.GetIntensityAttr().Set(1000)  # from LightAPI
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+# Import related classes
+from pxr import UsdPhysics
+
+# Apply a UsdPhysics Rigidbody API on the cube prim
+cube_rb_api = UsdPhysics.RigidBodyAPI.Apply(cube.GetPrim())
+	
+# Get the Kinematic Enabled Attribute 
+cube_rb_api.GetKinematicEnabledAttr()
+	
+# Create a linear velocity attribute of value 5
+cube_rb_api.CreateVelocityAttr(5)
+
+```
+</td> 
+
+
+</table>
+
+
+
 ##### ⭐ Example "schema for a sphere and ussage"
 
  <table>
@@ -4080,13 +4162,14 @@ Metadata commonly stores things like:
 
 Metadata can be authored at different scopes (for example on a stage, prim, or property), enabling both global and localized control.
 
-| Aspect                      | Metadata                                         | Attributes                                         |
-| --------------------------- | ------------------------------------------------ | -------------------------------------------------- |
-| **Schema Relationship**     | Separate from the core schema data model         | Defined explicitly by schemas                      |
-| **Intended Use**            | Supplementary and contextual information         | Actual authored data that defines an object        |
-| **Role in Scene**           | Guides behavior, organization, or pipeline logic | Describes concrete properties (e.g. values, state) |
-| **Time-Varying**            | ❌ Cannot be time-sampled                         | ✅ Can be time-sampled                              |
-| **Performance Implication** | Often cheaper to store and evaluate              | Time-sampling may increase evaluation cost         |
+| Aspect                      | Metadata                                                     | Attributes                                                        |
+| --------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------- |
+| **Schema Relationship**     | Separate from the core schema data model                     | Defined explicitly by schemas                                     |
+| **Intended Use**            | Supplementary and contextual information                     | Actual authored data that defines an object                       |
+| **Role in Scene**           | Guides behavior, organization, or pipeline logic             | Describes concrete properties and state                           |
+| **Time-Varying**            | ❌ Cannot be time-sampled                                     | ✅ Can be time-sampled                                             |
+| **Performance Implication** | Often cheaper to store and evaluate                          | Time-sampling may increase evaluation cost                        |
+| **Examples (Conceptual)**   | Tags, annotations, pipeline hints, ownership, workflow flags | Transform values, visibility, material parameters, animation data |
 
 
 ##### 🐍 Example: Working with metadata
@@ -4122,13 +4205,9 @@ GetMetadataByDictKey()
 </table>
 
 
-
-
-
-
 ## 5.2- Scene Description Blueprints
 
-### 5.2.1- Schemas
+### 5.2.1- Schemas -> (go to 3.1)
 ### 5.2.2- Scope
 ### 5.2.3- Xform
 ### 5.2.4- XformCommonAPI
