@@ -3831,7 +3831,6 @@ Paths are fundamental in USD for:
 - Authoring—specifying where to add or modify prims and properties on a stage. 
 - Querying and filtering prims, such as with expressions that match certain path patterns. 
 
-
 ##### 🐍 Example: Getting, Validating, and Defining Prims at Path
 
 <table>
@@ -3887,9 +3886,208 @@ def "hello"
 </table>
 
 
-### 5.1.6- OpenUSD File Formats
+##### 🐍 Example: Build and navigate prim paths with Sdf.Path
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">paths_build_and_nav.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom, Sdf
+
+stage = Usd.Stage.CreateNew("_assets/paths_build_and_nav.usda")
+
+# Build prim paths via Sdf.Path
+world_path = Sdf.Path("/World")
+geometry_path = world_path.AppendChild("Geometry")  # /World/Geometry
+sphere_path = geometry_path.AppendChild("Sphere")  # /World/Geometry/Sphere
+
+looks_path = world_path.AppendChild("Looks")  # /World/Looks
+material_path = looks_path.AppendChild("Material")  # /World/Looks/Material
+
+# Define prims at those paths
+stage.DefinePrim(world_path)
+stage.DefinePrim(geometry_path)
+UsdGeom.Sphere.Define(stage, sphere_path)
+stage.DefinePrim(looks_path)
+stage.DefinePrim(material_path)
+
+# Path checks and basic navigation
+print("sphere_path IsPrimPath:", sphere_path.IsPrimPath())
+print("sphere_path parent:",    sphere_path.GetParentPath())
+print("Geometry prim valid:",   stage.GetPrimAtPath(geometry_path).IsValid())
+print("\nmaterial_path IsPrimPath:", material_path.IsPrimPath())
+print("material_path parent:",    material_path.GetParentPath())
+print("Looks prim valid:",   stage.GetPrimAtPath(looks_path).IsValid())
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def "World"
+{
+    def "Geometry"
+    {
+        def Sphere "Sphere"
+        {
+        }
+    }
+
+    def "Looks"
+    {
+        def "Material"
+        {
+        }
+    }
+}
+
+
+```
+</td> 
+
+</table>
+
+
+##### 🐍 Example: Author an attribute and a relationship from property paths
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">paths_property_authoring.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom, Sdf
+
+stage = Usd.Stage.CreateNew("_assets/paths_property_authoring.usda")
+
+# A prim to work with
+sphere = UsdGeom.Sphere.Define(stage, "/World/Geom/Sphere")
+
+# Create a property path for the attribute /World/Geom/Sphere.userProperties:tag
+attr_property_path = sphere.GetPath().AppendProperty("userProperties:tag")
+
+# Working with the property path for the attribute
+owner_prim = stage.GetPrimAtPath(attr_property_path.GetPrimPath())
+attr_name = stage.GetPropertyAtPath(attr_property_path).GetPath().name  # "userProperties:tag"
+print(f"Attribute property '{attr_name}' has been defined on {owner_prim.GetPath()} after AppendProperty: {owner_prim.GetAttribute(attr_name).IsDefined()}")
+
+# Define the attribute on the owner prim
+attr = owner_prim.CreateAttribute(attr_name, Sdf.ValueTypeNames.String)
+print(f"\nAttribute property '{attr_name}' has been defined on {owner_prim.GetPath()} after CreateAttribute: {owner_prim.GetAttribute(attr_name).IsDefined()}")
+
+attr.Set("surveyed")
+print(f"Attribute value after Set: {stage.GetAttributeAtPath(attr_property_path).Get()}")
+
+# Create a relationship from a property path
+marker = UsdGeom.Xform.Define(stage, "/World/Markers/MarkerA")
+# Create a property path for the relationship
+rel_property_path = sphere.GetPath().AppendProperty("my:ref")  # /World/Geom/Sphere.my:ref
+
+# Working with the property path for the relationship
+owner_prim = stage.GetPrimAtPath(rel_property_path.GetPrimPath())
+rel_name = stage.GetPropertyAtPath(rel_property_path).GetPath().name  # "my:ref"
+print(f"\nRelationship property '{rel_name}' has been defined on {owner_prim.GetPath()} after AppendProperty: {owner_prim.GetRelationship(rel_name).IsDefined()}")
+
+# Define the relationship on the owner prim
+rel = owner_prim.CreateRelationship(rel_name)
+print(f"\nRelationship property '{rel_name}' has been defined on {owner_prim.GetPath()} after CreateRelationship: {owner_prim.GetRelationship(rel_name).IsDefined()}")
+
+rel.AddTarget(marker.GetPath())
+print(f"Relationship targets after AddTarget: {[str(p) for p in stage.GetRelationshipAtPath(rel_property_path).GetTargets()]}")
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def "World"
+{
+    def "Geom"
+    {
+        def Sphere "Sphere"
+        {
+            custom rel my:ref
+            prepend rel my:ref = </World/Markers/MarkerA>
+            custom string userProperties:tag = "surveyed"
+        }
+    }
+
+    def "Markers"
+    {
+        def Xform "MarkerA"
+        {
+        }
+    }
+}
+
+
+```
+</td> 
+
+</table>
+
+
+
+
+
+### 5.1.6- OpenUSD File Formats -> (go to 4.5)
+
 ### 5.1.7- OpenUSD Modules
+
+OpenUSD modules are organized libraries within the USD codebase that expose specific functionality for building, querying, or extending USD scenes. They help structure USD’s capabilities into cohesive APIs for different purposes such as scene authoring, composition, geometry, math utilities, and more. 
+
+| Package        | Description                                                                           | Required for Authoring |
+| -------------- | ------------------------------------------------------------------------------------- | ---------------------- |
+| **base**       | Foundational utilities and common low-level functionality used across all USD modules | ✅ Yes                  |
+| **usd**        | Core functionality for authoring, composing, and reading USD scene data               | ✅ Yes                  |
+| **imaging**    | Rendering and visualization support for USD scenes                                    | ❌ No                   |
+| **usdImaging** | USD-specific imaging adapters and rendering integration                               | ❌ No                   |
+
+
+| Module  | Purpose                                                                                                                              |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **Usd** | High-level API for creating and opening stages, manipulating prims and properties, authoring metadata, and managing composition arcs |
+| **Sdf** | Low-level scene description foundation for layers, paths, serialization, and core data structures                                    |
+| **Gf**  | Graphics foundation providing math and geometry types (vectors, matrices, quaternions, etc.)                                         |
+
+| Schema Module  | Domain                                                |
+| -------------- | ----------------------------------------------------- |
+| **UsdGeom**    | Geometry primitives, transforms, and spatial data     |
+| **UsdShade**   | Materials, shaders, and shading networks              |
+| **UsdPhysics** | Physical properties, simulation, and physics metadata |
+
+
+
+
+
 ### 5.1.8- Metadata
+
+
+
+
+
+
+
 
 
 ## 5.2- Scene Description Blueprints
@@ -3903,13 +4101,13 @@ def "hello"
 
 ## 5.3- Beyond the Basics
 
-### 5.2.1- Primvars
-### 5.2.2- Value Resolution
-### 5.2.3- Custom Properties
-### 5.2.4- Active and Inactive Prims
-### 5.2.5- Model Kinds -> (go to 2.1)
-### 5.2.6- Stage Traversal
-### 5.2.7- Hydra
+### 5.3.1- Primvars
+### 5.3.2- Value Resolution
+### 5.3.3- Custom Properties
+### 5.3.4- Active and Inactive Prims
+### 5.3.5- Model Kinds -> (go to 2.1)
+### 5.3.6- Stage Traversal
+### 5.3.7- Hydra
 
 
 
