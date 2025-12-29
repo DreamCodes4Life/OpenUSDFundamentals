@@ -2162,6 +2162,18 @@ Note: Prototype prims do not exist in scene description – they are generated a
 
 In the OpenUSD ecosystem, a schema is a blueprint that may define a new Prim type or Properties for describing a particular data model.  For example, a Geometry schema might specify how to define the vertices and topology of a 3D mesh, while a Shading schema could outline how to describe parameters for materials and textures.
 
+| Aspect                    | ISA (Typed) Schemas                                           | API Schemas                                       |
+| ------------------------- | ------------------------------------------------------------- | ------------------------------------------------- |
+| **Purpose**               | Define *what a prim is*                                       | Define *what a prim can do*                       |
+| **Schema Nature**         | **Concrete or Abstract**                                      | Always abstract                                   |
+| **Prim Type Definition**  | Define or participate in prim type identity                   | Do not define a prim type                         |
+| **Instantiation**         | Concrete schemas can be instantiated; abstract schemas cannot | Applied to existing prims                         |
+| **Multiplicity per Prim** | ❌ Only one typed schema per prim                              | ✅ Multiple API schemas can be applied             |
+| **Schema Role**           | Establish core structure, meaning, and inheritance            | Add reusable behavior or properties               |
+| **Inheritance Model**     | Uses ISA (“is-a”) inheritance                                 | Uses composition via applied APIs                 |
+| **Examples (Conceptual)** | Base geometry types, specialized prim categories              | Physics behavior, shading interfaces, constraints |
+
+
 ##### 🐍 Example: 
 
 <table>
