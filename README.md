@@ -2806,6 +2806,15 @@ For files that contain more than a few small definitions or overrides, the binar
 
 # 5) Data Modeling: Exam Weight 13%
 
+##  5.0- Before you start, things you need to know
+
+•	A **prim path** describes where a prim lives in the scene hierarchy. Prims are objects such as geometry, lights, transforms, etc. 
+
+•	Extending a prim path with a . and a property name gives you a **property path**. Properties include attributes (data values) and relationships (connections between prims). 
+
+•	USD paths can include **variant selections**, using curly braces to specify which variant of a prim is being referenced. 
+
+
 ## 5.1- Setting the Stage
 
 ### 5.1.1- Stage
@@ -3814,15 +3823,6 @@ a second.
 In OpenUSD, a path is a string that uniquely identifies the location of a prim or property within a USD scenegraph hierarchy, similar to a filesystem path. The root of the scene is represented by /, and each nested prim is separated by /. For example:
 
 /World/Geometry/Box
-
-**Prim Paths**
-A prim path describes where a prim lives in the scene hierarchy. Prims are objects such as geometry, lights, transforms, etc. 
-
-**Property Paths**
-Extending a prim path with a . and a property name gives you a property path. Properties include attributes (data values) and relationships (connections between prims). 
-
-**Variants**
-USD paths can include variant selections, using curly braces to specify which variant of a prim is being referenced. 
 
 **Primary Uses of Paths**
 Paths are fundamental in USD for:
