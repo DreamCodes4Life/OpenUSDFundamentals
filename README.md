@@ -2162,6 +2162,9 @@ Note: Prototype prims do not exist in scene description – they are generated a
 
 In the OpenUSD ecosystem, a schema is a blueprint that may define a new Prim type or Properties for describing a particular data model.  For example, a Geometry schema might specify how to define the vertices and topology of a 3D mesh, while a Shading schema could outline how to describe parameters for materials and textures.
 
+Two types of Schemas:
+
+
 | Aspect                    | ISA (Typed) Schemas                                           | API Schemas                                       |
 | ------------------------- | ------------------------------------------------------------- | ------------------------------------------------- |
 | **Purpose**               | Define *what a prim is*                                       | Define *what a prim can do*                       |
@@ -2173,6 +2176,7 @@ In the OpenUSD ecosystem, a schema is a blueprint that may define a new Prim typ
 | **Inheritance Model**     | Uses ISA (“is-a”) inheritance                                 | Uses composition via applied APIs                 |
 | **Examples (Conceptual)** | Base geometry types, specialized prim categories              | Physics behavior, shading interfaces, constraints |
 
+Note, all API schemas have API at the end of the name.
 
 ##### 🐍 Example: 
 
@@ -4221,6 +4225,67 @@ GetMetadataByDictKey()
 
 ### 5.2.1- Schemas -> (go to 3.1)
 ### 5.2.2- Scope
+
+The folders in USD. It does not represent any geometry or renderable content itself but acts as a container for organizing other prims
+
+##### 🐍 Example: Define a Scope and check Active/Inactive
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">scope.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom, Gf
+
+file_path = "_assets/scope.usda"
+stage = Usd.Stage.CreateNew(file_path)
+
+# World container (transformable)
+world = UsdGeom.Xform.Define(stage, "/World")
+
+num_a_prims = 2
+num_b_prims = 2
+
+# Two organizational Scopes (non-transformable grouping prims)
+a_scope = UsdGeom.Scope.Define(stage, world.GetPath().AppendPath("A_Scope"))
+b_scope = UsdGeom.Scope.Define(stage, world.GetPath().AppendPath("B_Scope"))
+
+# Populate the scopes with some geometry
+for a in range(num_a_prims):
+    sphere = UsdGeom.Sphere.Define(stage, a_scope.GetPath().AppendPath(f"A_Sphere_{a}"))
+    UsdGeom.XformCommonAPI(sphere).SetTranslate(Gf.Vec3d(a*2.5, 0, 0))
+
+for b in range(num_b_prims):
+    cube = UsdGeom.Cube.Define(stage, b_scope.GetPath().AppendPath(f"B_Cube_{b}"))
+    UsdGeom.XformCommonAPI(cube).SetTranslate(Gf.Vec3d(b*2.5, -2.5, 0))
+
+# Deactivate the A_Scope
+a_scope.GetPrim().SetActive(False)
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+
+
+
+```
+</td> 
+
+</table>
+
+
+
+
 ### 5.2.3- Xform
 ### 5.2.4- XformCommonAPI
 ### 5.2.5- Lights
