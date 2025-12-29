@@ -4065,10 +4065,61 @@ Commonly Used USD Modules
 Schema Modules
 <table width="100%"> <colgroup> <col style="width:20%"> <col style="width:25%"> <col style="width:55%"> </colgroup> <thead> <tr> <th>Name</th> <th>Type</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td><b>UsdGeom</b></td> <td>Schema Module</td> <td>Geometry primitives, transforms, and spatial data</td> </tr> <tr> <td><b>UsdShade</b></td> <td>Schema Module</td> <td>Materials, shaders, and shading networks</td> </tr> <tr> <td><b>UsdPhysics</b></td> <td>Schema Module</td> <td>Physical properties, simulation, and physics metadata</td> </tr> </tbody> </table>
 
+
 ### 5.1.8- Metadata
 
+Metadata is “data about the data” in a USD scene: extra information that guides behavior, organization, and pipeline decisions but is not the primary scene content (like geometry values).
+
+Metadata commonly stores things like:
+
+- author / creation notes, annotations
+
+- project- or pipeline-specific tags
+
+- render / workflow hints or flags 
+
+Metadata can be authored at different scopes (for example on a stage, prim, or property), enabling both global and localized control.
+
+| Aspect                      | Metadata                                         | Attributes                                         |
+| --------------------------- | ------------------------------------------------ | -------------------------------------------------- |
+| **Schema Relationship**     | Separate from the core schema data model         | Defined explicitly by schemas                      |
+| **Intended Use**            | Supplementary and contextual information         | Actual authored data that defines an object        |
+| **Role in Scene**           | Guides behavior, organization, or pipeline logic | Describes concrete properties (e.g. values, state) |
+| **Time-Varying**            | ❌ Cannot be time-sampled                         | ✅ Can be time-sampled                              |
+| **Performance Implication** | Often cheaper to store and evaluate              | Time-sampling may increase evaluation cost         |
 
 
+##### 🐍 Example: Working with metadata
+
+<table>
+<tr>
+<th align="left">Code</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+# Retrieve the metadata value associated with the given key for a USD Object
+usdobject.GetMetadata('key')
+
+# Set the metadata value for the given key on a USD Object
+usdobject.SetMetadata('key', value)
+
+# Retrieve the metadata value associated with the given key for the stage
+stage.GetMetadata('key')
+
+# Set the metadata value for the given key on the stage
+stage.SetMetadata('key', value) 
+
+# Use for better performance if accessing a single value and not all the metadata within a key
+GetMetadataByDictKey()
+
+
+```
+</td> 
+
+</table>
 
 
 
