@@ -3446,8 +3446,6 @@ def Xform "World"
     }
 }
 
-
-
 ```
 </td> 
 
@@ -3489,7 +3487,6 @@ print("Preview should draw:", str(draw_prim[0].GetPath() if draw_prim else high.
 
 stage.Save()
 
-
 ```
 </td> 
 <td valign="top">
@@ -3510,8 +3507,6 @@ def Xform "World"
         uniform token purpose = "proxy"
     }
 }
-
-
 
 ```
 </td> 
@@ -3573,7 +3568,6 @@ for prim in [cube_1, cube_2, cube_3]:
     print(f"{prim.GetPath()} -> {mat.GetPath() if mat else 'None'}")
 
 stage.Save()
-
 
 ```
 </td> 
@@ -3637,11 +3631,6 @@ def Xform "World"
     }
 }
 
-
-
-
-
-
 ```
 </td> 
 
@@ -3649,6 +3638,8 @@ def Xform "World"
 
 
 ### 5.1.4- Time Codes and Time Samples
+
+We have already show a few examples of this, let's see one more example.
 
 ##### 🐍 Example: Bouncing ball sim
 
@@ -3686,7 +3677,6 @@ cube_xform_api.SetTranslate(Gf.Vec3d(0, 0, -2))
 # Save the stage to the file:
 stage.Save()
 
-
 ```
 </td> 
 <td valign="top">
@@ -3717,7 +3707,6 @@ sphere_xform_api.SetScale(Gf.Vec3f(1.00, 1.00, 1.00), time=60)
 
 # Export to a new flattened layer for this example.
 stage.Export("_assets/timecode_ex2b.usda", addSourceFileComment=False)
-
 
 ```
 </td> 
@@ -3761,14 +3750,10 @@ def Xform "World"
     }
 }
 
-
 ```
 </td> 
 
 </table>
-
-
-
 
 ##### ⭐ Example "TimeCodes Scaled to Real Time"
 ---
@@ -3825,6 +3810,83 @@ a second.
 </table>
 
 ### 5.1.5- Prim and Property Paths
+
+In OpenUSD, a path is a string that uniquely identifies the location of a prim or property within a USD scenegraph hierarchy, similar to a filesystem path. The root of the scene is represented by /, and each nested prim is separated by /. For example:
+
+/World/Geometry/Box
+
+**Prim Paths**
+A prim path describes where a prim lives in the scene hierarchy. Prims are objects such as geometry, lights, transforms, etc. 
+
+**Property Paths**
+Extending a prim path with a . and a property name gives you a property path. Properties include attributes (data values) and relationships (connections between prims). 
+
+**Variants**
+USD paths can include variant selections, using curly braces to specify which variant of a prim is being referenced. 
+
+**Primary Uses of Paths**
+Paths are fundamental in USD for:
+- Uniquely identifying prims and their properties within a scene. 
+- Navigating the scene hierarchy programmatically or via tools. 
+- Authoring—specifying where to add or modify prims and properties on a stage. 
+- Querying and filtering prims, such as with expressions that match certain path patterns. 
+
+
+##### 🐍 Example: Getting, Validating, and Defining Prims at Path
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">paths.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd
+
+stage: Usd.Stage = Usd.Stage.CreateNew("_assets/paths.usda")
+stage.DefinePrim("/hello")
+stage.DefinePrim("/hello/world")
+
+# Get the primitive at the path "/hello" from the current stage
+hello_prim: Usd.Prim = stage.GetPrimAtPath("/hello")
+
+# Get the primitive at the path "/hello/world" from the current stage
+hello_world_prim: Usd.Prim = stage.GetPrimAtPath("/hello/world")
+
+# Get the primitive at the path "/world" from the current stage
+# Note: This will return an invalid prim because "/world" does not exist, but if changed to "/hello/world" it will return a valid prim
+world_prim: Usd.Prim = stage.GetPrimAtPath("/world")
+
+# Print whether the primitive is valid
+print("Is /hello a valid prim? ", hello_prim.IsValid())
+print("Is /hello/world a valid prim? ", hello_world_prim.IsValid())
+print("Is /world a valid prim? ", world_prim.IsValid())
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+def "hello"
+{
+    def "world"
+    {
+    }
+}
+
+
+```
+</td> 
+
+</table>
+
+
 ### 5.1.6- OpenUSD File Formats
 ### 5.1.7- OpenUSD Modules
 ### 5.1.8- Metadata
@@ -3848,6 +3910,14 @@ a second.
 ### 5.2.5- Model Kinds -> (go to 2.1)
 ### 5.2.6- Stage Traversal
 ### 5.2.7- Hydra
+
+
+
+
+
+
+
+
 
 
 
