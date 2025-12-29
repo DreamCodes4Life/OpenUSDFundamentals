@@ -4056,26 +4056,27 @@ def "World"
 
 OpenUSD modules are organized libraries within the USD codebase that expose specific functionality for building, querying, or extending USD scenes. They help structure USD’s capabilities into cohesive APIs for different purposes such as scene authoring, composition, geometry, math utilities, and more. 
 
-| Package        | Description                                                                           | Required for Authoring |
-| -------------- | ------------------------------------------------------------------------------------- | ---------------------- |
-| **base**       | Foundational utilities and common low-level functionality used across all USD modules | ✅ Yes                  |
-| **usd**        | Core functionality for authoring, composing, and reading USD scene data               | ✅ Yes                  |
-| **imaging**    | Rendering and visualization support for USD scenes                                    | ❌ No                   |
-| **usdImaging** | USD-specific imaging adapters and rendering integration                               | ❌ No                   |
+**OpenUSD Package & Module Overview**
+| Name           | Type             | Description                                                                           |
+| -------------- | ---------------- | ------------------------------------------------------------------------------------- |
+| **base**       | Core Package     | Foundational utilities and shared low-level functionality used across all USD modules |
+| **usd**        | Core Package     | Core APIs for authoring, composing, and reading USD scene data                        |
+| **imaging**    | Optional Package | Rendering and visualization support for USD scenes                                    |
+| **usdImaging** | Optional Package | USD-specific imaging adapters and renderer integration                                |
 
+**Commonly Used USD Modules**
+| Name    | Type              | Description                                                                        |
+| ------- | ----------------- | ---------------------------------------------------------------------------------- |
+| **Usd** | Core Module       | High-level API for stages, prims, properties, metadata, and composition arcs       |
+| **Sdf** | Foundation Module | Scene description foundation for layers, paths, serialization, and data structures |
+| **Gf**  | Utility Module    | Math and geometry types such as vectors, matrices, and quaternions                 |
 
-| Module  | Purpose                                                                                                                              |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **Usd** | High-level API for creating and opening stages, manipulating prims and properties, authoring metadata, and managing composition arcs |
-| **Sdf** | Low-level scene description foundation for layers, paths, serialization, and core data structures                                    |
-| **Gf**  | Graphics foundation providing math and geometry types (vectors, matrices, quaternions, etc.)                                         |
-
-| Schema Module  | Domain                                                |
-| -------------- | ----------------------------------------------------- |
-| **UsdGeom**    | Geometry primitives, transforms, and spatial data     |
-| **UsdShade**   | Materials, shaders, and shading networks              |
-| **UsdPhysics** | Physical properties, simulation, and physics metadata |
-
+**Schema Modules**
+| Name           | Type          | Description                                           |
+| -------------- | ------------- | ----------------------------------------------------- |
+| **UsdGeom**    | Schema Module | Geometry primitives, transforms, and spatial data     |
+| **UsdShade**   | Schema Module | Materials, shaders, and shading networks              |
+| **UsdPhysics** | Schema Module | Physical properties, simulation, and physics metadata |
 
 
 
