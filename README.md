@@ -4591,9 +4591,257 @@ def Scope "Lights"
 
 
 
-### 5.3.1- Primvars
+### 5.3.1- Primvars -> (go to 1.0)
+
 ### 5.3.2- Value Resolution
+
+Value resolution is how OpenUSD figures out the final value of a property or piece of metadata by looking at all the different sources that might have information about it.
+
+Key Differences and Main Points: Value Resolution vs Composition in OpenUSD
+
+| **Aspect**                          | **Value Resolution**                                                                 | **Composition**                                                                 |
+|-------------------------------------|-------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| **Definition**                      | Determines the final value of a property or metadata by combining multiple sources. | Determines where data comes from and creates an index of sources for each prim. |
+| **Caching**                         | Not cached; values are calculated on demand for efficiency and memory optimisation. | Cached at the prim level for quick access.                                      |
+| **Rules**                           | Vary by data type (e.g., metadata, relationships, attributes).                      | Vary by composition arc and strength ordering.                                  |
+| **Metadata Resolution**             | Strongest opinion wins; some metadata (e.g., dictionaries) combine element by element. | Strongest opinion wins based on composition arcs and strength ordering.         |
+| **Relationship Resolution**         | Combines multiple targets using list editing semantics (e.g., merging lists).       | Determines the hierarchy and structure of the scene.                            |
+| **Attribute Resolution**            | Considers value clips, time samples, and default values, with time scaling and interpolation. | Focuses on organising and layering data sources.                                |
+| **Performance**                     | Optimised for runtime efficiency and low memory usage.                              | Pre-calculates composition logic for faster access.                             |
+| **Key Use Case**                    | Combines data from multiple sources seamlessly in a non-destructive workflow.       | Organises and indexes data sources for efficient scene management.              |
+| **Python Tools**                    | Use `UsdAttributeQuery` to cache attribute values for repeated access.              | No specific tools mentioned for caching.                                        |
+
+##### 🐍 Example: Attribute Value Resolution and Animation
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">light_props.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Gf, Usd, UsdGeom, UsdLux
+
+file_path = "_assets/light_props.usda"
+stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
+geom_scope: UsdGeom.Scope = UsdGeom.Scope.Define(stage, "/Geometry")
+cube: UsdGeom.Cube = UsdGeom.Cube.Define(stage, geom_scope.GetPath().AppendPath("Box"))
+
+# Define a `Scope` Prim in stage at `/Lights`:
+lights_scope: UsdGeom.Scope = UsdGeom.Scope.Define(stage, "/Lights")
+
+# Define a `Sun` prim in stage as a child of `lights_scope`, called `Sun`:
+distant_light = UsdLux.DistantLight.Define(stage, lights_scope.GetPath().AppendPath("Sun"))
+# Define a `SphereLight` prim in stage as a child of lights_scope called `SphereLight`:
+sphere_light = UsdLux.SphereLight.Define(stage, lights_scope.GetPath().AppendPath("SphereLight"))
+
+# Configure the distant light's emissive attributes:
+distant_light.GetColorAttr().Set(Gf.Vec3f(1.0, 0.0, 0.0)) # Light color (red)
+distant_light.GetIntensityAttr().Set(120.0) # Light intensity
+# Lights are Xformable
+if not (distant_light_xform_api := UsdGeom.XformCommonAPI(distant_light)):
+    raise Exception("Prim not compatible with XformCommonAPI")
+distant_light_xform_api.SetRotate((45.0, 0.0, 0.0))
+
+
+# Configure the sphere light's emissive attributes:
+sphere_light.GetColorAttr().Set(Gf.Vec3f(0.0, 0.0, 1.0)) # Light color (blue)
+sphere_light.GetIntensityAttr().Set(50000.0) # Light intensity
+# Lights are Xformable
+if not (sphere_light_xform_api := UsdGeom.XformCommonAPI(sphere_light)):
+    raise Exception("Prim not compatible with XformCommonAPI")
+sphere_light_xform_api.SetTranslate((5.0, 10.0, 0.0))
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+(
+    defaultPrim = "World"
+    endTimeCode = 120
+    startTimeCode = 1
+    timeCodesPerSecond = 30
+)
+
+def Xform "World"
+{
+    float3 xformOp:rotateXYZ = (-75, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:rotateXYZ"]
+
+    def Cube "Ground"
+    {
+        float3 xformOp:scale = (10, 5, 0.1)
+        double3 xformOp:translate = (0, 0, -0.1)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "StaticDefaultCube"
+    {
+        color3f[] primvars:displayColor = [(0.2, 0.2, 0.8)]
+        float3 xformOp:scale
+        double3 xformOp:translate = (8, 0, 1)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "StaticCube"
+    {
+        color3f[] primvars:displayColor = [(0.8, 0.2, 0.2)]
+        float3 xformOp:scale = (1.5, 1.5, 1.5)
+        double3 xformOp:translate = (-8, 0, 1.5)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "AnimCube"
+    {
+        color3f[] primvars:displayColor = [(0.2, 0.8, 0.2)]
+        float3 xformOp:scale = (1.5, 1.5, 1.5)
+        float3 xformOp:scale.timeSamples = {
+            60: (2.5, 2.5, 2.5),
+            120: (5, 5, 5),
+        }
+        double3 xformOp:translate = (0, 0, 1.5)
+        double3 xformOp:translate.timeSamples = {
+            60: (0, 0, 2.5),
+            120: (0, 0, 5),
+        }
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+}
+
+
+
+```
+</td> 
+
+</table
+
+##### 🐍 Example: 
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">value_resolution_composed.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom
+import os
+
+# --- Layer 1 (weaker)
+layer_1_path = "_assets/value_resolution_layer_1.usda"
+layer_1_stage = Usd.Stage.CreateNew(layer_1_path)
+
+layer_1_xform = UsdGeom.Xform.Define(layer_1_stage, "/World/XformPrim")
+layer_1_xform_prim = layer_1_xform.GetPrim()
+
+# "/World/XformPrim" customData
+layer_1_xform_prim.SetCustomDataByKey("source",  "layer_1")
+layer_1_xform_prim.SetCustomDataByKey("opinion",  "weak")
+layer_1_xform_prim.SetCustomDataByKey("unique_layer_value", "layer_1_unique_value")  # only authored in layer_1
+
+# Relationship contribution from base
+look_a = UsdGeom.Xform.Define(layer_1_stage, "/World/Looks/LookA")
+layer_1_xform_prim.CreateRelationship("look:targets").AddTarget(look_a.GetPath())
+layer_1_stage.Save()
+
+# --- Layer 2 (stronger)
+layer_2_path = "_assets/value_resolution_layer_2.usda"
+layer_2_stage = Usd.Stage.CreateNew(layer_2_path)
+
+layer_2_xform = UsdGeom.Xform.Define(layer_2_stage, "/World/XformPrim")
+layer_2_xform_prim = layer_2_xform.GetPrim()
+
+# "/World/XformPrim" customData
+layer_2_xform_prim.SetCustomDataByKey("source",  "layer_2")
+layer_2_xform_prim.SetCustomDataByKey("opinion",  "strong")
+
+# Relationship contribution from override
+look_b = UsdGeom.Xform.Define(layer_2_stage, "/World/Looks/LookB")
+layer_2_xform_prim.CreateRelationship("look:targets").AddTarget(look_b.GetPath())
+layer_2_stage.Save()
+
+# --- Composed stage. First sublayer listed (layer_2) is strongest
+composed_path = "_assets/value_resolution_composed.usda"
+composed_stage = Usd.Stage.CreateNew(composed_path)
+composed_stage.GetRootLayer().subLayerPaths = [os.path.basename(layer_2_path), os.path.basename(layer_1_path)]
+
+xform_prim = composed_stage.GetPrimAtPath("/World/XformPrim")
+resolved_custom_data = xform_prim.GetCustomData() 
+
+# resolved custom data:
+print("Resolved CustomData:")
+for key, value in resolved_custom_data.items():
+    print(f"- '{key}': '{value}'")
+
+# resolved relationship targets:
+targets = xform_prim.GetRelationship("look:targets").GetTargets()
+print(f"\nResolved relationship targets: {[str(t) for t in targets]}")  # both LookA and LookB
+
+composed_stage.Save()
+
+# Write out the composed stage to a single file for inspection
+explicit_composed_path = '_assets/value_resolution_composed_explicit.usda'
+txt = composed_stage.ExportToString(addSourceFileComment=False)
+with open(explicit_composed_path, "w") as f:
+    f.write(txt)
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def "World"
+{
+    def Xform "XformPrim" (
+        customData = {
+            string opinion = "strong"
+            string source = "layer_2"
+            string unique_layer_value = "layer_1_unique_value"
+        }
+    )
+    {
+        custom rel look:targets = [
+            </World/Looks/LookB>,
+            </World/Looks/LookA>,
+        ]
+    }
+
+    def "Looks"
+    {
+        def Xform "LookA"
+        {
+        }
+
+        def Xform "LookB"
+        {
+        }
+    }
+}
+
+
+
+```
+</td> 
+
+</table>
+
 ### 5.3.3- Custom Properties
+
+
 ### 5.3.4- Active and Inactive Prims
 ### 5.3.5- Model Kinds -> (go to 2.1)
 ### 5.3.6- Stage Traversal
