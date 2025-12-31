@@ -4440,7 +4440,156 @@ UsdLux is the schema domain that includes a set of light types and light-related
 - Dome lights (UsdLuxDomeLight)
 - Portal lights (UsdLuxPortalLight)
 
+##### 🐍 Example: UsdLux and DistantLight
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">distant_light.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom, UsdLux
+
+file_path = "_assets/distant_light.usda"
+stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
+
+world: UsdGeom.Xform = UsdGeom.Xform.Define(stage, "/World")
+geo_scope: UsdGeom.Scope = UsdGeom.Scope.Define(stage, world.GetPath().AppendPath("Geometry"))
+box_geo: UsdGeom.Cube = UsdGeom.Cube.Define(stage, geo_scope.GetPath().AppendPath("Cube"))
+
+# Define a new Scope primitive at the path "/World/Lights" on the current stage:
+lights_scope: UsdGeom.Scope = UsdGeom.Scope.Define(stage, world.GetPath().AppendPath("Lights"))
+
+# Define a new DistantLight primitive at the path "/World/Lights/SunLight" on the current stage:
+distant_light: UsdLux.DistantLight = UsdLux.DistantLight.Define(stage, lights_scope.GetPath().AppendPath("SunLight"))
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def Xform "World"
+{
+    def Scope "Geometry"
+    {
+        def Cube "Cube"
+        {
+        }
+    }
+
+    def Scope "Lights"
+    {
+        def DistantLight "SunLight"
+        {
+        }
+    }
+}
+
+
+```
+</td> 
+
+</table>
+
+##### 🐍 Example: Setting Light Properties
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">light_props.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Gf, Usd, UsdGeom, UsdLux
+
+file_path = "_assets/light_props.usda"
+stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
+geom_scope: UsdGeom.Scope = UsdGeom.Scope.Define(stage, "/Geometry")
+cube: UsdGeom.Cube = UsdGeom.Cube.Define(stage, geom_scope.GetPath().AppendPath("Box"))
+
+# Define a `Scope` Prim in stage at `/Lights`:
+lights_scope: UsdGeom.Scope = UsdGeom.Scope.Define(stage, "/Lights")
+
+# Define a `Sun` prim in stage as a child of `lights_scope`, called `Sun`:
+distant_light = UsdLux.DistantLight.Define(stage, lights_scope.GetPath().AppendPath("Sun"))
+# Define a `SphereLight` prim in stage as a child of lights_scope called `SphereLight`:
+sphere_light = UsdLux.SphereLight.Define(stage, lights_scope.GetPath().AppendPath("SphereLight"))
+
+# Configure the distant light's emissive attributes:
+distant_light.GetColorAttr().Set(Gf.Vec3f(1.0, 0.0, 0.0)) # Light color (red)
+distant_light.GetIntensityAttr().Set(120.0) # Light intensity
+# Lights are Xformable
+if not (distant_light_xform_api := UsdGeom.XformCommonAPI(distant_light)):
+    raise Exception("Prim not compatible with XformCommonAPI")
+distant_light_xform_api.SetRotate((45.0, 0.0, 0.0))
+
+
+# Configure the sphere light's emissive attributes:
+sphere_light.GetColorAttr().Set(Gf.Vec3f(0.0, 0.0, 1.0)) # Light color (blue)
+sphere_light.GetIntensityAttr().Set(50000.0) # Light intensity
+# Lights are Xformable
+if not (sphere_light_xform_api := UsdGeom.XformCommonAPI(sphere_light)):
+    raise Exception("Prim not compatible with XformCommonAPI")
+sphere_light_xform_api.SetTranslate((5.0, 10.0, 0.0))
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def Scope "Geometry"
+{
+    def Cube "Box"
+    {
+    }
+}
+
+def Scope "Lights"
+{
+    def DistantLight "Sun"
+    {
+        color3f inputs:color = (1, 0, 0)
+        float inputs:intensity = 120
+        float3 xformOp:rotateXYZ = (45, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:rotateXYZ"]
+    }
+
+    def SphereLight "SphereLight"
+    {
+        color3f inputs:color = (0, 0, 1)
+        float inputs:intensity = 50000
+        double3 xformOp:translate = (5, 10, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+}
+
+
+```
+</td> 
+
+</table>
+
+
 ## 5.3- Beyond the Basics
+
+
 
 ### 5.3.1- Primvars
 ### 5.3.2- Value Resolution
