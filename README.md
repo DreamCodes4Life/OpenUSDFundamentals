@@ -4287,9 +4287,158 @@ stage.Save()
 
 
 ### 5.2.3- Xform
+
+In OpenUSD, an Xform is a type of prim that stores transformation data, such as translation, rotation, and scaling, which apply to its child prims.
+
+##### 🐍 Example: UsdGeom and Xform
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">xform_prim.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+# Import the necessary modules from the pxr package:
+from pxr import Usd, UsdGeom
+
+# Create a new USD stage with root layer named "xform_prim.usda":
+file_path = "_assets/xform_prim.usda"
+stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
+
+# Define a new Xform primitive at the path "/World" on the current stage:
+world: UsdGeom.Xform = UsdGeom.Xform.Define(stage, "/World")
+
+# Save changes to the current stage to its root layer:
+stage.Save()
+print(stage.ExportToString(addSourceFileComment=False))
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def Xform "World"
+{
+}
+
+
+```
+</td> 
+
+</table>
+
+
 ### 5.2.4- XformCommonAPI
+This API facilitates the authoring and retrieval of a common set of operations with a single translation, rotation, scale and pivot that is generally compatible with import and export into many tools. It’s designed to simplify the interchange of these transformations.
+
+##### 🐍 Example: XformCommonAPI - Transforms and Inheritance
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">xformcommonapi.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom, Gf
+
+file_path = "_assets/xformcommonapi.usda"
+stage = Usd.Stage.CreateNew(file_path)
+
+# A root transform group we will move and rotate
+world = UsdGeom.Xform.Define(stage, "/World")
+parent = UsdGeom.Xform.Define(stage, world.GetPath().AppendPath("Parent_Prim"))
+
+# Parent Translate, Rotate, Scale using XformCommonAPI
+parent_xform_api = UsdGeom.XformCommonAPI(parent)
+parent_xform_api.SetTranslate(Gf.Vec3d(5, 0, 3))
+parent_xform_api.SetRotate(Gf.Vec3f(90, 0, 0))
+parent_xform_api.SetScale(Gf.Vec3f(3.0, 3.0, 3.0))
+
+
+child_translation = Gf.Vec3d(2, 0, 0)
+
+# Child A - inherits parent transforms
+child_a_cone = UsdGeom.Cone.Define(stage, parent.GetPath().AppendChild("Child_A"))
+child_a_xform_api = UsdGeom.XformCommonAPI(child_a_cone)
+child_a_xform_api.SetTranslate(child_translation)  # Parent_Prim transform + local placement
+
+# Child B - "/World/Alt_Parent/Child_B" does NOT inherit Parent_Prim transforms
+alt_parent = UsdGeom.Xform.Define(stage, world.GetPath().AppendChild("Alt_Parent"))
+child_b_cone = UsdGeom.Cone.Define(stage, alt_parent.GetPath().AppendChild("Child_B"))
+child_b_xform_api = UsdGeom.XformCommonAPI(child_b_cone)
+child_b_xform_api.SetTranslate(child_translation)  # local placement only
+
+# Inspect the authored Xform Operation Order
+print("Parent xformOpOrder:", UsdGeom.Xformable(parent).GetXformOpOrderAttr().Get())
+print("Alt_Parent xformOpOrder:", UsdGeom.Xformable(alt_parent).GetXformOpOrderAttr().Get())
+print("Child A xformOpOrder:", UsdGeom.Xformable(child_a_cone).GetXformOpOrderAttr().Get())
+print("Child B xformOpOrder:", UsdGeom.Xformable(child_b_cone).GetXformOpOrderAttr().Get())
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def Xform "World"
+{
+    def Xform "Parent_Prim"
+    {
+        float3 xformOp:rotateXYZ = (90, 0, 0)
+        float3 xformOp:scale = (3, 3, 3)
+        double3 xformOp:translate = (5, 0, 3)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+
+        def Cone "Child_A"
+        {
+            double3 xformOp:translate = (2, 0, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+    }
+
+    def Xform "Alt_Parent"
+    {
+        def Cone "Child_B"
+        {
+            double3 xformOp:translate = (2, 0, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+    }
+}
+
+
+```
+</td> 
+
+</table>
+
 ### 5.2.5- Lights
 
+UsdLux is the schema domain that includes a set of light types and light-related schemas. It provides a standardized way to represent various types of lights, such as:
+
+- Directional lights (UsdLuxDistantLight)
+- Area lights, including
+- Cylinder lights (UsdLuxCylinderLight)
+- Rectangular area lights (UsdLuxRectLight)
+- Disk lights (UsdLuxDiskLight)
+- Sphere lights (UsdLuxSphereLight)
+- Dome lights (UsdLuxDomeLight)
+- Portal lights (UsdLuxPortalLight)
 
 ## 5.3- Beyond the Basics
 
