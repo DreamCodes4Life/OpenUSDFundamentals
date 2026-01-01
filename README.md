@@ -4593,6 +4593,10 @@ def Scope "Lights"
 
 ### 5.3.1- Primvars -> (go to 1.0)
 
+🔗 [More info](https://openusd.org/release/user_guides/render_user_guide.html#working-with-primvars)
+
+
+
 ### 5.3.2- Value Resolution
 
 Value resolution is how OpenUSD figures out the final value of a property or piece of metadata by looking at all the different sources that might have information about it.
@@ -5068,7 +5072,6 @@ Hydra supports various rendering backends and techniques, including rasterizatio
 It provides extensibility through plugins and custom rendering backends.
 
 🔗 [More info](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/hydra.html)
-
 
 
 
