@@ -4841,13 +4841,233 @@ def "World"
 
 ### 5.3.3- Custom Properties
 
+Here are a few ways we can use custom properties to enhance our OpenUSD workflows:
+
+- Metadata storage : Storing additional information about a prim, such as author names, creation dates, or custom tags.
+- Animation data : Defining custom animation curves or parameters that are not covered by standard schema properties.
+- Simulation parameters : Storing parameters for physics simulations or other procedural generation processes.
+- Arbitrary end user data : Because they can be easily defined at run time, custom properties are the best way to allow end users to define arbitrary custom data.
+
+##### 🐍 Example: Creating Custom Attributes
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">custom_attributes.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd, UsdGeom, Sdf
+
+file_path = "_assets/custom_attributes.usda"
+stage: Usd.Stage = Usd.Stage.CreateNew(file_path)
+
+world_xform: UsdGeom.Xform = UsdGeom.Xform.Define(stage, "/World")
+geometry_xform: UsdGeom.Xform = UsdGeom.Xform.Define(stage, world_xform.GetPath().AppendPath("Packages"))
+
+box_xform: UsdGeom.Xform = UsdGeom.Xform.Define(stage, geometry_xform.GetPath().AppendPath("Box"))
+box_prim: Usd.Prim = box_xform.GetPrim()
+box_prim.GetReferences().AddReference("./cubebox_a02/cubebox_a02.usd")
+
+# Create additional attributes for the box prim
+weight = box_prim.CreateAttribute("acme:weight", Sdf.ValueTypeNames.Float, custom=True)
+category = box_prim.CreateAttribute("acme:category", Sdf.ValueTypeNames.String, custom=True)
+hazard = box_prim.CreateAttribute("acme:hazardous_material", Sdf.ValueTypeNames.Bool, custom=True)
+
+# Optionally document your custom property
+weight.SetDocumentation("The weight of the package in kilograms.")
+category.SetDocumentation("The shopping category for the products this package contains.")
+hazard.SetDocumentation("Whether this package contains hazard materials.")
+
+# Set values for the attributes
+weight.Set(5.5)
+category.Set("Cosmetics")
+hazard.Set(False)
+
+# Save the stage
+stage.Save()
 
 
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def Xform "World"
+{
+    def Xform "Packages"
+    {
+        def Xform "Box" (
+            prepend references = @./cubebox_a02/cubebox_a02.usd@
+        )
+        {
+            custom string acme:category = "Cosmetics" (
+                doc = "The shopping category for the products this package contains."
+            )
+            custom bool acme:hazardous_material = 0 (
+                doc = "Whether this package contains hazard materials."
+            )
+            custom float acme:weight = 5.5 (
+                doc = "The weight of the package in kilograms."
+            )
+        }
+    }
+}
+
+
+```
+</td> 
+
+</table>
+
+
+
+##### 🐍 Example: Modifying Custom Attributes
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">custom_attributes.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd
+
+file_path = "_assets/custom_attributes.usda"
+stage: Usd.Stage = Usd.Stage.Open(file_path)
+box_prim = stage.GetPrimAtPath("/World/Packages/Box")
+
+# Get the weight attribute
+weight_attr: Usd.Attribute = box_prim.GetAttribute("acme:weight")
+# Set the value of the weight attribute
+weight_attr.Set(4.25)
+
+# Print the weight of the box
+print("Weight of Box:", weight_attr.Get())
+
+stage.Save()
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+
+def Xform "World"
+{
+    def Xform "Packages"
+    {
+        def Xform "Box" (
+            prepend references = @./cubebox_a02/cubebox_a02.usd@
+        )
+        {
+            custom string acme:category = "Cosmetics" (
+                doc = "The shopping category for the products this package contains."
+            )
+            custom bool acme:hazardous_material = 0 (
+                doc = "Whether this package contains hazard materials."
+            )
+            custom float acme:weight = 4.25 (
+                doc = "The weight of the package in kilograms."
+            )
+        }
+    }
+}
+
+
+```
+</td> 
+
+</table>
+
+🔗 [More info](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/custom-properties.html)
 
 ### 5.3.4- Active and Inactive Prims
+
+Deactivating a prim provides a way to temporarily remove, or prune, prims and their descendants from being composed and processed on the stage, which can make traversals more efficient.
+
+##### 🐍 Example: Setting Prims as Active/Inactive
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">Result</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+from pxr import Usd
+
+# Open the USD stage from the specified file
+file_path = "_assets/active-inactive.usda"
+stage = Usd.Stage.Open(file_path)
+
+# Iterate through all the prims on the stage
+# Print the state of the stage before deactivation
+print("Stage contents BEFORE deactivating:")
+for prim in stage.Traverse():
+    print(prim.GetPath())
+
+# Get the "/World/Box" prim and deactivate it
+box = stage.GetPrimAtPath("/World/Box")
+# Passing in False to SetActive() will set the prim as Inactive and passing in True will set the prim as active
+box.SetActive(False)
+
+print("\n\nStage contents AFTER deactivating:")
+for prim in stage.Traverse():
+    print(prim.GetPath())
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+Stage contents BEFORE deactivating:
+/World
+/World/Box
+/World/Box/Geometry
+/World/Box/Geometry/Cube
+/World/Box/Materials
+/World/Box/Materials/BoxMat
+/World/Environment
+/World/Environment/SkyLight
+
+
+Stage contents AFTER deactivating:
+/World
+/World/Environment
+/World/Environment/SkyLight
+
+
+```
+</td> 
+
+</table>
+
 ### 5.3.5- Model Kinds -> (go to 2.1)
-### 5.3.6- Stage Traversal
+### 5.3.6- Stage Traversal -> (go to 2.2)
 ### 5.3.7- Hydra
+
+Hydra is a rendering architecture within OpenUSD that provides a high-performance, scalable, and extensible solution for rendering large 3D scenes. It serves as a bridge between the scene description data, such as USD, and the rendering backend, such as OpenGL or DirectX.
+Hydra is a rendering architecture within OpenUSD that bridges scene data and rendering backends.
+It operates on a scene delegate and enables render delegate plugins to generate rendering instructions for specific backends.
+Hydra supports various rendering backends and techniques, including rasterization and ray tracing.
+It provides extensibility through plugins and custom rendering backends.
+
+🔗 [More info](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/hydra.html)
 
 
 
