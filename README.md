@@ -5574,6 +5574,44 @@ def means “Even though I may not be declaring a typed prim in this layer, by t
 
 over means “If some referenced layer happens to define this prim, then layer the information I contain onto it; but if not, just consider this information ancillary”
 
+## 6.6 Draw Modes
+
+## UsdGeomModelAPI – Draw Modes (Simple Summary)
+
+`UsdGeomModelAPI` adds **draw modes** that let you replace heavy geometry with simple stand-ins in the viewport for prims of `kind = model`. :contentReference[oaicite:0]{index=0}  
+
+Two key attributes control this:
+
+- **`model:drawMode`** (inheritable) – says *what kind* of stand-in to use (origin, bounds, cards, etc.). :contentReference[oaicite:1]{index=1}  
+- **`model:applyDrawMode`** (not inherited) – a boolean that says *whether to actually use* the resolved draw mode on this prim. :contentReference[oaicite:2]{index=2}  
+
+USD can then **stop traversing the subtree** at that prim and draw proxy geometry instead (axes, bounding box, or textured “cards”). This is mainly for performance + clarity when looking at big scenes. :contentReference[oaicite:3]{index=3}  
+
+For `kind = component` models, if you *do not* author `model:applyDrawMode`, they behave as if it were `true` when `model:drawMode` resolves to a non-`default` value. If you want to **opt-out**, apply `UsdGeomModelAPI` and explicitly set `model:applyDrawMode = false`. :contentReference[oaicite:4]{index=4}  
+
+`cards` mode uses flat quads around the model, with textures and layout controlled by `model:cardGeometry` and per-axis texture attributes (X/Y/Z ±). :contentReference[oaicite:5]{index=5}  
+
+---
+
+### Draw Mode Attributes Cheat Sheet
+
+| Attribute | Type / Scope | What It Does | Common Values / Notes |
+| ---------- | ------------ | ------------ | ---------------------- |
+| **`model:drawMode`** | token, **inherited** | Chooses the *type* of proxy geometry when draw mode is applied. | **`origin`** – draw basis vectors at the prim’s origin. **`bounds`** – draw the model-space bounding box. **`cards`** – draw textured quads as a stand-in. **`default`** – draw the full USD subtree normally. **`inherited`** – defer to parent’s drawMode; if nothing is set anywhere, result is `default`. :contentReference[oaicite:6]{index=6} |
+| **`model:applyDrawMode`** | bool, **not inherited** | Controls whether this prim actually uses the resolved `model:drawMode`. | If `true` and resolved `model:drawMode` is not `default`, USD stops traversal here and draws proxy geometry. For `kind = component`, “no opinion authored” is treated as `true` by default. Set to `false` to force full geometry even when a non-default drawMode is inherited. :contentReference[oaicite:7]{index=7} |
+| **`model:drawModeColor`** | color3f, not inherited | Base color for generated proxy geometry (axes, bounds lines, or untextured cards). | Default is a mid-gray; used when no texture exists or when a card face has an invalid texture path. :contentReference[oaicite:8]{index=8} |
+| **`model:cardGeometry`** | token, not inherited | Controls the **shape** of the quads in `cards` mode. | **`cross`** – quads that bisect the model along ±X, ±Y, ±Z. **`box`** – quads on the faces of the bounds box. **`fromTexture`** – quads and placement taken from texture metadata (world-to-screen matrix). :contentReference[oaicite:9]{index=9} |
+| **`model:cardTextureXPos`**<br>`model:cardTextureXNeg`<br>`model:cardTextureYPos` / `YNeg`<br>`model:cardTextureZPos` / `ZNeg` | asset paths, not inherited | Textures used on each axis-aligned card face in `cards` mode. | If both + and − textures exist on an axis, each side uses its own. If only one is set, it’s mirrored (flipped in s) to the opposite side. Faces with missing/invalid textures use `model:drawModeColor`. In `fromTexture` mode, only faces with valid textures are drawn. :contentReference[oaicite:10]{index=10} |
+
+---
+
+### How It All Fits Together (Short Version)
+
+1. Set `model:drawMode` somewhere up the hierarchy (`origin`, `bounds`, or `cards`).  
+2. On the prim where you want the proxy to actually be used, ensure `model:applyDrawMode = true` (or rely on the component default).  
+3. Optionally: adjust `model:drawModeColor`, `model:cardGeometry`, and the card textures for nicer impostors. :contentReference[oaicite:11]{index=11}  
+
+That’s enough to get simple, efficient stand-in rendering for your models using `UsdGeomModelAPI`’s draw modes.
 
 
 
