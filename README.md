@@ -5428,7 +5428,7 @@ It provides extensibility through plugins and custom rendering backends.
 
 ## 6.2 Inspecting and Authoring Properties
 
-##### 🧠 [Tutorial (Thttps://openusd.org/release/tut_inspect_and_author_props.html) 
+##### 🧠 [Tutorial] (https://openusd.org/release/tut_inspect_and_author_props.html) - 🧠 [Material] (https://openusd.org/release/tut_inspect_and_author_props.html)
 
 
 # 7) Pipeline Development: Exam Weight 14%
