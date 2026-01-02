@@ -4906,7 +4906,7 @@ Notice how the primvar indices refer to pairs of values in the value array – t
 
 Generally, the default element size of 1 will work for most use-cases. However you may encounter use-cases where you need to communicate an aggregate element to a renderer (e.g. representing spherical harmonics using nine floating-point coefficients) using larger element sizes.
 
-
+If you want to dig much more in primvars and materials, follow the next doc.
 
 🔗 [More info](https://openusd.org/release/user_guides/render_user_guide.html#working-with-primvars)
 
