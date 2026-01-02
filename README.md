@@ -4603,6 +4603,51 @@ Primvars support several interpolation modes, based on interpolation modes of th
 - **vertex**: Values are interpolated between each vertex in the surface prim. The basis function of the surface is used for interpolation between vertices.
 - **faceVarying**: For polygons and subdivision surfaces, four values are interpolated over each face of the mesh. Bilinear interpolation is used for interpolation between the four values.
 
+##### ⭐ Example
+
+<table>
+<tr>
+<th align="left">constant.usda</th>
+<th align="left">Result</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+#usda 1.0
+(
+)
+
+def Mesh "constant"
+{
+   float3[] extent = [(-1, 0, 0), (1, 1, 0)]
+   point3f[] points = [(-1, 0, 0), (-1, 1, 0), (0, 1, 0), (0, 0, 0), (1, 1, 0), (1, 0, 0)]
+   int[] faceVertexCounts = [4, 4]
+   int[] faceVertexIndices = [3, 2, 1, 0, 5, 4, 2, 3]
+
+   color3f[] primvars:displayColor = [(1, 0, 0)] (
+       interpolation = "constant"
+   )
+
+   double3 xformOp:translate = (0, 0, -10)
+   uniform token[] xformOpOrder = ["xformOp:translate"]
+}
+
+```
+</td> 
+<td valign="top">
+
+```py
+<img width="723" height="441" alt="image" src="https://github.com/user-attachments/assets/92dd571f-af7a-4987-b333-6394875d04ec" />
+
+
+
+```
+</td> 
+
+</table>
+
 
 🔗 [More info](https://openusd.org/release/user_guides/render_user_guide.html#working-with-primvars)
 
@@ -5109,7 +5154,7 @@ It provides extensibility through plugins and custom rendering backends.
 
 
 
-
+##### ⭐ Example
 ##### 🐍 Example: 
 
 <table>
