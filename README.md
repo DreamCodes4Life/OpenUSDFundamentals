@@ -5424,6 +5424,14 @@ It provides extensibility through plugins and custom rendering backends.
 
 # 6) Debugging and Troubleshooting: Exam Weight 11%
 
+## 6.0 Related Topics already explored
+
+- Traversing a Stage -> (go to 2.2)
+- LIVERPS -> (go to 1.7)
+- References -> (go to 1.2.5)
+- ISA Schemas -> (go to 3.1)
+- Inherits -> (go to 1.2.2)
+
 ## 6.1 Creating Composition Arcs -> (go to 1.1 - 1.2)
 
 ## 6.2 Inspecting and Authoring Properties
@@ -5504,6 +5512,74 @@ def Xform "World"
 </table>
 
 ##### 🧠 [Tutorial] (https://openusd.org/release/tut_inspect_and_author_props.html) - [Material] (https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/tutorials/authoringProperties)
+
+## 6.3 Visibility
+
+Visibility is a builtin attribute of the UsdGeomImageable base schema, and models the simplest form of “pruning” invisibility that is supported by most DCC apps. Visibility can take on two possible token string values:
+
+inherited (the fallback value if the attribute is not authored)
+
+invisible
+
+If the resolved value is invisible, then neither the prim itself nor any prims in the subtree rooted at the prim should be rendered - this is what we mean by “pruning invisibility”, since invisible subtrees are definitively pruned in their entirety. If the resolve value is inherited, it means that the computed visibility (as provided by UsdGeomImageable::ComputeVisibility()) of the prim will be whatever the computed value of the prim’s namespace parent is.
+
+Visibility may be animated, allowing a sub-tree of geometry to be renderable for some segment of a shot, and absent from others; unlike the action of deactivating geometry prims, invisible geometry is still available for inspection, for positioning, for defining volumes, etc.
+
+## 6.4 USD Performance
+
+## OpenUSD Performance Cheat Sheet
+
+> Practical notes distilled from the official “Maximizing Performance” docs.
+
+### When to Care
+
+You’re likely hitting avoidable performance bottlenecks if you notice any of these:
+
+- Stage open time grows **much faster than linearly** with scene size.
+- Hydra / viewport feels sluggish when loading or switching shots.
+- Tools that make **many USD edits** (imports, retimes, mass metadata updates) get slow as scenes grow.
+- Assets are made up of **many tiny layers** or very large `.usda` files.
+
+---
+
+### Key Practices
+
+| Topic | When It Matters (Symptoms) | What To Do |
+| ----- | -------------------------- | ---------- |
+| **Use a multithreaded allocator** | CPU usage looks high but scaling across cores is poor; loading big stages or imaging is slower than expected on many-core machines. | Link USD (and your DCC host if possible) against a multithread-friendly allocator such as **jemalloc**. This often gives ~2× speed-ups for multi-core workloads. On Linux, you can experiment by `LD_PRELOAD`-ing jemalloc when launching your app. |
+| **Prefer binary `.usd` (usdc) for heavy data** | Large text `.usda` files take a long time to open; memory usage is high; Alembic-to-USD conversions feel heavy. | Store geometry and animation caches in **binary crate** files (`.usd` / `usdc`). Reserve `.usda` mainly for small, human-readable “interface” layers (asset info, variants, payload wiring). Convert heavy `.usda` or Alembic to `.usd` where possible. |
+| **Package assets with payloads** | Opening a full shot composes all geometry and shading at once, making first-open very slow; even just inspecting the scene graph is expensive. | Use **payloads** to separate a lightweight “interface” layer (model prim, asset info, variants, bbox) from heavier detail (geo, materials, animation). Open stages **unloaded** and load only the prims you actually need. |
+| **Keep layer counts reasonable** | Each asset is made of many small layers (e.g., 10+), multiplied across all references and instances, causing lots of I/O and composition work. | Treat “lots of layers per asset” as a smell. Flatten or stitch authoring/workflow layers into a smaller set at publish time. Use tools like `usdcat --flatten` and friends, and keep an eye on `UsdStage::GetUsedLayers()`. |
+| **Minimize prim count (vs. property count)** | Stage open time grows sharply with the number of prims, even when you don’t add much more data per prim. | Spend your “budget” on **fewer prims with more properties**, not more prims. Avoid extra hierarchy prims that exist only for organization; use **namespaced properties** instead where possible. |
+| **Avoid unnecessary Xform+gprim pairs** | Lots of tiny `Xform` + `Mesh` pairs everywhere; prim count goes through the roof for complex scenes. | Use transformable gprims: in many cases you can transform the gprim itself instead of adding an extra `Xform` parent. This can significantly cut prim count (often 40–50% in dense scenes). |
+| **Use instancing at the right level** | You have many repeated objects, but performance is still bad despite “instancing” everything at the gprim level. | Prefer instancing **at asset / collection level** instead of per-gprim. Fine-grained instancing alone doesn’t reduce prim count and can add composition overhead; coarser instancing reduces both memory and composition work. |
+
+---
+
+### SdfChangeBlock & Bulk Edits
+
+When doing **many edits to layers or specs in a loop** (C++ or Python), change notifications and cache invalidation can dominate cost.
+
+Use `SdfChangeBlock` when:
+
+- You’re importing, retiming, or mass-editing **thousands of specs**.
+- You **don’t** need observers (like a UI) to see each individual intermediate change.
+- You conceptually care about the **final state** of the edits, not each step.
+
+Example pattern (C++):
+
+```cpp
+{
+    SdfChangeBlock block;
+    // Many SdfLayer / PrimSpec / AttributeSpec edits here
+} // Notifications and recomposition happen once here
+
+
+  
+
+
+
+
 
 
 # 7) Pipeline Development: Exam Weight 14%
