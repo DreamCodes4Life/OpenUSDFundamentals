@@ -4638,12 +4638,8 @@ def Mesh "constant"
 </td> 
 <td valign="top">
 
-```py
 <img width="723" height="441" alt="image" src="https://github.com/user-attachments/assets/92dd571f-af7a-4987-b333-6394875d04ec" />
 
-
-
-```
 </td> 
 
 </table>
