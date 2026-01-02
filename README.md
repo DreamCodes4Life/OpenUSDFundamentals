@@ -3280,7 +3280,7 @@ def Scope "Geometry"
 
 ### 5.1.3- Properties
 
-Prims can have two types of properties: attributes and relationships.
+Prims can have two types of properties: attributes and relationships. Attributes are the most common type of property authored in most USD scenes. An attribute can take on exactly one of the legal attribute typeNames USD provides, and can take on both a default value and an animated value. Resolving an attribute at any given timeCode will yield either a single value or no value. Attributes resolve according to “strongest wins” rules, so all values for any given attribute will be fetched from the strongest PrimSpec that provides either a default value or an animated value. Note that this simple rule is somewhat more complicated in the presence of authored value clips. One interacts with attributes through the UsdAttribute API.
 
  - **Attributes**
 
@@ -3477,6 +3477,45 @@ def Xform "World"
 </td> 
 
 </table>
+
+Similarly to how prims can be deactivated through composing overriding opinions, the value that an attribute produces can be blocked by an overriding opinion of None, which can be authored using UsdAttribute::Block().
+
+In the next example, Usd.Attribute.Get(t) will return always none, because we cannot override in timeSamples, we could if we dont define 
+
+##### ⭐ Example Attribute Block
+
+<table>
+<tr>
+<th align="left">attributeBlock.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+def Sphere "BigBall"
+{
+    double radius = 100
+    double radius.timeSamples = {
+        1: 100,
+        24: 500,
+    }
+}
+
+def "DefaultBall" (
+    references = </BigBall>
+)
+{
+    double radius = None
+}
+
+
+```
+</td> 
+
+</table>
+
+🔗 [Full examples](https://openusd.org/release/glossary.html#usdglossary-attributeblock)
 
  🔗 [More Info](https://docs.nvidia.com/learn-openusd/latest/stage-setting/properties/attributes.html)
 
@@ -3743,6 +3782,11 @@ def Xform "World"
 
 </table>
 
+  - **Connection**
+
+Connections are quite similar to relationships in that they are list-edited “scene pointers” that robustly identify other scene objects. The key difference is that while relationships are typeless, independent properties, connections are instead a sub-aspect of USD attributes.
+
+##### 🧠 [Tutorial (Simple Shading in USD)](https://openusd.org/release/tut_simple_shading.html)
 
 ### 5.1.4- Time Codes and Time Samples
 
