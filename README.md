@@ -4591,7 +4591,18 @@ def Scope "Lights"
 
 
 
-### 5.3.1- Primvars -> (go to 1.0)
+### 5.3.1- Primvars
+
+We have already been working with Primvars all along, and had a small description in 1.0. Let's dig deeper.
+
+Primvars support several interpolation modes, based on interpolation modes of the primvar equivalent Primitive Variable from RenderMan. These are:
+
+- **constant**: One value remains constant over the entire surface prim. Note that only constant interpolation primvars will inherit down the namespace.
+- **uniform**: One value remains constant for each UV patch segment of the surface prim (which is a face for meshes).
+- **varying**: Four values are interpolated over each UV patch segment of the surface. Bilinear interpolation is used for interpolation between the four values.
+- **vertex**: Values are interpolated between each vertex in the surface prim. The basis function of the surface is used for interpolation between vertices.
+- **faceVarying**: For polygons and subdivision surfaces, four values are interpolated over each face of the mesh. Bilinear interpolation is used for interpolation between the four values.
+
 
 🔗 [More info](https://openusd.org/release/user_guides/render_user_guide.html#working-with-primvars)
 
@@ -5074,17 +5085,12 @@ It provides extensibility through plugins and custom rendering backends.
 🔗 [More info](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/hydra.html)
 
 
-
-
-
-
-
-
-
-
-
-
 # 6) Debugging and Troubleshooting: Exam Weight 11%
+
+
+
+
+
 # 7) Pipeline Development: Exam Weight 14%
 # 8) Visualization: Exam Weight 8%
 
