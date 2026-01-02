@@ -2857,6 +2857,8 @@ $ usdcat file.usd --out file.usd --usdFormat usda
 
 🔗 [More Info](https://openusd.org/release/usdfaq.html#so-what-file-formats-does-usd-support)
 
+🔗 [More Info](https://openusd.org/release/toolset.html#usdcat)
+
 **Converting between .usda and .usdc Files**
 
 A .usd file can be either a text or binary format file. When USD opens a .usd file, it detects the underlying format and handles the file appropriately. You can convert any .usda or .usdc file to a .usd file simply by renaming it. 
@@ -5431,6 +5433,7 @@ It provides extensibility through plugins and custom rendering backends.
 - References -> (go to 1.2.5)
 - ISA Schemas -> (go to 3.1)
 - Inherits -> (go to 1.2.2)
+- USDCAT -> (go to 4.5)
 
 ## 6.1 Creating Composition Arcs -> (go to 1.1 - 1.2)
 
@@ -5527,11 +5530,9 @@ Visibility may be animated, allowing a sub-tree of geometry to be renderable for
 
 ## 6.4 USD Performance
 
-## OpenUSD Performance Cheat Sheet
+OpenUSD Performance Cheat Sheet
 
-> Practical notes distilled from the official “Maximizing Performance” docs.
-
-### When to Care
+Practical notes distilled from the official “Maximizing Performance” docs.
 
 You’re likely hitting avoidable performance bottlenecks if you notice any of these:
 
@@ -5566,16 +5567,13 @@ Use `SdfChangeBlock` when:
 - You **don’t** need observers (like a UI) to see each individual intermediate change.
 - You conceptually care about the **final state** of the edits, not each step.
 
-Example pattern (C++):
 
-```cpp
-{
-    SdfChangeBlock block;
-    // Many SdfLayer / PrimSpec / AttributeSpec edits here
-} // Notifications and recomposition happen once here
+## 6.5 Over vs typeless
 
+def means “Even though I may not be declaring a typed prim in this layer, by the time the UsdStage has finished composing, I expect a type to have been provided by referenced/layered scene description” (in the example, presumably the type would be provided by the layer targeted by the payload arc.
 
-  
+over means “If some referenced layer happens to define this prim, then layer the information I contain onto it; but if not, just consider this information ancillary”
+
 
 
 
