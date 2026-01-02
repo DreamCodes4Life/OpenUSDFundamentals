@@ -5428,7 +5428,82 @@ It provides extensibility through plugins and custom rendering backends.
 
 ## 6.2 Inspecting and Authoring Properties
 
-##### 🧠 [Tutorial] (https://openusd.org/release/tut_inspect_and_author_props.html) - 🧠 [Material] (https://openusd.org/release/tut_inspect_and_author_props.html)
+##### 🐍 Example: Inspecting and Authoring Properties
+
+<table>
+<tr>
+<th align="left">Code</th>
+<th align="left">.usda</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+
+# To run From Script Editor in Omniverse
+
+from pxr import Usd, UsdGeom, Sdf
+from omni.usd import get_context
+
+stage = get_context().get_stage()
+
+world_prim = stage.GetPrimAtPath("/World")
+
+if not world_prim.IsValid():
+    world_xform = UsdGeom.Xform.Define(stage, "/World")
+else:
+    world_xform = UsdGeom.Xform(world_prim)
+    
+    geometry_xform = UsdGeom.Sphere.Define(stage, "/World/Sphere")
+
+from pxr import Usd, UsdGeom, Sdf
+from omni.usd import get_context
+
+stage = get_context().get_stage()
+
+world_prim = stage.GetPrimAtPath("/World")
+
+if not world_prim.IsValid():
+    world_xform = UsdGeom.Xform.Define(stage, "/World")
+else:
+    world_xform = UsdGeom.Xform(world_prim)
+    
+    geometry_xform = UsdGeom.Sphere.Define(stage, "/World/Sphere")
+
+
+```
+</td> 
+<td valign="top">
+
+```py
+#usda 1.0
+(
+    defaultPrim = "World"
+    endTimeCode = 1000000
+    metersPerUnit = 1
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+    def Sphere "Sphere"
+    {
+        float3[] extent = [(-2, -2, -2), (2, 2, 2)]
+        color3f[] primvars:displayColor = [(0, 0, 1)]
+        double radius = 2
+    }
+}
+
+
+```
+</td> 
+
+</table>
+
+##### 🧠 [Tutorial] (https://openusd.org/release/tut_inspect_and_author_props.html) - [Material] (https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/tutorials/authoringProperties)
 
 
 # 7) Pipeline Development: Exam Weight 14%
