@@ -4603,7 +4603,7 @@ Primvars support several interpolation modes, based on interpolation modes of th
 - **vertex**: Values are interpolated between each vertex in the surface prim. The basis function of the surface is used for interpolation between vertices.
 - **faceVarying**: For polygons and subdivision surfaces, four values are interpolated over each face of the mesh. Bilinear interpolation is used for interpolation between the four values.
 
-##### ⭐ Example
+##### ⭐ Example Using Constant Interpolation
 
 <table>
 <tr>
@@ -4644,9 +4644,227 @@ def Mesh "constant"
 
 </table>
 
+##### ⭐ Example using Uniform Interpolation
+
+<table>
+<tr>
+<th align="left">uniform.usda</th>
+<th align="left">Result</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+#usda 1.0
+(
+)
+
+def Mesh "uniform"
+{
+    float3[] extent = [(-1, 0, 0), (1, 1, 0)]
+    point3f[] points = [(-1, 0, 0), (-1, 1, 0), (0, 1, 0), (0, 0, 0), (1, 1, 0), (1, 0, 0)]
+    int[] faceVertexCounts = [4, 4]
+    int[] faceVertexIndices = [3, 2, 1, 0, 5, 4, 2, 3]
+
+    color3f[] primvars:displayColor = [(1, 0, 0), (0,0,1)] (
+        interpolation = "uniform"
+    )
+
+    double3 xformOp:translate = (0, 0, -10)
+    uniform token[] xformOpOrder = ["xformOp:translate"]
+}
+
+```
+</td> 
+<td valign="top">
+
+<img width="686" height="399" alt="image" src="https://github.com/user-attachments/assets/0bb621ac-7e34-43ac-b3b1-024a9c50e58b" />
+
+
+</td> 
+
+</table>
+
+##### ⭐ Example using vertex Interpolation
+
+<table>
+<tr>
+<th align="left">vertex.usda</th>
+<th align="left">Result</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+#usda 1.0
+(
+)
+
+def Mesh "vertex"
+{
+    float3[] extent = [(-1, 0, 0), (1, 1, 0)]
+    point3f[] points = [(-1, 0, 0), (-1, 1, 0), (0, 1, 0), (0, 0, 0), (1, 1, 0), (1, 0, 0)]
+    int[] faceVertexCounts = [4, 4]
+    int[] faceVertexIndices = [3, 2, 1, 0, 5, 4, 2, 3]
+
+    color3f[] primvars:displayColor = [(1, 0, 0), (0.75,0,0), (0.5,0,0.25), (0.25,0,0.5), (0,0,1), (0,0,0.75)] (
+        interpolation = "vertex"
+    )
+
+    double3 xformOp:translate = (0, 0, -10)
+    uniform token[] xformOpOrder = ["xformOp:translate"]
+}
+
+```
+</td> 
+<td valign="top">
+
+<img width="671" height="389" alt="image" src="https://github.com/user-attachments/assets/3d3526e7-fcf4-4788-9c2a-2f4bfa391b4f" />
+
+
+
+</td> 
+
+</table>
+
+##### ⭐ Example using varying Interpolation
+
+<table>
+<tr>
+<th align="left">varying.usda</th>
+<th align="left">Result</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+#usda 1.0
+(
+)
+
+def Mesh "varying"
+{
+    float3[] extent = [(-1, 0, 0), (1, 1, 0)]
+    point3f[] points = [(-1, 0, 0), (-1, 1, 0), (0, 1, 0), (0, 0, 0), (1, 1, 0), (1, 0, 0)]
+    int[] faceVertexCounts = [4, 4]
+    int[] faceVertexIndices = [3, 2, 1, 0, 5, 4, 2, 3]
+
+    color3f[] primvars:displayColor = [(1, 0, 0), (0.75,0,0), (0.5,0,0.25), (0.25,0,0.5), (0,0,1), (0,0,0.75)] (
+        interpolation = "varying"
+    )
+
+    double3 xformOp:translate = (0, 0, -10)
+    uniform token[] xformOpOrder = ["xformOp:translate"]
+}
+
+```
+</td> 
+<td valign="top">
+
+<img width="629" height="328" alt="image" src="https://github.com/user-attachments/assets/7f7591e2-2212-41ec-a434-edd7e058f480" />
+
+
+
+</td> 
+
+</table>
+
+Note: If you’re working with polygonal mesh data that is explicitly not intended to be subdivided, you should use varying interpolation in addition to setting the mesh subdivision scheme to none. This will ensure that the mesh renders identically whether a renderer supports subdivision or not.
+
+##### ⭐ Example using faceVarying Interpolation
+
+<table>
+<tr>
+<th align="left">faceVarying.usda</th>
+<th align="left">Result</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+#usda 1.0
+(
+)
+
+def Mesh "faceVarying"
+{
+    float3[] extent = [(-1, 0, 0), (1, 1, 0)]
+    point3f[] points = [(-1, 0, 0), (-1, 1, 0), (0, 1, 0), (0, 0, 0), (1, 1, 0), (1, 0, 0)]
+    int[] faceVertexCounts = [4, 4]
+    int[] faceVertexIndices = [3, 2, 1, 0, 5, 4, 2, 3]
+
+    color3f[] primvars:displayColor = [(0,0,1), (0,0,0.75), (0.75,0,0), (1,0,0),
+                                       (0,0,1), (0,0,0.75), (0.75,0,0), (1,0,0)] (
+        interpolation = "faceVarying"
+    )
+
+    double3 xformOp:translate = (0, 0, -10)
+    uniform token[] xformOpOrder = ["xformOp:translate"]
+}
+```
+</td> 
+<td valign="top">
+
+<img width="657" height="373" alt="image" src="https://github.com/user-attachments/assets/b0662cbb-2a6f-4675-9b26-98f3d22ed8a3" />
+
+
+
+</td> 
+
+</table>
+
+Primvars have a characteristic different from most USD attributes in that primvars will get “inherited” down the scene namespace. Regular USD attributes only apply to the prim on which they are specified, but primvars implicitly also apply to all child imageable prims (unless the child prims have their own opinions about those primvars).
+
+Primvar Element Size: sets how many consecutive values in the primvar array should be treated as a single element to be interpolated over a Gprim
+
+##### ⭐ Example using Primvar Element Size
+
+<table>
+<tr>
+<th align="left">elementsize.usda</th>
+<th align="left">Flattened result</th>
+</tr>
+<tr>
+    
+<td valign="top">
+
+```py
+#usda 1.0
+(
+)
+
+def Cube "TestPrim"
+{
+    string[] primvars:testPrimvar = ["element1-partA", "element1-partB", "element2-partA", "element2-partB"] (
+        elementSize = 2
+    )
+    int[] primvars:testPrimvar:indices = [0, 1, 0]
+}
+```
+</td> 
+<td valign="top">
+	
+```py
+	
+	[element1-partA, element1-partB, element2-partA, element2-partB, element1-partA, element1-partB]
+
+
+```
+</td> 
+
+</table>
+
+Notice how the primvar indices refer to pairs of values in the value array – the “1” index refers to the third and fourth items in the values array.
+
+Generally, the default element size of 1 will work for most use-cases. However you may encounter use-cases where you need to communicate an aggregate element to a renderer (e.g. representing spherical harmonics using nine floating-point coefficients) using larger element sizes.
+
+
 
 🔗 [More info](https://openusd.org/release/user_guides/render_user_guide.html#working-with-primvars)
-
 
 
 ### 5.3.2- Value Resolution
