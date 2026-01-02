@@ -5574,9 +5574,7 @@ def means “Even though I may not be declaring a typed prim in this layer, by t
 
 over means “If some referenced layer happens to define this prim, then layer the information I contain onto it; but if not, just consider this information ancillary”
 
-## 6.6 Draw Modes
-
-## UsdGeomModelAPI – Draw Modes (Simple Summary)
+## 6.6 UsdGeomModelAPI – Draw Modes (Simple Summary)
 
 `UsdGeomModelAPI` adds **draw modes** that let you replace heavy geometry with simple stand-ins in the viewport for prims of `kind = model`. :contentReference[oaicite:0]{index=0}  
 
