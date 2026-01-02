@@ -5158,6 +5158,7 @@ def "World"
 </table>
 
 **List Editing**
+
 ---
 
 List editing is a USD feature that allows array-valued elements to be non-destructively and sparsely modified across composition layers, instead of being fully overridden. This enables layered workflows where stronger layers adjust lists defined in weaker layers without copying or rewriting them.
