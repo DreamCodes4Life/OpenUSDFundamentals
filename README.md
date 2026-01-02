@@ -5424,11 +5424,18 @@ It provides extensibility through plugins and custom rendering backends.
 
 # 6) Debugging and Troubleshooting: Exam Weight 11%
 
+## 6.1 Creating Composition Arcs -> (go to 1.1 - 1.2)
 
+## 6.2 Inspecting and Authoring Properties
 
+##### 🧠 [Tutorial (Thttps://openusd.org/release/tut_inspect_and_author_props.html) 
 
 
 # 7) Pipeline Development: Exam Weight 14%
+
+
+
+
 # 8) Visualization: Exam Weight 8%
 
 
