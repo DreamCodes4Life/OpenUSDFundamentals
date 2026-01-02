@@ -5157,6 +5157,39 @@ def "World"
 
 </table>
 
+**List Editing**
+---
+
+List editing is a USD feature that allows array-valued elements to be non-destructively and sparsely modified across composition layers, instead of being fully overridden. This enables layered workflows where stronger layers adjust lists defined in weaker layers without copying or rewriting them.
+
+Supported List Operations:
+
+| Operation            | Description                                    | Behavior                                              |
+| -------------------- | ---------------------------------------------- | ----------------------------------------------------- |
+| **append**           | Add value(s) to the end of the resolved list   | Existing values are reshuffled to the back            |
+| **prepend**          | Add value(s) to the front of the resolved list | Existing values are reshuffled to the front           |
+| **delete**           | Remove value(s) from the resolved list         | Safe and speculative; no error if value doesn’t exist |
+| **explicit (reset)** | Replace the entire resolved list               | Ignores all weaker-layer list operations              |
+
+| Rule                     | Explanation                                                         |
+| ------------------------ | ------------------------------------------------------------------- |
+| Non-destructive          | Weaker layers remain intact                                         |
+| Sparse                   | Only changes are authored                                           |
+| Order-aware              | Prepend and append affect ordering                                  |
+| Layer-dependent strength | Prepending in weaker layers can override appends in stronger layers |
+| No duplication           | Resolved lists behave like sets                                     |
+| No repetition in ops     | Same value cannot appear twice in one operation                     |
+
+| Syntax                     | Meaning                              |
+| -------------------------- | ------------------------------------ |
+| `references = @file.usd@`  | Explicit reset                       |
+| `references += @file.usd@` | Append                               |
+| `references -= @file.usd@` | Delete                               |
+| Single value allowed       | Brackets optional for single entries |
+| Multiple values            | Use `[ ... ]` list syntax            |
+
+
+
 ### 5.3.3- Custom Properties
 
 Here are a few ways we can use custom properties to enhance our OpenUSD workflows:
