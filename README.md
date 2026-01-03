@@ -100,7 +100,7 @@ from usd_helpers import (
 )
 
 # Target directory
-BASE_PATH = r"F:/ISAACSIM/LearnOpenUSD/OpenUSD_Github/01_Composition"
+BASE_PATH = r"YOUR_PATH"
 
 # Names WITHOUT ".usd"
 usd_names = [
@@ -267,100 +267,65 @@ Bellow is an example to introduce the concept of Flattering, we are running this
 <table>
   <tr>
     <th align="left">flattenShotUSD.py</th>
-    <th align="left">shot_flattened.py</th>
+    <th align="left">shot_flattened.usda</th>
   </tr>
   <tr>
     <td valign="top">
   
 ```py
+
 from pxr import Usd
 import os
-import omni.usd
+import time
 
-# Get the currently open stage
-stage = omni.usd.get_context().get_stage()
-if not stage:
-    raise RuntimeError("No stage is currently open")
+# Folder where your USD files live
+BASE_PATH = r"F:/ISAACSIM/LearnOpenUSD/OpenUSD_Github/01_Composition"
+SHOT_FILENAME = "shot.usd"
 
-# Get the root layer of the stage
-root_layer = stage.GetRootLayer()
+def flatten_usd_file(input_path: str):
+    """Open a USD file, flatten its composed stage, and save to *_flattened.usd."""
+    if not os.path.isfile(input_path):
+        raise RuntimeError(f"Input USD file does not exist: {input_path}")
 
-# Resolve the layer path
-input_path = root_layer.realPath or root_layer.identifier
-if not input_path:
-    raise RuntimeError("Unable to resolve root layer path")
+    # Open the stage from the given file
+    stage = Usd.Stage.Open(input_path)
+    if not stage:
+        raise RuntimeError(f"Failed to open stage from: {input_path}")
 
-# Build output path in the same folder
-folder = os.path.dirname(input_path)
-base, ext = os.path.splitext(os.path.basename(input_path))
-output_path = os.path.join(folder, f"{base}_flattened{ext}")
+    # Build output path in the same folder
+    folder = os.path.dirname(input_path)
+    base, ext = os.path.splitext(os.path.basename(input_path))
+    output_path = os.path.join(folder, f"{base}_flattened{ext}")
 
-# Flatten the composed stage
-flattened_layer = stage.Flatten()
+    # Measure flattening time
+    start_time = time.time()
 
-# Export flattened layer
-if not flattened_layer.Export(output_path):
-    raise RuntimeError("Failed to export flattened USD")
+    # Flatten the composed stage
+    flattened_layer = stage.Flatten()
 
-print(f"✅ Flattened stage saved to:\n{output_path}")
+    # Export flattened layer
+    if not flattened_layer.Export(output_path):
+        raise RuntimeError(f"Failed to export flattened USD: {output_path}")
 
-```
-  </td > 
-    <td valign="top">
-  
-```py
-#usda 1.0
-(
+    end_time = time.time()
+    elapsed_seconds = end_time - start_time
 
-    doc = """Generated from Composed Stage of root layer F:\\ISAACSIM\\OPEN_USD_COURSE\\1_Composition\\shot.usd
-"""
-    endTimeCode = 0
-    startTimeCode = -0.4
-    timeCodesPerSecond = 24
-)
+    print(f"✅ Flattened stage saved to:\n{output_path}")
+    print(f"⏱ Flattening time: {elapsed_seconds:.3f} seconds")
 
-def Xform "World"
-{
-    def Xform "Dressing"
-    {
-        quatd xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 0, 0)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-    }
+    return elapsed_seconds
 
-    def Xform "Layout"
-    {
-        quatd xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 0, 0)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-    }
 
-    def Xform "FX"
-    {
-        quatd xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 0, 0)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-    }
+def main():
+    shot_path = os.path.join(BASE_PATH, SHOT_FILENAME)
+    print(f"--- Flattening {SHOT_FILENAME} ---")
+    elapsed = flatten_usd_file(shot_path)
+    # If you want to use the variable later, it's in `elapsed`
+    # print(f"Flatten time (seconds): {elapsed:.3f}")
 
-    def Xform "shotAnimationBake"
-    {
-        quatd xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 0, 0)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-    }
+if __name__ == "__main__":
+    main()
 
-    def Xform "shotFX"
-    {
-        quatd xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 0, 0)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-    }
-}
 
 ```
   </td > 
