@@ -260,7 +260,7 @@ def create_or_update_sublayer_file(file_path, sublayers):
 
 </table>
 
-Bellow is an example to introduce the concept of Flattering, we are running this script from the script editor in Omniverse, with the shot.usd stage opened. Each of the referenced layers has only an xform in their stages. You can also use the flatten option in the Layer's tab
+Bellow is an example to introduce the concept of Flattering, we are running this script from the script editor in Omniverse. Each of the referenced layers has only an xform in their stages. You can also use the flatten option in the Layer's tab
 
 ##### 🐍 Example Flattering the previous Example
 ---
@@ -279,7 +279,7 @@ import os
 import time
 
 # Folder where your USD files live
-BASE_PATH = r"F:/ISAACSIM/LearnOpenUSD/OpenUSD_Github/01_Composition"
+BASE_PATH = r"YOUR_PATH"
 SHOT_FILENAME = "shot.usd"
 
 def flatten_usd_file(input_path: str):
