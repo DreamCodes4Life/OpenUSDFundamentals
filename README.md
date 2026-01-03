@@ -262,6 +262,9 @@ def create_or_update_sublayer_file(file_path, sublayers):
 
 Bellow is an example to introduce the concept of Flattering, we are running this script from the script editor in Omniverse. Each of the referenced layers has only an xform in their stages. You can also use the flatten option in the Layer's tab
 
+<img width="529" height="195" alt="image" src="https://github.com/user-attachments/assets/05b5f422-a946-45c9-bdd0-f87d9551f8c8" />
+
+
 ##### 🐍 Example Flattering the previous Example
 ---
 <table>
@@ -379,7 +382,9 @@ The ordered set of layers resulting from the recursive gathering of all SubLayer
 
 ##### 🧠 [Exercise (SubLayers)](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/sublayers/working-with-sublayers.html) - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/Exercises/sublayers)
 
-##### 🧠 [Tutorial (Transformations, Animation, and Layer Offsets)](https://openusd.org/release/tut_xforms.html) 
+##### 🧠 [Tutorial (Transformations, Animation, and Layer Offsets)](https://openusd.org/release/tut_xforms.html)  - [Material](https://github.com/DreamCodes4Life/OpenUSDFundamentals/tree/main/tutorials/animatedTop)
+
+
 
 
 What happens to “overs” when their underlying prim is moved to a different location in the scenegraph?
