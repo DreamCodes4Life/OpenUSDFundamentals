@@ -81,37 +81,180 @@ The following example shows how a **shot** composes multiple layers and includes
 
 <table>
 <tr>
+<th align="left">Helper.py</th>
+<th align="left">BuildFiles.py</th>
 <th align="left">shot.usd</th>
 <th align="left">sequence.usd</th>
 </tr>
 <tr>
-    
+
 <td valign="top">
     
 ```py
-#usda 1.0
-(
-    subLayers = [
-        @shotFX.usd@,
-        @shotAnimationBake.usd@,
-        @sequence.usd@
-    ]
+# build_sequence_and_shot.py
+
+import os
+from usd_helpers import (
+    create_or_update_usd_layer,
+    create_or_update_sublayer_file,
 )
+
+# Target directory
+BASE_PATH = r"F:/ISAACSIM/LearnOpenUSD/OpenUSD_Github/01_Composition"
+
+# Names WITHOUT ".usd"
+usd_names = [
+    "sequenceFX",
+    "sequenceLayout",
+    "sequenceDressing",
+    "shotFX",
+    "shotAnimationBake"
+]
+
+def main():
+    # Ensure directory exists
+    os.makedirs(BASE_PATH, exist_ok=True)
+
+    # 1) Create or update the 5 base usd files with /World + child xform
+    for name in usd_names:
+        usd_filename = f"{name}.usd"          # add .usd extension
+        full_path = os.path.join(BASE_PATH, usd_filename)
+        create_or_update_usd_layer(full_path, name)
+
+    # 2) Create or update sequence.usd with sequence subLayers
+    sequence_usd_path = os.path.join(BASE_PATH, "sequence.usd")
+    create_or_update_sublayer_file(
+        sequence_usd_path,
+        [
+            "sequenceFX.usd",
+            "sequenceLayout.usd",
+            "sequenceDressing.usd"
+        ]
+    )
+
+    # 3) Create or update shot.usd with shot subLayers + sequence.usd
+    shot_usd_path = os.path.join(BASE_PATH, "shot.usd")
+    create_or_update_sublayer_file(
+        shot_usd_path,
+        [
+            "shotFX.usd",
+            "shotAnimationBake.usd",
+            "sequence.usd"
+        ]
+    )
+
+if __name__ == "__main__":
+    main()
+
+
 ```
+
+</td>
+
+<td valign="top">
+    
+```py
+
+# usd_helpers.py
+
+from pxr import Usd, UsdGeom, Sdf
+import os
+
+def create_or_update_usd_layer(file_path, layer_name):
+    """
+    Create the USD file if it doesn't exist,
+    otherwise open it and make sure:
+      - /World exists and is defaultPrim
+      - /World/xform_<layer_name> exists
+    """
+    if os.path.exists(file_path):
+        stage = Usd.Stage.Open(file_path)
+        print(f"Opened existing layer: {file_path}")
+    else:
+        stage = Usd.Stage.CreateNew(file_path)
+        print(f"Created new layer: {file_path}")
+
+    # Ensure /World exists
+    world_path = "/World"
+    world_prim = stage.GetPrimAtPath(world_path)
+    if not world_prim:
+        world = UsdGeom.Xform.Define(stage, world_path)
+        world_prim = world.GetPrim()
+    else:
+        # Wrap existing prim as Xform (no-op if already Xform)
+        world = UsdGeom.Xform(stage.GetPrimAtPath(world_path))
+
+    # Ensure /World is defaultPrim
+    if not stage.HasDefaultPrim():
+        stage.SetDefaultPrim(world_prim)
+
+    # Ensure child xform exists: /World/xform_<layer_name>
+    child_xform_path = f"/World/xform_{layer_name}"
+    if not stage.GetPrimAtPath(child_xform_path):
+        UsdGeom.Xform.Define(stage, child_xform_path)
+
+    # Save
+    stage.GetRootLayer().Save()
+    print(f"Saved layer: {file_path}")
+
+
+def create_or_update_sublayer_file(file_path, sublayers):
+    """
+    Create or modify a file that only defines subLayers, like:
+
+    #usda 1.0
+    (
+        subLayers = [
+            @file1.usd@,
+            @file2.usd@
+        ]
+    )
+    """
+    if os.path.exists(file_path):
+        layer = Sdf.Layer.FindOrOpen(file_path)
+        print(f"Opened existing subLayer file: {file_path}")
+    else:
+        layer = Sdf.Layer.CreateNew(file_path)
+        print(f"Created new subLayer file: {file_path}")
+
+    # Overwrite subLayerPaths with the new list
+    layer.subLayerPaths = sublayers
+    layer.Save()
+    print(f"Saved subLayer file: {file_path}")
+
+
+```
+</td>     
+<td valign="top">
+    
+```py
+
+    #usda 1.0
+    (
+        subLayers = [
+            @shotFX.usd@,
+            @shotAnimationBake.usd@,
+            @sequence.usd@
+        ]
+    )
+```
+
 </td> 
 <td valign="top">
 
 ```py
+
 #usda 1.0
-(
-    subLayers = [
-        @sequenceFX.usd@,
-        @sequenceLayout.usd@,
-        @sequenceDressing.usd@
-    ]
-)
+    (
+        subLayers = [
+            @sequenceFX.usd@,
+            @sequenceLayout.usd@,
+            @sequenceDressing.usd@
+        ]
+    )
 ```
 </td>
+
 </table>
 
 Bellow is an example to introduce the concept of Flattering, we are running this script from the script editor in Omniverse, with the shot.usd stage opened. Each of the referenced layers has only an xform in their stages. You can also use the flatten option in the Layer's tab
