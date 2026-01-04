@@ -16,27 +16,6 @@ work, and when and when it is appropriate to use each. The developer needs to be
 
 ---
 
-##  1.0- Before you start, things you need to know
-
-•	A **Prim** is a container for property data and nested PrimSpecs is the primary container object in USD. It can contain and order other prims or hold different kinds of data. They are composed of prim specs and property spec.
-
-•	**PrimSpec** is a container for property data and nested PrimSpecs.
-
-•	Composition arcs can only be applied on PrimSpecs
-
-•	A **PrimStack** is a list of PrimSpecs that contribute opinions for a composed prim’s metadata.
-
-•   A **[primvar](https://openusd.org/release/glossary.html#usdglossary-primvar)** (primitive variable) is a special kind of attribute that can vary and interpolate across a geometric primitive. You work with primvars through UsdGeomImageable and UsdGeomPrimvar. Review its **[class](https://openusd.org/release/api/class_usd_geom_primvar.html)**. See **[Primvar Data Management](https://docs.omniverse.nvidia.com/usd/code-docs/usd-exchange-sdk/latest/api/group__primvars.html)**
-
-•	Composition is cached, value resolution is not
-
-•	Composition is internally multi-threaded, value resolution is meant to be client multi-threaded. USD’s primary guidance for clients wishing to maximize USD’s performance on multi-core systems is to perform as much simultaneous value resolution and data extraction as possible
-
-•	Composition rules vary by composition arc, value resolution rules vary by metadatum.
-
-•	An **index**, also referred to as a PrimIndex, is the result of composition. A prim’s index contains an ordered (from strongest to weakest) list of “Nodes”. All of the queries on USD classes except for stage-level metadata rely on prim indices to perform value resolution.
-
-
 ##  1.1- Creating Composition Arcs
 
 **Composition arcs** are the operators that allow **USD (Universal Scene Description)** to combine multiple layers of scene description in specific ways.
@@ -456,7 +435,7 @@ class Xform "_class_Tree"
 {
     def Mesh "Trunk"
     {
-        color3f[] primvars:displayColor = [(.8, .8, .2)]
+        color3f[] :displayColor = [(.8, .8, .2)]
     }
 
     def Mesh "Leaves"
@@ -4755,7 +4734,7 @@ def Scope "Lights"
 
 ### 5.3.1- Primvars
 
-We have already been working with Primvars all along, and had a small description in 1.0. Let's dig deeper.
+A **[primvar](https://openusd.org/release/glossary.html#usdglossary-primvar)** (primitive variable) is a special kind of attribute that can vary and interpolate across a geometric primitive. You work with primvars through UsdGeomImageable and UsdGeomPrimvar. Review its **[class](https://openusd.org/release/api/class_usd_geom_primvar.html)**. See **[Primvar Data Management](https://docs.omniverse.nvidia.com/usd/code-docs/usd-exchange-sdk/latest/api/group__primvars.html)**
 
 Primvars support several interpolation modes, based on interpolation modes of the primvar equivalent Primitive Variable from RenderMan. These are:
 
