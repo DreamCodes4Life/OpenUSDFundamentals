@@ -417,7 +417,7 @@ Inherits is a composition arc that addresses the problem of adding a single, non
 
 🔗 [More info]([https://openusd.org/release/glossary.html#liverps-strength-ordering](https://openusd.org/release/glossary.html#usdglossary-instancing))
 
-##### ⭐ Example "TimeCodes Scaled to Real Time"
+##### ⭐ Example "Inherits"
 ---
 <table>
   <tr>
