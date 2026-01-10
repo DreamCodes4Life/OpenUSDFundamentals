@@ -59,7 +59,7 @@ This makes sublayers ideal for **non-destructive layering** of work from multipl
 ---
 The following example shows how a **shot** composes multiple layers and includes an entire **sequence**, which itself is composed of additional layers.
 
-##### ⭐ Example: Shot → Sequence Composition
+##### 🐍 Example: Shot → Sequence Composition
 
 <table>
 <tr>
