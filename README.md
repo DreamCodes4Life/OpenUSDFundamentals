@@ -418,7 +418,7 @@ In this example, the book defined in sequence.usda has the title “Toy Story”
 
 Inherits is a composition arc that addresses the problem of adding a single, non-destructive edit (override) that can affect a whole class of distinct objects on a stage. Inherits acts as a non-destructive “broadcast” operator that applies opinions authored on one prim to every other prim that inherits the “source” prim; not only do property opinions broadcast over inherits arcs - all scene description, hierarchically from the source, inherits. 
 
-🔗 [More info]([https://openusd.org/release/glossary.html#liverps-strength-ordering](https://openusd.org/release/glossary.html#usdglossary-instancing))
+🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-instancing)
 
 ##### ⭐ Example "Inherits"
 ---
