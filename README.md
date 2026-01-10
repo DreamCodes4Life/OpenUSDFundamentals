@@ -39,7 +39,7 @@ Composition arcs are evaluated according to **strength ordering** (from weakest 
 | E | **Relocate** | Move prim paths |
 | R | **Reference** | Bring in external USD layers |
 | P | **Payload** | Lazy-load external content |
-| S | **Specialize** | Stronger form of inheritance |
+| S | **Specialize** | Default opinion|
 
 > **Mnemonic:** **LIVERPS** — the strength ordering of composition arcs
 
