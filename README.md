@@ -391,19 +391,7 @@ def Xform "World"
   
 ```
   </td> 
-<td>
-	
-```py
-#usda 1.0
-(
-    subLayers = [
-        @./someAnimation.usd@ (offset = 10; scale = 0.5)
-    ]
-)
 
-```
-
-</td> 
 <td>
 	
 ```py
@@ -437,6 +425,21 @@ print(f"Translate at frame {frame}:", translate_value)
 ```
 
 </td> 
+
+<td>
+	
+```py
+#usda 1.0
+(
+    subLayers = [
+        @./someAnimation.usd@ (offset = 10; scale = 0.5)
+    ]
+)
+
+```
+
+</td> 
+
   <td>
     
 ```py
