@@ -344,11 +344,58 @@ They are commonly used to:
 ---
 <table>
   <tr>
+	<th align="left">bouncingBall.usd</th>
     <th align="left">example.usd</th>
     <th align="left">notes</th>
   </tr>
   <tr>
     <td>
+
+```py
+#usda 1.0
+(
+    subLayers = [
+        @./someAnimation.usd@ (offset = 10; scale = 0.5)
+    ]
+)
+
+```
+```py
+#usda 1.0
+(
+    endTimeCode = 60
+    startTimeCode = 1
+)
+
+def Xform "World"
+{
+    def Sphere "Sphere"
+    {
+        float3 xformOp:scale.timeSamples = {
+            1: (1, 1, 1),
+            30: (1, 1, 1),
+            45: (1, 0.2, 1.25),
+            50: (0.75, 2, 0.75),
+            60: (1, 1, 1),
+        }
+        double3 xformOp:translate.timeSamples = {
+            1: (0, 5.5, 0),
+            30: (0, -4.5, 0),
+            45: (0, -5, 0),
+            50: (0, -3.25, 0),
+            60: (0, 5.5, 0),
+        }
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "Backdrop"
+    {
+        color3f[] primvars:displayColor = [(0, 0, 1)]
+        float3 xformOp:scale = (5, 5, 0.1)
+        double3 xformOp:translate = (0, 0, -2)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+}	
   
 ```py
 #usda 1.0
