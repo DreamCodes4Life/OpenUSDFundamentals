@@ -76,10 +76,6 @@ The following example shows how a **shot** composes multiple layers and includes
 # build_sequence_and_shot.py
 
 import os
-from usd_helpers import (
-    create_or_update_usd_layer,
-    create_or_update_sublayer_file,
-)
 
 # Target directory
 BASE_PATH = r"YOUR_PATH"
@@ -178,10 +174,6 @@ def create_or_update_usd_layer(file_path, layer_name):
     # Save
     stage.GetRootLayer().Save()
     print(f"Saved layer: {file_path}")
-
-
-from pxr import Usd, UsdGeom, Sdf
-import os
 
 def create_or_update_sublayer_file(file_path, sublayers):
     """
