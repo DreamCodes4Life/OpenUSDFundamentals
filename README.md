@@ -360,6 +360,10 @@ They are commonly used to:
 )
 
 ```
+
+</td> 
+<td>
+	  
 ```py
 #usda 1.0
 (
