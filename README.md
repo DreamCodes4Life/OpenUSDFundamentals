@@ -388,13 +388,6 @@ def Xform "World"
     }
 }	
   
-```py
-#usda 1.0
-(
-    subLayers = [
-        @./someAnimation.usd@ (offset = 10; scale = 0.5)
-    ]
-)
 ```
   </td> 
 <td>
