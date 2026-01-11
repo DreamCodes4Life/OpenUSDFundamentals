@@ -345,6 +345,7 @@ They are commonly used to:
 <table>
   <tr>
 	<th align="left">bouncingBall.usd</th>
+	<th align="left">requestOpinionTime.py</th>
     <th align="left">example.usd</th>
     <th align="left">notes</th>
   </tr>
@@ -399,6 +400,39 @@ def Xform "World"
         @./someAnimation.usd@ (offset = 10; scale = 0.5)
     ]
 )
+
+```
+
+</td> 
+<td>
+	
+```py
+from pxr import UsdGeom, Usd
+
+def get_translate_at_time(stage, prim_path, frame):
+    prim = stage.GetPrimAtPath(prim_path)
+    xform = UsdGeom.Xformable(prim)
+    tcode = Usd.TimeCode(frame)
+
+    for op in xform.GetOrderedXformOps():
+        if op.GetOpType() == UsdGeom.XformOp.TypeTranslate:
+            return op.Get(tcode)  # may interpolate
+    return None
+
+
+# --- USAGE EXAMPLE ---
+
+# Get current stage (Omniverse Kit / Code / Composer / Isaac)
+import omni.usd
+stage = omni.usd.get_context().get_stage()
+
+prim_path = "/World/Sphere"
+frame = 50
+
+translate_value = get_translate_at_time(stage, prim_path, frame)
+
+print(f"Translate at frame {frame}:", translate_value)
+
 
 ```
 
