@@ -349,21 +349,8 @@ They are commonly used to:
     <th align="left">notes</th>
   </tr>
   <tr>
-    <td>
-
-```py
-#usda 1.0
-(
-    subLayers = [
-        @./someAnimation.usd@ (offset = 10; scale = 0.5)
-    ]
-)
-
-```
-
-</td> 
 <td>
-	  
+	
 ```py
 #usda 1.0
 (
@@ -410,6 +397,19 @@ def Xform "World"
 )
 ```
   </td> 
+<td>
+	
+```py
+#usda 1.0
+(
+    subLayers = [
+        @./someAnimation.usd@ (offset = 10; scale = 0.5)
+    ]
+)
+
+```
+
+</td> 
   <td>
     
 ```py
