@@ -180,29 +180,49 @@ def create_or_update_usd_layer(file_path, layer_name):
     print(f"Saved layer: {file_path}")
 
 
+from pxr import Usd, UsdGeom, Sdf
+import os
+
 def create_or_update_sublayer_file(file_path, sublayers):
     """
-    Create or modify a file that only defines subLayers, like:
+    Create or update a USD file that:
+      - Has a /World Xform as defaultPrim
+      - Defines the given sublayers
 
-    #usda 1.0
-    (
-        subLayers = [
-            @file1.usd@,
-            @file2.usd@
-        ]
-    )
+    Args:
+        file_path (str): USD file path (local or nucleus)
+        sublayers (list[str]): list of subLayer paths (usually relative)
     """
-    if os.path.exists(file_path):
-        layer = Sdf.Layer.FindOrOpen(file_path)
-        print(f"Opened existing subLayer file: {file_path}")
-    else:
-        layer = Sdf.Layer.CreateNew(file_path)
-        print(f"Created new subLayer file: {file_path}")
 
-    # Overwrite subLayerPaths with the new list
-    layer.subLayerPaths = sublayers
-    layer.Save()
+    # 1. Open or create a full USD stage
+    if os.path.exists(file_path):
+        stage = Usd.Stage.Open(file_path)
+        print(f"Opened existing subLayer stage: {file_path}")
+    else:
+        stage = Usd.Stage.CreateNew(file_path)
+        print(f"Created new subLayer stage: {file_path}")
+
+    root = stage.GetRootLayer()
+
+    # 2. Ensure /World exists
+    world_path = "/World"
+    if not stage.GetPrimAtPath(world_path):
+        UsdGeom.Xform.Define(stage, world_path)
+        print(f"Created /World Xform in: {file_path}")
+
+    # 3. Ensure defaultPrim = /World
+    if stage.GetDefaultPrim() is None or stage.GetDefaultPrim().GetPath() != world_path:
+        stage.SetDefaultPrim(stage.GetPrimAtPath(world_path))
+        print(f"Set defaultPrim to /World in: {file_path}")
+
+    # 4. Overwrite subLayerPaths
+    root.subLayerPaths = list(sublayers)
+    print(f"Applied subLayers to {file_path}: {sublayers}")
+
+    # 5. Save
+    root.Save()
     print(f"Saved subLayer file: {file_path}")
+
 
 
 ```
