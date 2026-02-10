@@ -18,6 +18,10 @@ work, and when and when it is appropriate to use each. The developer needs to be
 🔗 [More info](https://openusd.org/release/glossary.html#liverps-strength-ordering)
 
 ---
+##  1.0- Videos
+
+🔗 [Overview](https://www.youtube.com/live/85gC4Vja5Uo)
+
 
 ##  1.1- Creating Composition Arcs
 
@@ -1504,7 +1508,11 @@ strategies for overriding an instanced asset for efficient, optimized, and colla
 large scenes.</strong>
 </p>
 
-##  2.0- Before you start, things you need to know
+##  2.0- Videos:
+
+🔗 [Overview]([https://www.linkedin.com/events/7425712736740913152/])
+
+
 
 ##  2.1- Model Kinds, Model Hierarchy
 
