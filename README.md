@@ -1510,7 +1510,7 @@ large scenes.</strong>
 
 ##  2.0- Videos:
 
-🔗 [Overview]([https://www.linkedin.com/events/7425712736740913152/])
+🔗 [Overview](https://www.linkedin.com/events/7425712736740913152/)
 
 
 
