@@ -53,6 +53,8 @@ Composition arcs are evaluated according to **strength ordering** (from weakest 
 
 ### 1.2.1 - Sublayer (Local)
 
+🔗 [YT Video](https://www.youtube.com/watch?v=UNXw0ddWvZ4)
+
 **Sublayer** is a special composition mechanism:
 
 - It **does not support prim name changes**
@@ -517,6 +519,7 @@ In this example, the book defined in sequence.usda has the title “Toy Story”
 
 Inherits is a composition arc that addresses the problem of adding a single, non-destructive edit (override) that can affect a whole class of distinct objects on a stage. Inherits acts as a non-destructive “broadcast” operator that applies opinions authored on one prim to every other prim that inherits the “source” prim; not only do property opinions broadcast over inherits arcs - all scene description, hierarchically from the source, inherits. 
 
+🔗 [YT Video](https://www.youtube.com/watch?v=lNC8vmWq2dI)
 🔗 [More info](https://openusd.org/release/glossary.html#usdglossary-instancing)
 
 ##### ⭐ Example "Inherits"
