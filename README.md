@@ -3,6 +3,8 @@
 🔗 [Exam Guide](https://nvdam.widen.net/s/6kxsqcsrrw/ncp-openusd-development-study-guide)
 🔗 [Learning Path OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html)
 🔗 [Dev Guide](https://docs.omniverse.nvidia.com/dev-guide/latest/programmer_ref/usd.html)
+🔗 [OpenUSD Community Office Hour](https://www.youtube.com/results?search_query=OpenUSD+Community+Office+Hour)
+
 
 
 
